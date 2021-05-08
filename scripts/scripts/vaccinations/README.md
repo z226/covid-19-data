@@ -40,7 +40,7 @@ To update the data, make sure to install all the dependencies and run the code b
 Note that the pipelien currently uses a combination of Python and R. We recommend using a virtual environment for Python
 and an RStudio interactive session for R.
 
-<details open>
+<details closed>
 <summary>Show steps ...</summary>
 
 ### 1. Dependencies

@@ -8,10 +8,12 @@ VAX_ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..
 SUB_POP_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "../../input/owid/subnational_population_2020.csv"))
 CONTINENTS_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "../../input/owid/continents.csv"))
 EU_COUNTRIES_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "../../input/owid/eu_countries.csv"))
+ISO_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "../../input/iso/iso3166_1_alpha_3_codes.csv"))
 METADATA_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "./metadata.preliminary.csv"))
 VAX_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "./vaccinations.preliminary.csv"))
 # Outputs
 AUTOMATED_STATE_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "./automation_state.csv"))
+LOCATIONS_FILE = os.path.abspath(os.path.join(VAX_ROOT_DIR, "./public/data/vaccinations/locations.csv"))
 
 
 # Load files
@@ -47,30 +49,56 @@ def generate_automation_file(df: pd.DataFrame):
     )
 
 
-def generate_locations_file(df_metadata: pd.DataFrame, df_vax: pd.DataFrame):
-    df_vax = df_vax.sort_values(by="date")
-    raise NotImplementedError()
-    """
-    vax_per_loc <- vax[, .(vaccines = paste0(sort(unique(unlist(str_split(vaccine, ", ")))), collapse = ", ")), location]
-    latest_meta <- vax[, .SD[.N], location]
-    metadata <- merge(merge(metadata, vax_per_loc, "location"), latest_meta, "location")
-    setnames(metadata, c("source_url", "date"), c("source_website", "last_observation_date"))
-    metadata <- add_iso(metadata)
-    metadata <- metadata[, c("location", "iso_code", "vaccines", "last_observation_date", "source_name", "source_website")]
-    fwrite(metadata, "../../../public/data/vaccinations/locations.csv")
-    return(metadata)
-    """
+def generate_locations_file(df_metadata: pd.DataFrame, df_vax: pd.DataFrame, df_iso: pd.DataFrame):
+    def _pretty_vaccine(vaccines):
+        return ",".join(sorted(v.strip() for v in vaccines.split(',')))
+    df_vax = (
+        df_vax
+        .sort_values(by=["location", "date"])
+        .drop_duplicates(subset=["location"], keep="last")
+        .assign(vaccines=df_vax.vaccine.apply(_pretty_vaccine))
+        .rename(columns={
+            "date": "last_observation",
+            "source_url": "source_website"
+        })
+    )
+
+    if len(df_met) != len(df_vax):
+        raise ValueError("Missmatch between vaccination data and metadata!")
+        
+    return (
+        df_vax
+        .merge(df_met, on="location")
+        .merge(df_iso, on="location")
+    )[["location", "iso_code", "vaccines", "last_observation", "source_name", "source_website"]]
 
 
 def main():
     # Load data
     metadata = pd.read_csv(METADATA_FILE)
     vax = pd.read_csv(VAX_FILE, parse_dates=["date"])
+    iso = pd.read_csv(ISO_FILE, parse_dates=["date"])
 
     # Metadata
     generate_automation_file(metadata)
-    metadata = generate_locations_file(metadata, vax)
+    metadata = generate_locations_file(metadata, vax, iso)
+    metadata.to_csv(LOCATIONS_FILE, index=False)
 
+    # Select columns
+    vax = vax[["date", "location", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
+    """
+    # Select columns
+    vax <- vax[, c("date", "location", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated")]
 
+    # Add regional aggregates
+    for (agg_name in names(AGGREGATES)) {
+        vax <- add_aggregate(
+            vax,
+            aggregate_name = agg_name,
+            included_locs = AGGREGATES[[agg_name]][["included_locs"]],
+            excluded_locs = AGGREGATES[[agg_name]][["excluded_locs"]]
+        )
+    }
+    """
 if __name__ == "__main__":
     main()

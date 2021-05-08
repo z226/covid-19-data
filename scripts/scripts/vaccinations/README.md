@@ -99,7 +99,10 @@ pipeline:
 
 We provide [`config.yaml.template`](config.yaml.template) as a template.
 
-**Note**: For `google`-related fields, you'll need a valid OAuth JSON credentials file, as explained in the [gsheets documentation](https://gsheets.readthedocs.io/en/stable/#quickstart).
+**Note 1**: We recommend placing it under `~/.config/cowid/config.yaml`. Otherwise, you may specify an alternative 
+directory with option `--config` later.
+
+**Note 2**: For `google`-related fields, you'll need a valid OAuth JSON credentials file, as explained in the [gsheets documentation](https://gsheets.readthedocs.io/en/stable/#quickstart).
 
 
 ### 2. Manual data updates

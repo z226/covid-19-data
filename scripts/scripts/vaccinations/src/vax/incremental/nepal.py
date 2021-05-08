@@ -14,6 +14,7 @@ from vax.utils.incremental import clean_count, enrich_data, increment
 
 def read(source: str):
     url_pdf = parse_pdf_link(source)
+    print(url_pdf)
     pdf_text = get_text_from_pdf(url_pdf)
     return pd.Series({
         "people_vaccinated": parse_people_vaccinated(pdf_text),

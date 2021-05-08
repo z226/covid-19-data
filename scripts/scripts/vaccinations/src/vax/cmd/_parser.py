@@ -18,6 +18,7 @@ def _parse_args():
     )
     parser.add_argument(
         "-c", "--countries", default="all",
+        type=lambda x: [ss.strip().replace(" ", "_").lower() for ss in x.split(",")],
         help=(
             "Run for a specific country. For a list of countries use commas to separate them (only in mode get-data)"
             "E.g.: peru, norway. \nSpecial keywords: 'all' to run all countries, 'incremental' to run incremental"

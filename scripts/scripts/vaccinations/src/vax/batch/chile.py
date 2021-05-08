@@ -31,6 +31,7 @@ def rename_vaccines(df: pd.DataFrame) -> pd.DataFrame:
     vaccine_mapping = {
         "Pfizer": "Pfizer/BioNTech",
         "Sinovac": "Sinovac",
+        "Astra-Zeneca": "Oxford/AstraZeneca"
     }
     assert set(df["Type"].unique()) == set(vaccine_mapping.keys())
     return df.replace(vaccine_mapping)

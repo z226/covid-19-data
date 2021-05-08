@@ -28,9 +28,9 @@ class ConfigParams(object):
     def __init__(self, config_file, parallel, njobs, countries, mode, display):
         self.config_file = config_file
         self._config = self._load_yaml()
-        self.parallel = parallel
-        self.njobs = njobs
-        self.countries = countries
+        self._parallel = parallel
+        self._njobs = njobs
+        self._countries = countries
         self.mode = mode
         self.display = display
         self.project_dir = self._get_project_dir_from_config()
@@ -41,7 +41,7 @@ class ConfigParams(object):
             config_file=args.config,
             parallel=args.parallel,
             njobs=args.njobs,
-            countries=_countries_to_modules(args.countries),
+            countries=args.countries,
             mode=args.mode,
             display=args.show_config,
         )
@@ -58,8 +58,8 @@ class ConfigParams(object):
 
     def _load_yaml(self):
         if self.config_file_exists:
-            with open(self.config_file) as file:
-                config = yaml.load(file, Loader=yaml.FullLoader)
+            with open(self.config_file) as f:
+                config = yaml.load(f, Loader=yaml.FullLoader)
             return config
         return {}
 
@@ -67,10 +67,9 @@ class ConfigParams(object):
     def GetDataConfig(self):
         """Use `_token` for variables that are secret"""
         return ConfigParamsStep({
-            "output_dir": self._return_value("get-data", "output_dir", "output"),
-            "parallel": self._return_value("get-data", "parallel", self.parallel),
-            "njobs": self._return_value("get-data", "njobs", self.njobs),
-            "countries": self._return_value("get-data", "countries", self.countries),
+            "parallel": self._return_value("get-data", "parallel", self._parallel),
+            "njobs": self._return_value("get-data", "njobs", self._njobs),
+            "countries": _countries_to_modules(self._return_value("get-data", "countries", self._countries)),
             "greece_api_token": self._return_value("get-data", "greece_api_token", None),
         })
 
@@ -115,15 +114,15 @@ class ConfigParams(object):
         return s
 
 
-def _countries_to_modules(s):
-        if s == "all":
+def _countries_to_modules(countries):
+    if len(countries) == 1:
+        if countries[0] == "all":
             return modules_name
-        elif s == "incremental":
+        elif countries[0] == "incremental":
             return modules_name_incremental
-        elif s == "batch":
+        elif countries[0] == "batch":
             return modules_name_batch
-        # Comma separated string to list of strings
-        countries = [ss.strip().replace(" ", "_").lower() for ss in s.split(",")]
+    if len(countries) >= 1:
         # Verify validity of countries
         countries_wrong = [c for c in countries if c not in country_to_module]
         if countries_wrong:

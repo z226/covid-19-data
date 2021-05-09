@@ -1,5 +1,6 @@
-import yaml
+from pyaml_env import parse_config
 import os
+import json
 
 from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
 from vax.cmd._parser import _parse_args
@@ -25,15 +26,19 @@ class ConfigParamsStep(object):
 
 class ConfigParams(object):
 
-    def __init__(self, config_file, parallel, njobs, countries, mode, display):
-        self.config_file = config_file
-        self._config = self._load_yaml()
+    def __init__(self, config_file, parallel, njobs, countries, mode, display, credentials_file):
         self._parallel = parallel
         self._njobs = njobs
         self._countries = countries
         self.mode = mode
         self.display = display
+        # Config file
+        self.config_file = config_file
+        self._config = self._load_yaml()
         self.project_dir = self._get_project_dir_from_config()
+        # Credentials file
+        self.credentials_file = self._get_credentials_file_from_config(credentials_file)
+        self._credentials = self._load_json_credentials()
 
     @classmethod
     def from_args(cls, args):
@@ -44,46 +49,75 @@ class ConfigParams(object):
             countries=args.countries,
             mode=args.mode,
             display=args.show_config,
+            credentials_file=args.credentials,
         )
 
     @property
     def config_file_exists(self):
         return os.path.isfile(self.config_file)
+    
+    @property
+    def credentials_file_exists(self):
+        return os.path.isfile(self.credentials_file)
 
     def _get_project_dir_from_config(self):
         try:
             return self._config["global"]["project_dir"]
         except KeyError:
-            raise KeyError("Missing global.repo_dir variable in config.yaml")
+            print(self._config)
+            raise KeyError("Missing global.project_dir variable in config.yaml")
+
+    def _get_credentials_file_from_config(self, credentials):
+            try:
+                return self._config["global"]["credentials"]
+            except KeyError:
+                return credentials
 
     def _load_yaml(self):
         if self.config_file_exists:
-            with open(self.config_file) as f:
-                config = yaml.load(f, Loader=yaml.FullLoader)
-            return config
+            return parse_config(self.config_file, raise_if_na=False)
         return {}
 
-    @property
+    def _load_json_credentials(self):
+        if self.credentials_file_exists:
+            with open(self.credentials_file) as f:
+                return json.load(f)
+        else:
+            raise FileNotFoundError(f"Credentials file not found. Check path {self.credentials_file}. We recommend"
+                                     "setting this in `config.yaml`.")
+
     def GetDataConfig(self):
-        """Use `_token` for variables that are secret"""
+        """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({
-            "parallel": self._return_value("get-data", "parallel", self._parallel),
-            "njobs": self._return_value("get-data", "njobs", self._njobs),
-            "countries": _countries_to_modules(self._return_value("get-data", "countries", self._countries)),
-            "greece_api_token": self._return_value("get-data", "greece_api_token", None),
+            "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
+            "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
+            "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
         })
 
-    @property
     def ProcessDataConfig(self):
-        """Use `_token` for variables that are secret"""
+        """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({
-            "skip_complete": self._return_value("process-data", "skip_complete", []),
-            "skip_monotonic_check": self._return_value("process-data", "skip_monotonic_check", []),
-            "google_credentials": self._return_value("process-data", "google_credentials", None),
-            "google_spreadsheet_vax_id": self._return_value("process-data", "google_spreadsheet_vax_id", None),
+            "skip_complete": self._return_value_pipeline("process-data", "skip_complete", []),
+            "skip_monotonic_check": self._return_value_pipeline("process-data", "skip_monotonic_check", []),
         })
 
-    def _return_value(self, step, feature_name, feature_from_args):
+    def CredentialsConfig(self):
+        """Use `_token`/`id`/`secret` for variables that are secret"""
+        return ConfigParamsStep({
+            "greece_api_token": self._return_value_credentials("greece_api_token"),
+            "owid_cloud_table_post": self._return_value_credentials("owid_cloud_table_post"),
+            "google_credentials": self._return_value_credentials("google_credentials"),
+            "google_spreadsheet_vax_id": self._return_value_credentials("google_spreadsheet_vax_id"),
+        })
+
+    def _return_value_credentials(self, feature_name):
+        if feature_name in self._credentials:
+            v = self._credentials[feature_name]
+            if v:
+                return v
+        raise AttributeError(f"Missing field {feature_name} or value was None in credentials")
+
+    def _return_value_pipeline(self, step, feature_name, feature_from_args):
         try:
             v = self._config["pipeline"][step][feature_name]
             if v is not None:
@@ -101,16 +135,17 @@ class ConfigParams(object):
             s = f"CONFIGURATION PARAMS:\nNo config file\n\n"
             s += "*************************\n"
         if self.mode == "get-data":
-            s += f"Get Data: \n{self.GetDataConfig.__str__()}"
+            s += f"Get Data: \n{self.GetDataConfig().__str__()}"
         elif self.mode == "process-data":
-            s += f"Process Data: \n{self.ProcessDataConfig.__str__()}"
+            s += f"Process Data: \n{self.ProcessDataConfig().__str__()}"
         elif self.mode == "all":
-            s += f"Get Data: \n{self.GetDataConfig.__str__()}"
+            s += f"Get Data: \n{self.GetDataConfig().__str__()}"
             s += "\n*************************\n\n"
-            s += f"Process Data: \n{self.ProcessDataConfig.__str__()}"
+            s += f"Process Data: \n{self.ProcessDataConfig().__str__()}"
         else:
             raise ValueError("Not a valid mode!")
         s += "\n*************************\n\n"
+        # s += f"Secrets: \n{self.CredentialsConfig().__str__()}"
         return s
 
 

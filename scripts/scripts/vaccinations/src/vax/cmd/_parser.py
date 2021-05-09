@@ -46,5 +46,11 @@ def _parse_args():
             "Path to config file (YAML)."
         )
     )
+    parser.add_argument(
+        "--credentials", default="vax_dataset_config.json",
+        help=(
+            "Path to credentials file (JSON). If a config file is being used, the value ther will be prioritized."
+        )
+    )
     args = parser.parse_args()
     return args

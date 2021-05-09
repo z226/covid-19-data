@@ -42,11 +42,7 @@ for continent in ["Asia", "Africa", "Europe", "North America", "Oceania", "South
 
 
 def generate_automation_file(df: pd.DataFrame):
-    df.sort_values(by=["automated", "location"]).to_csv(
-        AUTOMATED_STATE_FILE, 
-        index=False,
-        columns=["automated", "location"],
-    )
+    return df.sort_values(by=["automated", "location"], ascending=[False, True])[["location", "automated"]]
 
 
 def generate_locations_file(df_metadata: pd.DataFrame, df_vax: pd.DataFrame, df_iso: pd.DataFrame):
@@ -63,12 +59,12 @@ def generate_locations_file(df_metadata: pd.DataFrame, df_vax: pd.DataFrame, df_
         })
     )
 
-    if len(df_met) != len(df_vax):
+    if len(df_metadata) != len(df_vax):
         raise ValueError("Missmatch between vaccination data and metadata!")
-        
+
     return (
         df_vax
-        .merge(df_met, on="location")
+        .merge(df_metadata, on="location")
         .merge(df_iso, on="location")
     )[["location", "iso_code", "vaccines", "last_observation", "source_name", "source_website"]]
 
@@ -80,8 +76,9 @@ def main():
     iso = pd.read_csv(ISO_FILE, parse_dates=["date"])
 
     # Metadata
-    generate_automation_file(metadata)
+    automated_state = generate_automation_file(metadata)
     metadata = generate_locations_file(metadata, vax, iso)
+    automated_state.to_csv(AUTOMATED_STATE_FILE, index=False)
     metadata.to_csv(LOCATIONS_FILE, index=False)
 
     # Select columns

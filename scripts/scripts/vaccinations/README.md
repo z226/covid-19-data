@@ -9,6 +9,7 @@ automated scripts.
 
 ### Content
 - [Directory content](#directory-content)
+- [Development environment](#development-environment)
 - [Update the data](#update-the-data)
 - [Generated files](#generated-files)
 - [Other functions](#other-functions)
@@ -35,16 +36,13 @@ This directory contains the following files:
 
 ## Update the data
 
-To update the data, make sure to install all the dependencies and run the code below.
-
-Note that the pipelien currently uses a combination of Python and R. We recommend using a virtual environment for Python
+Note that the pipeline currently uses a combination of Python and R. We recommend using a virtual environment for Python
 and an RStudio interactive session for R.
 
+## Development environment
 <details closed>
 <summary>Show steps ...</summary>
 
-### 1. Dependencies
-#### 1.1 Python and R
 Make sure you have a working environment with R and python 3 installed. We recommend R >= 4.0.2 and Python >= 3.7.
 
 You can check:
@@ -57,62 +55,85 @@ and
 $ R --version
 ```
 
-#### 1.2 Install python requirements
+### Install python requirements
 In your environment (shell), run:
 
 ```
 $ pip install -e .
 ```
 
-#### 1.3 Install R requirements
+### Install R requirements
 In your R console, run:
 
 ```r
 install.packages(c("data.table", "imputeTS", "lubridate", "readr", "retry", "rjson", "stringr", "tidyr", "jsonlite", "bit64"))
 ```
 
-#### 1.4 Configuration file (internal)
+### Configuration file
 
-To correctly run the pipeline, make sure to previously create a configuration file.
+To correctly run the pipeline, make sure to have a valid configuration file. We currently use
+[config.yaml](config.yaml). This file contains data used throughout the different pipeline stages.
 
 ```yaml
 global:
-  project_dir: [PATH TO THE REPOSITORY]  # Mandatory
+  project_dir: !ENV ${OWID_COVID_PROJECT_DIR}
+  credentials: !ENV ${OWID_COVID_VAX_CREDENTIALS_FILE}
 pipeline:
   get-data:
-    parallel: [True or False]  # Use multi-threading
-    countries:  # Can be left empty. Additionally, can use keywords "incremental" and "batch"
-      - [COUNTRY A]
-      - [COUNTRY B]
-    njobs:  # Number of workers if using parallel=True
-    greece_api_token: [GREECE API TOKEN]
+    parallel: True
+    countries:
+    njobs: -2
   process-data:
     skip_complete:
-    skip_monotonic_check:  # Can be left empty
-        - [COUNTRY 1]
-        - [COUNTRY 2]
-        ...
-    google_credentials: [PATH TO credentials.json FILE]
-    google_spreadsheet_vax_id: [GOOGLE SPREADSHEET ID]
+    skip_monotonic_check:
+        - Northern Ireland
+        - Malta
+        - Romania
+        - Sweden
   generate-dataset:
 ```
 
-We provide [`config.yaml.template`](config.yaml.template) as a template.
+### Check the style
+We use [flake8](https://flake8.pycqa.org/en/latest/) to check the style of our code. The configuration lives in file 
+[tox.ini](tox.ini). To check the style, simply run
+
+```sh
+$ tox
+```
+**Note**: This requires tox to be installed (`$ pip install tox`)
+
+**Notes**
+- Requires to previously set environment variables `project_dir` and `credentials`. We recommend defining them in
+  `~/.bashrc` or `/.bash_profile`.
+  - `OWID_COVID_PROJECT_DIR`: Path to the repository project. E.g., `/Users/Alice/Git/covid-19-data`.
+  - `OWID_COVID_VAX_CREDENTIALS_FILE`: Path to the credentials JSON file (internal).
+- The credentials file is internal. `Google`-related fields require a valid OAuth JSON credentials file (see [gsheets
+  documentation](https://gsheets.readthedocs.io/en/stable/#quickstart)). The file should have the following structure:
+```json
+{
+    "greece_api_token": "[GREECE_API_TOKEN]",
+    "owid_cloud_table_post": "[OWID_CLOUD_TABLE_POST]",
+    "google_credentials": "[CREDENTIALS_JSON_PATH]",
+    "google_spreadsheet_vax_id": "[SHEET_ID]"
+}
+```
 
 **Note 1**: We recommend placing it under `~/.config/cowid/config.yaml`. Otherwise, you may specify an alternative 
 directory with option `--config` later.
 
-**Note 2**: For `google`-related fields, you'll need a valid OAuth JSON credentials file, as explained in the [gsheets documentation](https://gsheets.readthedocs.io/en/stable/#quickstart).
+**Note 2**: 
+</details>
 
+## Update the data
+To update the data, prior to runing the code, make sure to correctly [set up the development environment](#development-environment).
 
-### 2. Manual data updates
+### Manual data updates
 
 Check for new updates and manually add them in the internal spreadsheet:
 - See this repo's [pull requests](https://github.com/owid/covid-19-data/pulls) and [issues](https://github.com/owid/covid-19-data/issues).
 - Look for new data based on previously-used source URLs.
 
-
-### 3. Automated process
+### Automated process
 Run the following script:
 
 ```
@@ -127,19 +148,18 @@ By default this will do the following:
   `vaccinations.preliminary.csv` and `metadata.preliminary.csv` which are later
   required by `generate_dataset.R`.
 
-**Note 1**: this step might crash for some countries, as the automation scripts might no longer (or temporarily) work
+**Notes**:
+- This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
 (e.g. due to changes in the source). Try to keep the scripts up to date.
+- Optionally you can use positional argument `get-data` and `process-data` to only execute steps 1 or 2, 
+respectively. E.g. executing `$ cowid-vax process-data` will just run step 2.
+- To use [config.yaml](config.yaml), run `$ cowid-vax --config config.yaml`. Otherwise, it will:
+  - Attempt to load configuration from `~/.config/cowid/config.yaml`.
+  - If above was not possible, use arguments passed via the command call, i.e. `--parallel`, `--countries`, etc.
 
-**Note 2**: Optionally you can use positional argument `get-data` and `process-data` to only execute steps 1 or 2, 
-respectively. E.g. executing `$ cowid-vax process-data` will just run step 2. For more info check 
-`$ cowid-vax --help`.
+For more details check `$ cowid-vax --help`.
 
-**Note 3**: Use option `--parallel` to run the code using parallelisation.
-
-**Note 4**: Use option `-c` or `--countries` to just run a few countries. E.g. `$ cowid-vax get-data norway,italy`. Only
-works for `get-data` step.
-
-### 4. Dataset generation
+### Dataset generation
 Make sure you've succesfully [configured your environment](#0.-dependencies), then run the following script:
 
 ```
@@ -150,7 +170,7 @@ Running this script in an interactive environment (typically RStudio) is recomme
 potential debugging process much easier.
 
 
-### 5. Megafile generation
+### Megafile generation
 
 This will update the complete COVID dataset, which also includes all vaccination metrics:
 
@@ -159,8 +179,6 @@ $ python ../megafile.py
 ```
 
 **Note**: you can use [vax_update.sh.template](vax_update.sh.template) as an example of how to automate data updates and push them to the repo.
-
-</details>
 
 ## Generated files
 Once the automation is successfully executed (see [Update the data](#update-the-data) section), the following files are updated:
@@ -178,15 +196,6 @@ Once the automation is successfully executed (see [Update the data](#update-the-
 _You can find more information about these files [here](../../../public/data/vaccinations/README.md)_.
 
 ## Other functions
-### Check the style
-We use [flake8](https://flake8.pycqa.org/en/latest/) to check the style of our code. The configuration lives in file 
-[tox.ini](tox.ini). To check the style, simply run
-
-```sh
-$ tox
-```
-**Note**: This requires tox to be installed (`$ pip install tox`)
-
 ### Tracking
 It is extremely usefull to get some insights on which data are we tracking (and which are we not). This can be done with
 the tool `cowid-vax-track`. Find below some use cases.

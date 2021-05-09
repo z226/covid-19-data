@@ -151,11 +151,22 @@ By default this will do the following:
 **Notes**:
 - This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
 (e.g. due to changes in the source). Try to keep the scripts up to date.
-- Optionally you can use positional argument `get-data` and `process-data` to only execute steps 1 or 2, 
-respectively. E.g. executing `$ cowid-vax process-data` will just run step 2.
+- Optionally you can use positional argument `get-data` and `process-data` to only execute steps 1 or 2, respectively:
+
+```sh
+$ cowid-vax get-data
+$ cowid-vax process-data
+```
 - To use [config.yaml](config.yaml), run `$ cowid-vax --config config.yaml`. Otherwise, it will:
   - Attempt to load configuration from `~/.config/cowid/config.yaml`.
   - If above was not possible, use arguments passed via the command call, i.e. `--parallel`, `--countries`, etc.
+
+**We recommend running steps separately, with a configuration file:**
+
+```sh
+$ cowid-vax get-data --config config.yaml
+$ cowid-vax process-data --config config.yaml
+```
 
 For more details check `$ cowid-vax --help`.
 

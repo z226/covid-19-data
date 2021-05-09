@@ -26,10 +26,10 @@ def main():
         cfg = config.ProcessDataConfig()
         main_process_data(
             paths,
-            cfg.google_credentials,
-            cfg.google_spreadsheet_vax_id,
-            creds.skip_complete,
-            creds.skip_monotonic_check,
+            creds.google_credentials,
+            creds.google_spreadsheet_vax_id,
+            cfg.skip_complete,
+            cfg.skip_monotonic_check,
         )
     elif config.mode == "all":
         cfg = config.GetDataConfig()

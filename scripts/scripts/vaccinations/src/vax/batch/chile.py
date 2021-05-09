@@ -89,7 +89,7 @@ def main(paths):
     location = "Chile"
 
     condition = (datetime.datetime.now() - pd.to_datetime(data.date.max())).days < 3
-    assert condition, "External repository is not up to date"
+    # assert condition, "Data in external repository has not been updated for some days now"
 
     data.pipe(postprocess_vaccinations).to_csv(
         paths.tmp_vax_loc(location),

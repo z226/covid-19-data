@@ -76,7 +76,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     # date = pattern.sub(lambda m: thai_date_replace[re.escape(m.group(0))], thai_date)
     # date = clean_date(date, "%d %B %Y")
 
-    thai_date_regex = r"\s?ข้อมูล ณ วันที่ (\d{1,2}) (.*) (\d{4}) เวลำ (\d{1,2}.\d{1,2}) น.\s?"
+    thai_date_regex = r"\s?ข้อมูล ณ วันที่ (\d{1,2}) (.*) (\d{4})"
     thai_date = re.search(thai_date_regex, text)
     thai_date_replace = {
         # Months

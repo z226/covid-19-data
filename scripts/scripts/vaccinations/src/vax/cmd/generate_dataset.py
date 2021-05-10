@@ -3,32 +3,48 @@ import itertools
 from datetime import datetime
 from collections import ChainMap
 from math import isnan
+import json
 
 import pandas as pd
 
 
+class Bucket(object):
+    def __init__(self, **kwargs):
+        self._dict = kwargs
+        self.__dict__.update(kwargs)
+
+
 class DatasetGenerator:
 
-    def __init__(self, vaccinations_file, metadata_file, project_dir):
+    def __init__(self, project_dir, vaccinations_file, metadata_file):
         # Inputs
-        self.vaccinations_file = vaccinations_file
-        self.metadata_file = metadata_file
-        self.iso_file = os.path.join(project_dir, "scripts/input/iso/iso3166_1_alpha_3_codes.csv")
-        self.population_file = os.path.join(project_dir, "scripts/input/un/iso3166_1_alpha_3_codes.csv")
-        self.population_sub_file = os.path.join(project_dir, "scripts/input/owid/subnational_population_2020.csv")
-        self.continents_file = os.path.join(project_dir, "scripts/input/owid/continents.csv")
-        self.eu_file = os.path.join(project_dir, "scripts/input/owid/eu_countries.csv")
+        self.inputs = Bucket(
+            project_dir=project_dir,
+            vaccinations=vaccinations_file,
+            metadata=metadata_file,
+            iso=os.path.join(project_dir, "scripts/input/iso/iso3166_1_alpha_3_codes.csv"),
+            population=os.path.join(project_dir, "scripts/input/un/population_2020.csv"),
+            population_sub=os.path.join(project_dir, "scripts/input/owid/subnational_population_2020.csv"),
+            continent_countries=os.path.join(project_dir, "scripts/input/owid/continents.csv"),
+            eu_countries=os.path.join(project_dir, "scripts/input/owid/eu_countries.csv"),
+        )
+        
         # Outputs
-        self.locations_file = os.path.join(project_dir, "public/data/vaccinations/locations.csv")
-        self.automated_file = os.path.abspath(os.path.join(project_dir, "automation_state.csv"))
-        self.vaccinations_file = os.path.abspath(os.path.join(project_dir, "public/data/vaccinations/vaccinations.csv"))
+        self.outputs = Bucket(
+            locations=os.path.join(project_dir, "public/data/vaccinations/locations.csv"),
+            automated=os.path.abspath(os.path.join(project_dir, "automation_state.csv")),
+            vaccinations=os.path.abspath(os.path.join(project_dir, "public/data/vaccinations/vaccinations.csv")),
+            vaccinations_json=os.path.abspath(os.path.join(project_dir, "public/data/vaccinations/vaccinations.json")),
+            grapher=os.path.abspath(os.path.join(project_dir, "scripts/grapher/COVID-19 - Vaccinations.csv")),
+        )
+        
         # Others
         self.aggregates = self.build_aggregates()
 
     def build_aggregates(self):
-        continents = pd.read_csv(self.continents_file, usecols=["Entity", "Unnamed: 3"])
-        eu_countries = pd.read_csv(self.eu_file, usecols=["Country"], squeeze=True).tolist()
-        AGGREGATES = {
+        continent_countries = pd.read_csv(self.inputs.continent_countries, usecols=["Entity", "Unnamed: 3"])
+        eu_countries = pd.read_csv(self.inputs.eu_countries, usecols=["Country"], squeeze=True).tolist()
+        aggregates = {
             "World": {
                 "excluded_locs": ["England", "Northern Ireland", "Scotland", "Wales"], 
                 "included_locs": None
@@ -39,30 +55,34 @@ class DatasetGenerator:
             }
         }
         for continent in ["Asia", "Africa", "Europe", "North America", "Oceania", "South America"]:
-            AGGREGATES[continent] = {
+            aggregates[continent] = {
                 "excluded_locs": None,
-                "included_locs": continents.loc[continents["Unnamed: 3"] == continent, "Entity"].tolist()
+                "included_locs": (
+                    continent_countries.loc[continent_countries["Unnamed: 3"] == continent, "Entity"].tolist()
+                )
             }
-        return AGGREGATES
+        return aggregates
 
     def pipeline_automated(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Generate DataFrame for automated states."""
         return (
             df
             .sort_values(by=["automated", "location"], ascending=[False, True])
             [["location", "automated"]]
+            .reset_index(drop=True)
         )
 
     def pipeline_locations(self, df_vax: pd.DataFrame, df_metadata: pd.DataFrame,
                            df_iso: pd.DataFrame) -> pd.DataFrame:
+        """Generate DataFrame for locations."""
         def _pretty_vaccine(vaccines):
-            return ",".join(sorted(v.strip() for v in vaccines.split(',')))
+            return ", ".join(sorted(v.strip() for v in vaccines.split(',')))
         df_vax = (
             df_vax
             .sort_values(by=["location", "date"])
             .drop_duplicates(subset=["location"], keep="last")
-            .assign(vaccines=df_vax.vaccine.apply(_pretty_vaccine))
             .rename(columns={
-                "date": "last_observation",
+                "date": "last_observation_date",
                 "source_url": "source_website"
             })
         )
@@ -72,9 +92,10 @@ class DatasetGenerator:
 
         return (
             df_vax
+            .assign(vaccines=df_vax.vaccine.apply(_pretty_vaccine)) # Keep only last vaccine set
             .merge(df_metadata, on="location")
             .merge(df_iso, on="location")
-        )[["location", "iso_code", "vaccines", "last_observation", "source_name", "source_website"]]
+        )[["location", "iso_code", "vaccines", "last_observation_date", "source_name", "source_website"]]
 
     def _get_aggregate(self, df, agg_name, included_locs, excluded_locs):
         # Take rows that matter
@@ -117,14 +138,14 @@ class DatasetGenerator:
         aggs = []
         for agg_name, value in self.aggregates.items():
             aggs.append(
-                get_aggregate(
+                self._get_aggregate(
                     df=df,
                     agg_name=agg_name,
                     included_locs=self.aggregates[agg_name]["included_locs"],
                     excluded_locs=self.aggregates[agg_name]["excluded_locs"]
                 )
             )
-        return pd.concat([vax] + aggs, ignore_index=True)
+        return pd.concat([df] + aggs, ignore_index=True)
 
     def pipe_daily(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.sort_values(by=["location", "date"])
@@ -168,14 +189,14 @@ class DatasetGenerator:
     def pipe_smoothed(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.groupby("location").apply(self._add_smoothed).reset_index(drop=True)
 
-    def get_population(self, subnational_pop: pd.DataFrame) -> pd.DataFrame:
+    def get_population(self, df_subnational: pd.DataFrame) -> pd.DataFrame:
         # Build population dataframe
         column_rename = {
             "entity": "location",
             "population": "population"
         }
-        pop = pd.read_csv(self.population_file, usecols=column_rename.keys()).rename(columns=column_rename)
-        pop = pd.concat([pop, self.subnational_pop], ignore_index=True)
+        pop = pd.read_csv(self.inputs.population, usecols=column_rename.keys()).rename(columns=column_rename)
+        pop = pd.concat([pop, df_subnational], ignore_index=True)
         # Group territories
         location_rename = {
             "United States": [
@@ -196,12 +217,12 @@ class DatasetGenerator:
 
     def pipe_capita(self, df: pd.DataFrame) -> pd.DataFrame:
         # Get data
-        subnational_pop = pd.read_csv(self.population_sub_file, usecols=["location", "population"])
-        pop = self.get_population(subnational_pop)
+        df_subnational = pd.read_csv(self.inputs.population_sub, usecols=["location", "population"])
+        pop = self.get_population(df_subnational)
         df = df.merge(pop, on="location")
         # Get covered countries
         locations = df.location.unique()
-        ncountries = subnational_pop.location.tolist() + list(self.aggregates.keys())
+        ncountries = df_subnational.location.tolist() + list(self.aggregates.keys())
         countries_covered = list(filter(lambda x: x not in ncountries, locations))
         # Obtain per-capita metrics
         df = df.assign(
@@ -211,7 +232,7 @@ class DatasetGenerator:
             new_vaccinations_smoothed_per_million=(df.new_vaccinations_smoothed * 1000000 / df.population).round(),
         )
         df.loc[:, "people_fully_vaccinated"] = df.people_fully_vaccinated.replace({0: pd.NA})
-        df.loc[vax.people_fully_vaccinated.isnull(), "people_fully_vaccinated_per_hundred"] = pd.NA
+        df.loc[df.people_fully_vaccinated.isnull(), "people_fully_vaccinated_per_hundred"] = pd.NA
         return df.drop(columns=["population"])
 
     def pipe_vax_checks(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -227,7 +248,7 @@ class DatasetGenerator:
     def pipeline_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            ["date", "location", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+            [["date", "location", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
             .pipe(self.pipe_aggregates)
             .pipe(self.pipe_daily)
             .pipe(self.pipe_smoothed)
@@ -236,22 +257,73 @@ class DatasetGenerator:
             .sort_values(by=["location", "date"])
         )
 
+    def pipe_vaccinations_out(self, df: pd.DataFrame, df_iso: pd.DataFrame) -> pd.DataFrame:
+        df = df.merge(df_iso, on="location")
+        df = df.rename(columns={
+            "new_vaccinations_smoothed": "daily_vaccinations",
+            "new_vaccinations_smoothed_per_million": "daily_vaccinations_per_million",
+            "new_vaccinations": "daily_vaccinations_raw",
+        })
+        return df
+
+    def pipe_grapher_out(self, df: pd.DataFrame):
+        df = df.rename(columns={
+            "date": "Year",
+            "location": "Country",
+        })[[
+            "Country",
+            "Year",
+            "total_vaccinations",
+            "people_vaccinated",
+            "people_fully_vaccinated",
+            "new_vaccinations",
+            "new_vaccinations_smoothed",
+            "total_vaccinations_per_hundred",
+            "people_vaccinated_per_hundred",
+            "people_fully_vaccinated_per_hundred",
+            "new_vaccinations_smoothed_per_million",
+        ]]
+        df.loc[:, "location"] = (df.Year - datetime(2021, 1, 21)).dt.days
+        return df
+
     def run(self):
+        print("load")
         files = []
-        df_metadata = pd.read_csv(self.metadata_file)
-        df_vaccinations = pd.read_csv(self.vaccinations_file, parse_dates=["date"])
-        df_iso = pd.read_csv(self.iso_file)
+        df_metadata = pd.read_csv(self.inputs.metadata)
+        df_vaccinations = pd.read_csv(self.inputs.vaccinations, parse_dates=["date"])
+        df_iso = pd.read_csv(self.inputs.iso)
 
         # Metadata  
-        automated_state = df_metadata.pipe(self.build_automation_df)  # Export to AUTOMATED_STATE_FILE
-        files.append((automated_state.copy(), self.automated_file))
-        metadata = df_vaccinations.pipe(self.build_locations_df, df_metadata, df_iso)  # Export to LOCATIONS_FILE
-        files.append((metadata.copy(), self.metadata_file))
+        print("automated")
+        df_automated = df_metadata.pipe(self.pipeline_automated)  # Export to AUTOMATED_STATE_FILE
+        files.append((df_automated.copy(), self.outputs.automated))
+        print("locations")
+        df_locations = df_vaccinations.pipe(self.pipeline_locations, df_metadata, df_iso)  # Export to LOCATIONS_FILE
+        files.append((df_locations.copy(), self.outputs.locations))
 
         # Vaccinations
-        vax = df_vaccinations.pipe(self.pipeline_vaccinations)
-        files.append((vax.copy(), self.vaccinations_file))
+        print("vax")
+        df_vaccinations_base = df_vaccinations.pipe(self.pipeline_vaccinations)
+        #files.append((vax.copy(), self.outputs.vaccinations))
+        
+        # Generate final files
+        df_vaccinations = df_vaccinations_base.pipe(self.pipe_vaccinations_out, df_iso)
+        files.append((df_vaccinations.copy(), self.outputs.vaccinations))
+        # json_vaccinations = self.jsonify(df_vaccinations)
+        # files.append((json_vaccinations, self.outputs.vaccinations_json))
 
+        df_grapher = df_vaccinations_base.pipe(self.pipe_grapher_out)
+        files.append((df_grapher.copy(), self.outputs.grapher))
+
+        # Export
+        for obj, path in files:
+            if path.endswith(".csv"):
+                obj.to_csv(path, index=False)
+            elif path.endswith(".json"):
+                with open(path, 'w') as f:
+                    json_string = json.dumps(obj, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+                    f.write(obj)
+        return vax, automated_state, metadata
         # generate_vaccinations_file(copy(vax))
         # generate_grapher_file(copy(vax))
         # generate_html(metadata)

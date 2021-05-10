@@ -39,7 +39,10 @@ def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
 def exclude_data_points(df: pd.DataFrame) -> pd.DataFrame:
     # The data contains an error that creates a negative change in the people_vaccinated series
     df = df[df.date.astype(str) != "2021-01-24"]
-    df = df[df.date.astype(str) >= "2021-05-05"]
+
+    # Check that data logic is valid
+    assert all(df.people_fully_vaccinated <= df.people_vaccinated)
+
     return df
 
 

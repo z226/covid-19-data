@@ -68,14 +68,14 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
     # Additional fields
-    num_days_since_first_observation = (
+    observation_window_days = (
         datetime.now() - pd.to_datetime(df.first_observation_date)
     ).dt.days + 1
-    counts_per_days_observation = df.counts / num_days_since_first_observation
+    counts_per_day_observation_window = df.counts / observation_window_days
 
     df = df.assign(
-        num_days_since_first_observation = num_days_since_first_observation,
-        counts_per_days_observation=counts_per_days_obsrvation
+        observation_window_days = num_days_since_first_observation,
+        counts_per_day_observation_window=counts_per_day_observation_window
     )
     # Sort data
     if sortby_counts:
@@ -89,7 +89,8 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         "last_observation_date",
         "first_observation_date",
         "counts",
-        "counts_per_days_obsrvation",
+        "counts_per_day_observation_window",
+        "observation_window_days",
         "automated",
         "source_website"
     ]]

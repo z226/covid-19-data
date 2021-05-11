@@ -74,7 +74,7 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     counts_per_day_observation_window = df.counts / observation_window_days
 
     df = df.assign(
-        observation_window_days = num_days_since_first_observation,
+        observation_window_days = observation_window_days,
         counts_per_day_observation_window=counts_per_day_observation_window
     )
     # Sort data

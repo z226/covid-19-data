@@ -1,4 +1,5 @@
 import re
+import time
 
 from bs4 import BeautifulSoup
 import dateparser
@@ -15,6 +16,7 @@ def read(source: str) -> pd.Series:
 
     with webdriver.Chrome(options=op) as driver:
         driver.get(source)
+        time.sleep(1)
 
         for h5 in driver.find_elements_by_tag_name("h5"):
 

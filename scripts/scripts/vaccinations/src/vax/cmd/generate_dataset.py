@@ -1,13 +1,16 @@
 import os
+import tempfile
 import itertools
 from datetime import datetime
 from collections import ChainMap
 from math import isnan
+import glob
 import json
 
 import pandas as pd
 
 from vax.cmd.utils import get_logger, print_eoe
+from vax.utils.checks import VACCINES_ACCEPTED
 
 
 logger = get_logger()
@@ -273,7 +276,7 @@ class DatasetGenerator:
             .sort_values(by=["location", "date"])
         )
 
-    def pipe_vaccinations_out(self, df: pd.DataFrame, df_iso: pd.DataFrame) -> pd.DataFrame:
+    def pipe_vaccinations_csv(self, df: pd.DataFrame, df_iso: pd.DataFrame) -> pd.DataFrame:
         return (
             df
             .merge(df_iso, on="location")
@@ -298,7 +301,7 @@ class DatasetGenerator:
             ]]
         )
 
-    def pipe_vaccinations_to_json(self, df: pd.DataFrame) -> list:
+    def pipe_vaccinations_json(self, df: pd.DataFrame) -> list:
         location_iso_codes = df[["location", "iso_code"]].drop_duplicates().values.tolist()
         metrics = [column for column in df.columns if column not in {"location", "iso_code"}]
         df = df.assign(date=df.date.apply(lambda x: x.strftime("%Y-%m-%d")))
@@ -316,27 +319,69 @@ class DatasetGenerator:
             for location, iso_code in location_iso_codes
         ]
 
-    def pipe_grapher_out(self, df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_manufacturer_select_cols(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
+            df[[
+                "location",
+                "date",
+                "vaccine",
+                "total_vaccinations",
+            ]]
+            .sort_values(["location", "date", "vaccine"])
+        )
+
+    def pipe_manufacturer_checks(self, df: pd.DataFrame) -> pd.DataFrame:
+        if not df.vaccine.drop_duplicates().isin(VACCINES_ACCEPTED).all():
+            raise ValueError("Non valid vaccines found in manufacturer file! Check vax.utils.checks.VACCINES_ACCEPTED")
+        return df
+
+    def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_manufacturer_select_cols)
+            .pipe(self.pipe_manufacturer_checks)
+            .pipe(self.pipe_to_int)
+        )
+
+    def pipe_grapher(self, df: pd.DataFrame, date_ref: datetime = datetime(2020, 1, 21),
+                     fillna: bool = False) -> pd.DataFrame:
+        df = (
             df
             .rename(columns={
                 "date": "Year",
                 "location": "Country",
             })
-            .assign(Year=(df.date - datetime(2020, 1, 21)).dt.days)
-            [[
-                "Country",
-                "Year",
-                "total_vaccinations",
-                "people_vaccinated",
-                "people_fully_vaccinated",
-                "new_vaccinations",
-                "new_vaccinations_smoothed",
-                "total_vaccinations_per_hundred",
-                "people_vaccinated_per_hundred",
-                "people_fully_vaccinated_per_hundred",
-                "new_vaccinations_smoothed_per_million",
-            ]]
+            .assign(Year=(df.date - date_ref).dt.days)
+        )
+        columns_first = ["Country", "Year"]
+        columns_rest = [col for col in df.columns if col not in columns_first]
+        col_order = columns_first + columns_rest
+        df = (
+            df
+            [col_order]
+            .sort_values(col_order)
+        )
+        if fillna:
+            df[columns_rest] = df.groupby(["Country"])[columns_rest].fillna(method="ffill").fillna(0)
+        return df
+
+    def pipe_manufacturer_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pivot(
+                index=["location", "date"],
+                columns="vaccine",
+                values="total_vaccinations"
+            )
+            .reset_index()
+        )
+
+    def pipeline_manufacturer_grapher(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_manufacturer_pivot)
+            .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True)
+            .pipe(self.pipe_to_int)
         )
 
     def pipe_locations_to_html(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -374,14 +419,17 @@ class DatasetGenerator:
         return html_table
 
     def export(self, df_automated: pd.DataFrame, df_locations: pd.DataFrame, df_vaccinations: pd.DataFrame,
-               json_vaccinations: dict, df_grapher: pd.DataFrame, html_table: str):
+               df_manufacturer: pd.DataFrame, json_vaccinations: dict, df_grapher: pd.DataFrame,
+               df_manufacturer_grapher: pd.DataFrame, html_table: str):
         # Export
         files = [
             (df_automated, self.outputs.automated),
             (df_locations, self.outputs.locations),
             (df_vaccinations, self.outputs.vaccinations),
+            (df_manufacturer, self.outputs.manufacturer),
             (json_vaccinations, self.outputs.vaccinations_json),
             (df_grapher, self.outputs.grapher),
+            (df_manufacturer_grapher, self.outputs.grapher_manufacturer),
             (html_table, self.outputs.html_table),
         ]
         for obj, path in files:
@@ -398,7 +446,7 @@ class DatasetGenerator:
 
     def run(self):
         print("-- Generating dataset... --")
-        logger.info("1/8 Loading input data...")
+        logger.info("1/9 Loading input data...")
         try:
             df_metadata = pd.read_csv(self.inputs.metadata)
             df_vaccinations = pd.read_csv(self.inputs.vaccinations, parse_dates=["date"])
@@ -407,36 +455,48 @@ class DatasetGenerator:
                 "Internal files not found! Make sure to run `proccess-data` step prior to running `generate-dataset`."
             )
         df_iso = pd.read_csv(self.inputs.iso)
-
+        files_manufacturer = glob.glob(self.inputs.manufacturer)
+        df_manufacturer = pd.concat(
+            (pd.read_csv(filepath, parse_dates=["date"]) for filepath in files_manufacturer),
+            ignore_index=True
+        )
+        
         # Metadata  
-        logger.info("2/8 Generating `automated_state` table...")
+        logger.info("2/9 Generating `automated_state` table...")
         df_automated = df_metadata.pipe(self.pipeline_automated)  # Export to AUTOMATED_STATE_FILE
-        logger.info("3/8 Generating `locations` table...")
+        logger.info("3/9 Generating `locations` table...")
         df_locations = df_vaccinations.pipe(self.pipeline_locations, df_metadata, df_iso)  # Export to LOCATIONS_FILE
 
         # Vaccinations
-        logger.info("4/8 Generating `vaccinations` table...")
+        logger.info("4/9 Generating `vaccinations` table...")
         df_vaccinations_base = df_vaccinations.pipe(self.pipeline_vaccinations)
-        df_vaccinations = df_vaccinations_base.pipe(self.pipe_vaccinations_out, df_iso)
-        logger.info("5/8 Generating `vaccinations` json...")
-        json_vaccinations = df_vaccinations.pipe(self.pipe_vaccinations_to_json)
+        df_vaccinations = df_vaccinations_base.pipe(self.pipe_vaccinations_csv, df_iso)
+        logger.info("5/9 Generating `vaccinations` json...")
+        json_vaccinations = df_vaccinations.pipe(self.pipe_vaccinations_json)
+
+        # Manufacturer
+        logger.info("6/9 Generating `manufacturer` table...")
+        df_manufacturer = df_manufacturer.pipe(self.pipeline_manufacturer)
 
         # Grapher
-        logger.info("6/8 Generating `grapher` table...")
-        df_grapher = df_vaccinations_base.pipe(self.pipe_grapher_out)
+        logger.info("7/9 Generating `grapher` table...")
+        df_grapher = df_vaccinations_base.pipe(self.pipe_grapher)
+        df_manufacturer_grapher = df_manufacturer.pipe(self.pipeline_manufacturer_grapher)
 
         # HTML
-        logger.info("7/8 Generating HTML...")
+        logger.info("8/9 Generating HTML...")
         html_table = df_locations.pipe(self.pipe_locations_to_html)
 
         # Export
-        logger.info("8/8 Exporting files...")
+        logger.info("9/9 Exporting files...")
         self.export(
             df_automated,
             df_locations,
             df_vaccinations,
+            df_manufacturer,
             json_vaccinations,
             df_grapher,
+            df_manufacturer_grapher,
             html_table,
         )
 
@@ -452,19 +512,24 @@ def main_generate_dataset(paths):
         population_sub=os.path.join(paths.project_dir, "scripts/input/owid/subnational_population_2020.csv"),
         continent_countries=os.path.join(paths.project_dir, "scripts/input/owid/continents.csv"),
         eu_countries=os.path.join(paths.project_dir, "scripts/input/owid/eu_countries.csv"),
+        manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv")
     )
     outputs = Bucket(
         # locations=os.path.join(paths.project_dir, "public/data/vaccinations/locations.csv"),
         # automated=os.path.abspath(os.path.join(paths.project_dir, "automation_state.csv")),
         # vaccinations=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.csv")),
         # vaccinations_json=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.json")),
+        # manufacturer=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations-by-manufacturer.csv")),
         # grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations.csv")),
+        # grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")),
         # html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
         locations=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/locations.csv"),
         automated=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/automation_state.csv")),
         vaccinations=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations.csv")),
         vaccinations_json=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations.json")),
+        manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations-by-manufacturer.csv")),
         grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/COVID-19 - Vaccinations.csv")),
+        grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/COVID-19 - Vaccinations by manufacturer.csv")),
         html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/source_table.html")),
     )
     generator = DatasetGenerator(inputs, outputs)

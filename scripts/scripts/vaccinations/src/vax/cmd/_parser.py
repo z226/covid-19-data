@@ -59,5 +59,12 @@ def _parse_args():
             "Path to credentials file (JSON). If a config file is being used, the value ther will be prioritized."
         )
     )
+    parser.add_argument(
+        "--checkr", action="store_true",
+        help=(
+                "Compare results from generate-dataset with results obtained with former generate_dataset.R script."
+                "It requires that the R script is previously run (without removing temporary files vax & metadata)!"
+        )
+    )
     args = parser.parse_args()
     return args

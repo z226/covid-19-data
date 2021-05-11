@@ -503,6 +503,7 @@ class DatasetGenerator:
 
 def main_generate_dataset(paths):
     # Select columns
+    # TODO: Paths might better defined in vax.utils.paths.Paths
     inputs = Bucket(
         project_dir=paths.project_dir,
         vaccinations=paths.tmp_vax_all,

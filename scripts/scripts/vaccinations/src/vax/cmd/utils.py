@@ -10,3 +10,7 @@ def get_logger():
     )
     logger = logging.getLogger()
     return logger
+
+
+def print_eoe():
+    print("----------------------------\n----------------------------\n----------------------------\n")

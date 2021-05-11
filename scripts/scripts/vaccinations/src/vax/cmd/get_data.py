@@ -4,7 +4,7 @@ from joblib import Parallel, delayed
 
 from vax.batch import __all__ as batch_countries
 from vax.incremental import __all__ as incremental_countries
-from vax.cmd.utils import get_logger
+from vax.cmd.utils import get_logger, print_eoe
 
 
 SCRAPING_SKIP_COUNTRIES = []
@@ -80,11 +80,11 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
 
     modules_failed = [m["module_name"] for m in modules_execution_results if m["success"] is False]
     # Retry failed modules
-    print(f"\n---\n\nRETRIALS ({len(modules_failed)})")
+    logger.info(f"\n---\n\nRETRIALS ({len(modules_failed)})")
     modules_failed_retrial = []
     for module_name in modules_failed:
         _get_data_country(module_name, paths, greece_api_token)
     if len(modules_failed_retrial) > 0:
-        print(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):")
-        print("\n".join([f"* {m}" for m in modules_failed_retrial]))
-    print("----------------------------\n----------------------------\n----------------------------\n")
+        failed_str = "\n".join([f"* {m}" for m in modules_failed_retrial])
+        logger.warn(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):{failed_str}")
+    print_eoe()

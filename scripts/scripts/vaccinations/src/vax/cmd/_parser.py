@@ -10,10 +10,11 @@ def _parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "mode", choices=["get-data", "process-data", "all"], default="all",
+        "mode", choices=["get-data", "process-data", "generate-dataset", "all"], default="all",
         help=(
-            "Choose a step: i) get-data will run automated scripts, 2) process-data will get csvs generated in 1 and"
-            "collect all data from spreadsheet, 3) will run both sequentially."
+            "Choose a step: i) `get-data` will run automated scripts, 2) `process-data` will get csvs generated in 1"
+            " and collect all data from spreadsheet, 3) `generate-dataset` generate the output files, 4) `all` will"
+            " run all steps sequentially."
         )
     )
     parser.add_argument(
@@ -41,9 +42,15 @@ def _parse_args():
         help="Display configuration parameters at the beginning of the execution."
     )
     parser.add_argument(
-        "--config", default=os.path.join(os.path.expanduser("~"), ".config", "cowid", "config.yaml"),
+        "--config", default=(
+            os.environ.get(
+                "OWID_COVID_VAX_CONFIG_FILE",
+                os.path.join(os.path.expanduser("~"), ".config", "cowid", "config.yaml")
+            )
+        ),
         help=(
-            "Path to config file (YAML)."
+            "Path to config file (YAML). Will look for file in path given by environment variable "
+            "`$OWID_COVID_VAX_CONFIG_FILE`. If not set, will default to ~/.config/cowid/config.yaml"
         )
     )
     parser.add_argument(

@@ -43,16 +43,12 @@ and an RStudio interactive session for R.
 <details closed>
 <summary>Show steps ...</summary>
 
-Make sure you have a working environment with R and python 3 installed. We recommend R >= 4.0.2 and Python >= 3.7.
+Make sure you have a working environment with R and python 3 installed. We use Python >= 3.7.
 
 You can check:
 
 ```
 $ python --version
-```
-and
-```
-$ R --version
 ```
 
 ### Install python requirements
@@ -62,12 +58,7 @@ In your environment (shell), run:
 $ pip install -e .
 ```
 
-### Install R requirements
-In your R console, run:
-
-```r
-install.packages(c("data.table", "imputeTS", "lubridate", "readr", "retry", "rjson", "stringr", "tidyr", "jsonlite", "bit64"))
-```
+This will install our development library `owid-covid19-vaccination-dev`.
 
 ### Configuration file
 
@@ -93,21 +84,16 @@ pipeline:
   generate-dataset:
 ```
 
-### Check the style
-We use [flake8](https://flake8.pycqa.org/en/latest/) to check the style of our code. The configuration lives in file 
-[tox.ini](tox.ini). To check the style, simply run
+Our config.yaml configuration requires to previously set environment variables `OWID_COVID_PROJECT_DIR` and
+`OWID_COVID_VAX_CREDENTIALS_FILE`. We recommend defining them in `~/.bashrc` or `/.bash_profile`. For instance:
 
 ```sh
-$ tox
+export OWID_COVID_PROJECT_DIR=/Users/username/projects/covid-19-data
+export OWID_COVID_VAX_CREDENTIALS_FILE=${OWID_COVID_PROJECT_DIR}/scripts/scripts/vaccinations/vax_dataset_config.json
 ```
-**Note**: This requires tox to be installed (`$ pip install tox`)
 
-**Notes**
-- Requires to previously set environment variables `project_dir` and `credentials`. We recommend defining them in
-  `~/.bashrc` or `/.bash_profile`.
-  - `OWID_COVID_PROJECT_DIR`: Path to the repository project. E.g., `/Users/Alice/Git/covid-19-data`.
-  - `OWID_COVID_VAX_CREDENTIALS_FILE`: Path to the credentials JSON file (internal).
-- The credentials file is internal. `Google`-related fields require a valid OAuth JSON credentials file (see [gsheets
+### Credentials file
+The environment variable `OWID_COVID_VAX_CREDENTIALS_FILE` corresponds to the path to the credentials file. This is internal. `Google`-related fields require a valid OAuth JSON credentials file (see [gsheets
   documentation](https://gsheets.readthedocs.io/en/stable/#quickstart)). The file should have the following structure:
 ```json
 {
@@ -118,10 +104,14 @@ $ tox
 }
 ```
 
-**Note 1**: We recommend placing it under `~/.config/cowid/config.yaml`. Otherwise, you may specify an alternative 
-directory with option `--config` later.
+### Check the style
+We use [flake8](https://flake8.pycqa.org/en/latest/) to check the style of our code. The configuration lives in file 
+[tox.ini](tox.ini). To check the style, simply run
 
-**Note 2**: 
+```sh
+$ tox
+```
+**Note**: This requires tox to be installed (`$ pip install tox`)
 </details>
 
 ## Update the data
@@ -140,33 +130,42 @@ Run the following script:
 $ cowid-vax
 ```
 
+Runing it like this, without specifying argument `--config` will try to load it from virtual environment variable
+`OWID_COVID_VAX_CONFIG_FILE`. See `cowid-vax --help` for more details.
+
+
 By default this will do the following:
 1. Run the scrips for [batch](src/vax/batch) and [incremental](src/vax/incremental) updates. It will then generate
   individual country files and save them in [`output`](output).
 2. Collect manually updated data from the spreadsheet and data generated in (1). Process this data, and generate public country data in
   [`country_data`](../../../public/data/vaccinations/country_data/), as well as temporary files 
-  `vaccinations.preliminary.csv` and `metadata.preliminary.csv` which are later
-  required by `generate_dataset.R`.
+  `vaccinations.preliminary.csv` and `metadata.preliminary.csv`.
+3. Generate pipeline output files: 
+    - [`public/data/vaccinations/locations.csv`](../../../public/data/vaccinations/locations.csv)
+    - [`scripts/scripts/vaccinations/automation_state.csv`](automation_state.csv)
+    - [`public/data/vaccinations/vaccinations.csv`](../../../public/data/vaccinations/vaccinations.csv)
+    - [`public/data/vaccinations/vaccinations.json`](../../../public/data/vaccinations/vaccinations.json)
+    - [`scripts/scripts/vaccinations/source_table.html`](source_table.html)
+    - Manufacturer
 
 **Notes**:
 - This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
 (e.g. due to changes in the source). Try to keep the scripts up to date.
-- Optionally you can use positional argument `get-data` and `process-data` to only execute steps 1 or 2, respectively:
+- Optionally you can use positional argument `get-data`, `process-data` and `generate-dataset` to only execute a
+  particular step.
 
 ```sh
 $ cowid-vax get-data
 $ cowid-vax process-data
+$ cowid-vax generate-dataset
 ```
-- To use [config.yaml](config.yaml), run `$ cowid-vax --config config.yaml`. Otherwise, it will:
-  - Attempt to load configuration from `~/.config/cowid/config.yaml`.
-  - If above was not possible, use arguments passed via the command call, i.e. `--parallel`, `--countries`, etc.
 
-**We recommend running steps separately, with a configuration file:**
+To use [config.yaml](config.yaml), you can:
+  - Set environment variable `OWID_COVID_VAX_CONFIG_FILE` to file's path.
+  - Save config under `~/.config/cowid/config.yaml` and run.
+  - Run `$ cowid-vax --config config.yaml`, explicitly specifying the path to the config file.
+If above was not possible, use arguments passed via the command call, i.e. `--parallel`, `--countries`, etc.
 
-```sh
-$ cowid-vax get-data --config config.yaml
-$ cowid-vax process-data --config config.yaml
-```
 
 For more details check `$ cowid-vax --help`.
 

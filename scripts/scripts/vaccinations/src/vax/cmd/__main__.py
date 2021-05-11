@@ -1,7 +1,7 @@
 import argparse
 
 from vax.cmd._config import get_config
-from vax.cmd import main_get_data, main_process_data
+from vax.cmd import main_get_data, main_process_data, main_generate_dataset
 from vax.utils.paths import Paths
 
 
@@ -31,6 +31,10 @@ def main():
             cfg.skip_complete,
             cfg.skip_monotonic_check,
         )
+    elif config.mode == "generate-dataset":
+        main_generate_dataset(
+            paths,
+        )
     elif config.mode == "all":
         cfg = config.GetDataConfig()
         main_get_data(
@@ -48,7 +52,9 @@ def main():
             cfg.skip_complete,
             cfg.skip_monotonic_check,
         )
-
+        main_generate_dataset(
+            paths,
+        )
 
 if __name__ == "__main__":
     main()

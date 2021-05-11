@@ -84,7 +84,7 @@ pipeline:
   generate-dataset:
 ```
 
-Our `config.yaml` configuration requires to previously set environment variables `${OWID_COVID_PROJECT_DIR}` and
+Our config.yaml configuration requires to previously set environment variables `${OWID_COVID_PROJECT_DIR}` and
 `${OWID_COVID_VAX_CREDENTIALS_FILE}`. We recommend defining them in `~/.bashrc` or `/.bash_profile`. For instance:
 
 ```sh
@@ -163,7 +163,7 @@ $ cowid-vax generate-dataset
 ```
 
 To use [config.yaml](config.yaml), you can:
-  - Set environment variable `OWID_COVID_VAX_CONFIG_FILE` to file's path.
+  - Set environment variable `${OWID_COVID_VAX_CONFIG_FILE}` to file's path.
   - Save config under `~/.config/cowid/config.yaml` and run.
   - Run `$ cowid-vax --config config.yaml`, explicitly specifying the path to the config file.
 If above was not possible, use arguments passed via the command call, i.e. `--parallel`, `--countries`, etc.

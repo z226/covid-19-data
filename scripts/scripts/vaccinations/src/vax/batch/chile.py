@@ -30,6 +30,7 @@ def rename_vaccines(df: pd.DataFrame) -> pd.DataFrame:
     vaccine_mapping = {
         "Pfizer": "Pfizer/BioNTech",
         "Sinovac": "Sinovac",
+        "Astra-Zeneca": "Oxford/AstraZeneca"
     }
     assert set(df["Type"].unique()) == set(vaccine_mapping.keys())
     return df.replace(vaccine_mapping)
@@ -87,7 +88,7 @@ def main():
     data = read(source).pipe(preprocess)
 
     condition = (datetime.datetime.now() - pd.to_datetime(data.date.max())).days < 3
-    assert condition, "External repository is not up to date"
+    # assert condition, "Data in external repository has not been updated for some days now"
 
     data.pipe(postprocess_vaccinations).to_csv(destination, index=False)
     data.pipe(postprocess_manufacturer).to_csv(destination.replace("output", "output/by_manufacturer"), index=False)

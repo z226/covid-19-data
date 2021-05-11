@@ -1,33 +1,44 @@
 import re
+import time
 
 from bs4 import BeautifulSoup
 import dateparser
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.utils import get_soup
 
 
 def read(source: str) -> pd.Series:
-    soup = get_soup(source)
-    return parse_data(soup)
+    op = Options()
+    op.add_argument("--headless")
 
+    with webdriver.Chrome(options=op) as driver:
+        driver.get(source)
+        time.sleep(1)
 
-def parse_data(soup: BeautifulSoup) -> pd.Series:
+        for h5 in driver.find_elements_by_tag_name("h5"):
 
-    for p in soup.find_all("p"):
+            if "Primera dosis" in h5.text:
+                people_vaccinated = clean_count(
+                    h5.find_element_by_xpath("./preceding-sibling::div").text
+                )
 
-        if "Primera dosis" in p.text:
-            people_vaccinated = clean_count(re.search(r"[\d,]{6,}", p.text).group(0))
+            elif "Total dosis aplicadas" in h5.text:
+                total_vaccinations = clean_count(
+                    h5.find_element_by_xpath("./preceding-sibling::div").text
+                )
 
-        elif "Total dosis aplicadas" in p.text:
-            total_vaccinations = clean_count(re.search(r"[\d,]{6,}", p.text).group(0))
+            elif "Población completamente vacunada" in h5.text:
+                people_fully_vaccinated = clean_count(
+                    h5.find_element_by_xpath("./preceding-sibling::div").text
+                )
 
-        elif "Población completamente vacunada" in p.text:
-            people_fully_vaccinated = clean_count(re.search(r"[\d,]{6,}", p.text).group(0))
+            elif "Acumulados al" in h5.text:
+                date = h5.text.replace("Acumulados al ", "")
+                date = str(dateparser.parse(date, languages=["es"]).date())
 
-    date = soup.find("h6").text.replace("Acumulados al ", "")
-    date = str(dateparser.parse(date, languages=["es"]).date())
 
     data = {
         "date": date,

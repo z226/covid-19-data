@@ -89,25 +89,4 @@ for (c in countries) {
 
 }
 
-if (nrow(attempts) > 0) {
-    html_add("<h3>Other countries</h3>")
-
-    html_add('<p>Below is the list of countries for which we have attempted to collect data but could not find official sources.</p>')
-
-    html_add('<ul>')
-    for (i in seq_len(nrow(attempts))) {
-        row <- attempts[i]
-
-        html_add('<li>')
-        html_add(sprintf(
-            '<strong>%s</strong> (last checked on %s): %s',
-            row$Entity,
-            format.Date(row$`Date last tried to add`, "%d %B %Y"),
-            activate_links(row$`Notes for OWID website`)
-        ))
-        html_add('</li>')
-    }
-    html_add('</ul>')
-}
-
 writeLines(HTML_CODE, "source_table.html")

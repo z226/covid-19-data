@@ -84,8 +84,8 @@ pipeline:
   generate-dataset:
 ```
 
-Our config.yaml configuration requires to previously set environment variables `OWID_COVID_PROJECT_DIR` and
-`OWID_COVID_VAX_CREDENTIALS_FILE`. We recommend defining them in `~/.bashrc` or `/.bash_profile`. For instance:
+Our `config.yaml` configuration requires to previously set environment variables `${OWID_COVID_PROJECT_DIR}` and
+`${OWID_COVID_VAX_CREDENTIALS_FILE}`. We recommend defining them in `~/.bashrc` or `/.bash_profile`. For instance:
 
 ```sh
 export OWID_COVID_PROJECT_DIR=/Users/username/projects/covid-19-data
@@ -130,8 +130,8 @@ Run the following script:
 $ cowid-vax
 ```
 
-Runing it like this, without specifying argument `--config` will try to load it from virtual environment variable
-`OWID_COVID_VAX_CONFIG_FILE`. See `cowid-vax --help` for more details.
+Runing it like this, without specifying argument `--config`, will try to load the configuration using environment variable
+`${OWID_COVID_VAX_CONFIG_FILE}`. See `cowid-vax --help` for more details.
 
 
 By default this will do the following:
@@ -145,8 +145,10 @@ By default this will do the following:
     - [`scripts/scripts/vaccinations/automation_state.csv`](automation_state.csv)
     - [`public/data/vaccinations/vaccinations.csv`](../../../public/data/vaccinations/vaccinations.csv)
     - [`public/data/vaccinations/vaccinations.json`](../../../public/data/vaccinations/vaccinations.json)
+    - [`public/data/vaccinations/vaccinations-by-manufacturer.html`](../../../public/data/vaccinations/vaccinations-by-manufacturer.csv)
+    - [`scripts/grapher/COVID-19 - Vaccinations.csv`](../../../scripts/grapher/COVID-19%20-%20Vaccinations.csv)
+    - [`scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv`](../../../scripts/grapher/COVID-19%20-%20Vaccinations%20by%20manufacturer.csv)
     - [`scripts/scripts/vaccinations/source_table.html`](source_table.html)
-    - Manufacturer
 
 **Notes**:
 - This step might crash for some countries, as the automation scripts might no longer (or temporarily) work

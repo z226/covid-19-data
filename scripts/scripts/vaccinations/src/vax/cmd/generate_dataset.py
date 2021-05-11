@@ -515,22 +515,19 @@ def main_generate_dataset(paths):
         manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv")
     )
     outputs = Bucket(
-        # locations=os.path.join(paths.project_dir, "public/data/vaccinations/locations.csv"),
-        # automated=os.path.abspath(os.path.join(paths.project_dir, "automation_state.csv")),
-        # vaccinations=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.csv")),
-        # vaccinations_json=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.json")),
-        # manufacturer=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations-by-manufacturer.csv")),
-        # grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations.csv")),
-        # grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")),
-        # html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
-        locations=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/locations.csv"),
-        automated=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/automation_state.csv")),
-        vaccinations=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations.csv")),
-        vaccinations_json=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations.json")),
-        manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/vaccinations-by-manufacturer.csv")),
-        grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/COVID-19 - Vaccinations.csv")),
-        grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/COVID-19 - Vaccinations by manufacturer.csv")),
-        html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/notebooks/output-test/source_table.html")),
+        locations=os.path.join(paths.project_dir, "public/data/vaccinations/locations.csv"),
+        automated=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/automation_state.csv")),
+        vaccinations=os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.csv")),
+        vaccinations_json=(
+            os.path.abspath(os.path.join(paths.project_dir, "public/data/vaccinations/vaccinations.json"))
+        ),
+        manufacturer=(
+            os.path.abspath(os.path.join(paths.project_dir,
+            "public/data/vaccinations/vaccinations-by-manufacturer.csv"))
+        ),
+        grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations.csv")),
+        grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")),
+        html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
     )
     generator = DatasetGenerator(inputs, outputs)
     generator.run()

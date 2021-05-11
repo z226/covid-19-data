@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import pandas as pd
 
@@ -58,10 +59,24 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df_loc = pd.read_csv(path_locations)
     df_state = pd.read_csv(path_automation_state)
     # Get counts
-    df_vax = pd.DataFrame({"counts": df_vax.groupby("location").date.count().sort_values()})
+    df_vax = df_vax.dropna(subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"], how="all")
+    df_vax = pd.DataFrame({
+        "counts": df_vax.groupby("location").date.count().sort_values(),
+        "first_observation_date": df_vax.groupby("location").date.min()
+    })
     # Merge data
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
+    # Additional fields
+    num_days_since_first_observation = (
+        datetime.now() - pd.to_datetime(df.first_observation_date)
+    ).dt.days + 1
+    counts_per_days_observation = df.counts / num_days_since_first_observation
+
+    df = df.assign(
+        num_days_since_first_observation = num_days_since_first_observation,
+        counts_per_days_observation=counts_per_days_obsrvation
+    )
     # Sort data
     if sortby_counts:
         sort_column = "counts"
@@ -69,7 +84,15 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         sort_column = "last_observation_date"
     df = df.sort_values(
         by=sort_column
-    )[["location", "last_observation_date", "counts", "automated", "source_website"]]
+    )[[
+        "location",
+        "last_observation_date",
+        "first_observation_date",
+        "counts",
+        "counts_per_days_obsrvation",
+        "automated",
+        "source_website"
+    ]]
 
     def _web_type(x):
         if ("facebook" in x.lower()) or ("twitter" in x.lower()):

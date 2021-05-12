@@ -8,7 +8,9 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
-                            path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False):
+                            path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
+                            sortby_updatefreq: bool = False,
+                            ):
     """Check last updated countries.
 
     It loads the content from locations.csv, vaccinations.csv and automation_state.csv to present results on the update
@@ -68,17 +70,19 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
     # Additional fields
-    observation_window_days = (
+    num_observation_days = (
         datetime.now() - pd.to_datetime(df.first_observation_date)
     ).dt.days + 1
-    counts_per_day_observation_window = df.counts / observation_window_days
+    num_updates_per_observation_day = df.counts / num_observation_days
 
     df = df.assign(
-        observation_window_days = observation_window_days,
-        counts_per_day_observation_window=counts_per_day_observation_window
+        num_observation_days = num_observation_days,
+        update_frequency=num_updates_per_observation_day
     )
     # Sort data
-    if sortby_counts:
+    if sortby_updatefreq:
+        sort_column = "update_frequency"
+    elif sortby_counts:
         sort_column = "counts"
     else:
         sort_column = "last_observation_date"
@@ -89,8 +93,8 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         "last_observation_date",
         "first_observation_date",
         "counts",
-        "counts_per_day_observation_window",
-        "observation_window_days",
+        "update_frequency",
+        "num_observation_days",
         "automated",
         "source_website"
     ]]

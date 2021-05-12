@@ -118,7 +118,7 @@ def merge_legacy(df: pd.DataFrame, country: str) -> pd.DataFrame:
     return pd.concat([df, df_legacy]).sort_values("date")
 
 
-def main():
+def main(paths):
     url_country = "+".join(country_mapping.keys())
     url = (
         f"https://stats-nsi-stable.pacificdata.org/rest/data/SPC,DF_COVID_VACCINATION,1.0/D.{url_country}.?"
@@ -126,7 +126,7 @@ def main():
     )
     data = read(url)
     for c, df in data.items():
-        df.to_csv(f"output/{c}.csv", index=False)
+        df.to_csv(paths.tmp_vax_out(c), index=False)
 
 
 if __name__ == "__main__":

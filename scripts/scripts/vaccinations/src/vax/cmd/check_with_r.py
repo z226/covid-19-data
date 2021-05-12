@@ -18,6 +18,7 @@ def test_check_with_r(paths):
         population_sub=os.path.join(paths.project_dir, "scripts/input/owid/subnational_population_2020.csv"),
         continent_countries=os.path.join(paths.project_dir, "scripts/input/owid/continents.csv"),
         eu_countries=os.path.join(paths.project_dir, "scripts/input/owid/eu_countries.csv"),
+        income_groups=os.path.join(paths.project_dir, "scripts/input/wb/income_groups.csv"),
         manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv")
     )
     with tempfile.TemporaryDirectory() as tmp:

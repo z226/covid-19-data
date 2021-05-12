@@ -5,7 +5,7 @@ from vax.utils.checks import VACCINES_ONE_DOSE
 
 # Dict mapping WHO country names -> OWID country names
 COUNTRIES = {
-    "Afghanistan": "Afghanistan",
+    "Egypt": "Egypt",
 }
 
 # Dict mapping WHO vaccine names -> OWID vaccine names
@@ -17,6 +17,7 @@ VACCINES = {
     "Pfizer BioNTech - Comirnaty": "Pfizer/BioNTech",
     "Moderna - mRNA-1273": "Moderna",
     "SII - Covishield": "Oxford/AstraZeneca",
+    "AstraZeneca - AZD1222": "Oxford/AstraZeneca",
     "Bharat - Covaxin": "Covaxin",
     "SRCVB - EpiVacCorona": "EpiVacCorona",
     "Janssen - Ad26.COV 2.5": "Johnson&Johnson",

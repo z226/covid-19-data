@@ -8,25 +8,6 @@ import pandas as pd
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.files import load_query
 
-firstDose_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22firstDose%22%2C%22outStatisticFieldName%22%3A%22firstDose_max%22%"
-    "2C%22statisticType%22%3A%22max%22%7D%5D"
-)
-secondDose_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22secondDose%22%2C%22outStatisticFieldName%22%3A%22secondDose_max"
-    "%22%2C%22statisticType%22%3A%22max%22%7D%5D"
-)
-date_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22relDate%22%2C%22outStatisticFieldName%22%3A%22relDate_max%22%2C"
-    "%22statisticType%22%3A%22max%22%7D%5D"
-)
-
 
 class Ireland:
 

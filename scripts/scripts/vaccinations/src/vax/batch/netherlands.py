@@ -37,6 +37,7 @@ def main():
 	df = df.assign(
 		location="Netherlands",
 		source_url="https://www.ecdc.europa.eu/en/publications-data/data-covid-19-vaccination-eu-eea",
+		vaccine="Johnson&Johnson, Moderna, Pfizer/BioNTech, Oxford/AstraZeneca",
 	)
 	df.to_csv("output/Netherlands.csv", index=False)
 

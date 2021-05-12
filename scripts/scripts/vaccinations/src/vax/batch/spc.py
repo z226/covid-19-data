@@ -97,7 +97,10 @@ def _build_df(dix, country):
         .sort_values(by="date")
         .assign(
             location=country,
-            source_url="https://www.spc.int/updates/blog/did-you-know/2021/04/stat-of-the-week-covid-19-vaccination-in-the-pacific-island",
+            source_url=(
+                "https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df"
+                "[vs]=1.0"
+            ),
             vaccine="Oxford/AstraZeneca"
         )
     )
@@ -105,8 +108,10 @@ def _build_df(dix, country):
     if country in ["Fiji", "Nauru"]:
         df = merge_legacy(df, country)
     # Drop duplicates
-    msk = df.people_vaccinated == df.total_vaccinations
-    df.loc[msk, "people_fully_vaccinated"] = 0
+    # msk = df.people_vaccinated == df.total_vaccinations
+    # df.loc[msk, "people_fully_vaccinated"] = 0
+    msk = df.people_fully_vaccinated == 0
+    df.loc[msk, "people_fully_vaccinated"] = pd.NA
     df = df.drop_duplicates(subset=['people_vaccinated', 'people_fully_vaccinated', 'total_vaccinations'])
     return df
 

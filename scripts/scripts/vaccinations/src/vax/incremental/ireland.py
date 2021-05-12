@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 
@@ -6,25 +7,6 @@ import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.files import load_query
-
-firstDose_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22firstDose%22%2C%22outStatisticFieldName%22%3A%22firstDose_max%22%"
-    "2C%22statisticType%22%3A%22max%22%7D%5D"
-)
-secondDose_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22secondDose%22%2C%22outStatisticFieldName%22%3A%22secondDose_max"
-    "%22%2C%22statisticType%22%3A%22max%22%7D%5D"
-)
-date_source = (
-    "https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_Vaccine_Administration_Hosted_View/"
-    "FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&"
-    "outStatistics=%5B%7B%22onStatisticField%22%3A%22relDate%22%2C%22outStatisticFieldName%22%3A%22relDate_max%22%2C"
-    "%22statisticType%22%3A%22max%22%7D%5D"
-)
 
 
 class Ireland:
@@ -42,10 +24,6 @@ class Ireland:
             "Covid19_Vaccine_Administration_VaccineTypeHostedView_V2/"
             "FeatureServer/0/query"
         )
-
-    @property
-    def output_file(self):
-        return f"./output/{self.location}.csv"
 
     def read(self) -> pd.Series:
         ds = pd.Series({
@@ -140,10 +118,11 @@ class Ireland:
             .pipe(self.pipe_source)
         )
 
-    def to_csv(self, output_file: str = None):
+    def to_csv(self, paths):
         """Generalized."""
         data = self.read().pipe(self.pipeline)
         increment(
+            paths=paths,
             location=data['location'],
             total_vaccinations=data['total_vaccinations'],
             people_vaccinated=data['people_vaccinated'],
@@ -154,11 +133,11 @@ class Ireland:
         )
 
 
-def main():
+def main(paths):
     Ireland(
         source_url="https://covid19ireland-geohive.hub.arcgis.com/",
         location="Ireland"
-    ).to_csv() 
+    ).to_csv(paths) 
 
 
 if __name__ == "__main__":

@@ -14,8 +14,8 @@ with open(os.path.join(this_directory, "requirements.txt")) as f:
 
 
 setup(
-    name="owid-covid19-vaccination-utils",
-    version="0.0.0",
+    name="owid-covid19-vaccination-dev",
+    version="1.0.0",
     description="Update tools for OWID vaccination dataset.",
     #long_description=long_description,
     long_description_content_type="text/markdown",
@@ -47,7 +47,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "cowid-vax=vax.__main__:main" ,
+            "cowid-vax=vax.cmd.__main__:main" ,
             "cowid-vax-track=vax.tracking.__main__:main" 
         ]
     }

@@ -1,3 +1,4 @@
+import os
 import tempfile
 import re
 from datetime import datetime
@@ -13,6 +14,7 @@ from vax.utils.incremental import clean_count, enrich_data, increment
 
 def read(source: str):
     url_pdf = parse_pdf_link(source)
+    print(url_pdf)
     pdf_text = get_text_from_pdf(url_pdf)
     return pd.Series({
         "people_vaccinated": parse_people_vaccinated(pdf_text),
@@ -99,10 +101,11 @@ def pipeline(ds: pd.Series) -> pd.Series:
     )
 
 
-def main():
+def main(paths):
     source = "https://covid19.mohp.gov.np/"
     data = read(source).pipe(pipeline)
     increment(
+        paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],

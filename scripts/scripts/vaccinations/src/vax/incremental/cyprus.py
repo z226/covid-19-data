@@ -49,10 +49,11 @@ def pipeline(ds: pd.Series) -> pd.Series:
     )
 
 
-def main():
+def main(paths):
     source = "https://www.moh.gov.cy/moh/moh.nsf/All/0EFA027144C9E54AC22586BE0032B2F5"
     data = read(source).pipe(pipeline)
     increment(
+        paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],

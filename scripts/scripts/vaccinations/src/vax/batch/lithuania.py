@@ -1,9 +1,11 @@
+import os
 import json
+
 import requests
 import pandas as pd
 
 
-def main():
+def main(paths):
 
     DATA_URL = (
         "https://services3.arcgis.com/MF53hRPmwfLccHCj/arcgis/rest/services/"
@@ -52,7 +54,7 @@ def main():
         .rename(columns={"vaccine_name": "vaccine", "vaccinated_cum": "total_vaccinations"})
     )
     vax["location"] = "Lithuania"
-    vax.to_csv("output/by_manufacturer/Lithuania.csv", index=False)
+    vax.to_csv(paths.tmp_vax_out_man("Lithuania"), index=False)
 
     # Unpivot
     df = (
@@ -90,7 +92,7 @@ def main():
         "https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/"
     )
 
-    df.to_csv("output/Lithuania.csv", index=False)
+    df.to_csv(paths.tmp_vax_out("Lithuania"), index=False)
 
 
 if __name__ == "__main__":

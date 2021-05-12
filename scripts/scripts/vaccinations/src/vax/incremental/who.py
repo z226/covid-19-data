@@ -6,6 +6,7 @@ from vax.utils.checks import VACCINES_ONE_DOSE
 # Dict mapping WHO country names -> OWID country names
 COUNTRIES = {
     "Egypt": "Egypt",
+    "Iran (Islamic Republic of)": "Iran",
 }
 
 # Dict mapping WHO vaccine names -> OWID vaccine names
@@ -41,8 +42,8 @@ def source_checks(df: pd.DataFrame) -> pd.DataFrame:
 def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
     """Get rows from selected countries."""
     df = df[df.DATA_SOURCE == "REPORTING"].copy()
-    df = df[df.COUNTRY.isin(COUNTRIES.values())]
     df["COUNTRY"] = df.COUNTRY.replace(COUNTRIES)
+    df = df[df.COUNTRY.isin(COUNTRIES.values())]
     return df
 
 

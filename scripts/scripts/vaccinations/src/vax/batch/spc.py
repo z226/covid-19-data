@@ -19,9 +19,9 @@ country_mapping = {
     "WS": "Samoa",
     "NR": "Nauru",
     "FJ": "Fiji",
-    #"PF": "French Polynesia",
-    #"WF": "Wallis and Futuna",
-    #"NC": "New Caledonia",
+    "PF": "French Polynesia",
+    "WF": "Wallis and Futuna",
+    "NC": "New Caledonia",
 }
 
 def read(url):

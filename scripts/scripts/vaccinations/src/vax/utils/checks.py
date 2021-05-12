@@ -7,6 +7,10 @@ VACCINES_ACCEPTED = [
     "Sinopharm/Wuhan", "Johnson&Johnson", "Sinovac", "Covaxin", "EpiVacCorona", "CanSino"
 ]
 
+VACCINES_ONE_DOSE = [
+    "Johnson&Johnson",
+    "CanSino",
+]
 
 def country_df_sanity_checks(
         df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check: bool = True) -> pd.DataFrame:

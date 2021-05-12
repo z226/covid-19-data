@@ -105,8 +105,8 @@ def _build_df(dix, country):
     if country in ["Fiji", "Nauru"]:
         df = merge_legacy(df, country)
     # Drop duplicates
-    msk = df.people_vaccinated == df.total_vaccinations
-    df.loc[msk, "people_fully_vaccinated"] = 0
+    msk = df.people_vaccinated == 0
+    df.loc[msk, "people_fully_vaccinated"] = pd.NA
     df = df.drop_duplicates(subset=['people_vaccinated', 'people_fully_vaccinated', 'total_vaccinations'])
     return df
 

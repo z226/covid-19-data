@@ -91,11 +91,11 @@ def main(paths):
     data = read_vaccination_datasets(source)
 
     data.pipe(pipeline, country_code="CH").to_csv(
-        paths.tmp_vax_loc("Switzerland"),
+        paths.tmp_vax_out("Switzerland"),
         index=False
     )
     data.pipe(pipeline, country_code="FL").to_csv(
-        paths.tmp_vax_loc("Liechtenstein"),
+        paths.tmp_vax_out("Liechtenstein"),
         index=False
     )
 

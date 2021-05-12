@@ -83,7 +83,7 @@ def main(paths):
 
     assert len(df) > 10
 
-    df.to_csv(paths.tmp_vax_loc("Norway"), index=False)
+    df.to_csv(paths.tmp_vax_out("Norway"), index=False)
 
     os.remove("./antall-personer-vaksiner.csv")
 

@@ -25,31 +25,31 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
 def enrich_date(ds: pd.Series) -> pd.Series:
     date = str(datetime.datetime.now(pytz.timezone("Europe/Sofia")).date() - datetime.timedelta(days=1))
-    return enrich_data(ds, 'date', date)
+    return enrich_data(ds, "date", date)
 
 
 def translate_index(ds: pd.Series) -> pd.Series:
     return ds.rename({
-        'Общо ваксинирани лицас втора доза': 'people_fully_vaccinated',
-        'Общо поставени дози': 'total_vaccinations',
+        "Общ брой лица със завършен ваксинационен цикъл": "people_fully_vaccinated",
+        "Общо поставени дози": "total_vaccinations",
     })
 
 
 def add_totals(ds: pd.Series) -> pd.Series:
-    people_vaccinated = int(ds['total_vaccinations']) - int(ds['people_fully_vaccinated'])
-    return enrich_data(ds, 'people_vaccinated', people_vaccinated)
+    people_vaccinated = int(ds["total_vaccinations"]) - int(ds["people_fully_vaccinated"])
+    return enrich_data(ds, "people_vaccinated", people_vaccinated)
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, 'location', "Bulgaria")
+    return enrich_data(ds, "location", "Bulgaria")
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Moderna, Pfizer/BioNTech")
+    return enrich_data(ds, "vaccine", "Johnson&Johnson, Oxford/AstraZeneca, Moderna, Pfizer/BioNTech")
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, 'source_url', "https://coronavirus.bg/bg/statistika")
+    return enrich_data(ds, "source_url", "https://coronavirus.bg/bg/statistika")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
@@ -67,7 +67,6 @@ def pipeline(ds: pd.Series) -> pd.Series:
 def main(paths):
     source = "https://coronavirus.bg/bg/statistika"
     data = read(source).pipe(pipeline)
-
     increment(
         paths=paths,
         location=data['location'],

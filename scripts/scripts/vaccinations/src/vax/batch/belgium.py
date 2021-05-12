@@ -80,7 +80,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
 
 def main(paths):
     source = "https://epistat.sciensano.be/Data/COVID19BE_VACC.csv"
-    destination = paths.tmp_vax_loc("Belgium")
+    destination = paths.tmp_vax_out("Belgium")
 
     read(source).pipe(pipeline).to_csv(destination, index=False)
 

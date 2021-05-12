@@ -24,7 +24,7 @@ def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id:
     # Get automated-country data
     logger.info("Getting data from output...")
     automated = gsheet.automated_countries
-    filepaths_auto = [paths.tmp_vax_loc(country) for country in automated]
+    filepaths_auto = [paths.tmp_vax_out(country) for country in automated]
     df_auto_list = [pd.read_csv(filepath) for filepath in filepaths_auto]
 
     # Concatenate

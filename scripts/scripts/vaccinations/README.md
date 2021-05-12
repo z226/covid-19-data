@@ -225,6 +225,19 @@ $ cowid-vax-track countries-missing
 Countries are given from most to least populated.
 </details>
 
+#### Which countries have been updated unfrequently?
+<details closed>
+<summary>Show</summary>
+Get the list of countries sorted by least frequently updated. The update frequency is defined by the ratio between the 
+number of days with an update and the number of days of observation (i.e. days since first update).
+
+```
+$ cowid-vax-track countries-least-updatedfreq
+```
+
+Countries are given from least to most frequently updated.
+</details>
+
 #### Which countries haven't been updated for some time?
 <details closed>
 <summary>Show</summary>
@@ -237,10 +250,10 @@ $ cowid-vax-track countries-last-updated
 Countries are given from least to most recently updated.
 </details>
 
-#### Which countries are missing?
+#### Which countries have been updated few times?
 <details closed>
 <summary>Show</summary>
-Get the list of countries least updated:
+Get the list of countries least updated (in absolute counts):
 
 ```
 $ cowid-vax-track countries-least-updated

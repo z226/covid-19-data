@@ -12,14 +12,17 @@ def _parse_args():
             "countries-missing",
             "countries-last-updated",
             "countries-least-updated",
+            "countries-least-updatedfreq",
             "vaccines-missing",
         ],
         default="countries-last-updated",
         help=(
-            "Choose a step: i) countries-missing will get table with countries not included in dataset, 2)"
-            "countries-last-updated will get table with countries last updated, 3) countries-least-updated will"
-            "get table with countries least updated, 4) vaccines-missing will get table with missing vaccines."
-            "Unapproved (but tracked) and Untracked (but approved)."
+            "Choose a step: i) countries-missing will get table with countries not included in dataset, 2) "
+            "countries-last-updated will get table with countries last updated, 3) countries-least-updated will "
+            "get table with countries least updated, 4) countries-least-updatedfreq will g et table with countries "
+            "least frequently updated (ratio of number of updates and time since first observation), "
+            "5) vaccines-missing will get table with missing vaccines.Unapproved (but tracked) and Untracked (but "
+            "approved)."
         )
     )
     parser.add_argument(
@@ -59,6 +62,13 @@ def main():
         print("----------------------------\n----------------------------\n----------------------------\n")
         if args.to_csv:
             export_to_csv(df, filename="countries-least-updated.tmp.csv")
+    if args.mode == "countries-least-updatedfreq":
+        print("-- Least frequently-updated countries... --")
+        df = country_updates_summary(sortby_updatefreq=True)
+        print(df)
+        print("----------------------------\n----------------------------\n----------------------------\n")
+        if args.to_csv:
+            export_to_csv(df, filename="countries-least-updatedfreq.tmp.csv")
     if args.mode == "vaccines-missing":
         print("-- Missing vaccines... --")
         df = vaccines_missing(verbose=True)

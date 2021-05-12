@@ -54,7 +54,7 @@ def main(paths):
         .rename(columns={"vaccine_name": "vaccine", "vaccinated_cum": "total_vaccinations"})
     )
     vax["location"] = "Lithuania"
-    vax.to_csv(paths.tmp_vax_loc_man("Lithuania"), index=False)
+    vax.to_csv(paths.tmp_vax_out_man("Lithuania"), index=False)
 
     # Unpivot
     df = (
@@ -92,7 +92,7 @@ def main(paths):
         "https://experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca/page/page_3/"
     )
 
-    df.to_csv(paths.tmp_vax_loc("Lithuania"), index=False)
+    df.to_csv(paths.tmp_vax_out("Lithuania"), index=False)
 
 
 if __name__ == "__main__":

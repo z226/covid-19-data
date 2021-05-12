@@ -27,7 +27,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
 
 def main(paths):
     source = "https://api.covid19tracker.ca/reports"
-    destination = paths.tmp_vax_loc("Canada")
+    destination = paths.tmp_vax_out("Canada")
 
     read(source).pipe(pipeline).to_csv(destination, index=False)
 

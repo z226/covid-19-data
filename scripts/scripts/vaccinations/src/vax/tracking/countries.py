@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import pandas as pd
 
@@ -7,7 +8,9 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
-                            path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False):
+                            path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
+                            sortby_updatefreq: bool = False,
+                            ):
     """Check last updated countries.
 
     It loads the content from locations.csv, vaccinations.csv and automation_state.csv to present results on the update
@@ -58,18 +61,43 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df_loc = pd.read_csv(path_locations)
     df_state = pd.read_csv(path_automation_state)
     # Get counts
-    df_vax = pd.DataFrame({"counts": df_vax.groupby("location").date.count().sort_values()})
+    df_vax = df_vax.dropna(subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"], how="all")
+    df_vax = pd.DataFrame({
+        "counts": df_vax.groupby("location").date.count().sort_values(),
+        "first_observation_date": df_vax.groupby("location").date.min()
+    })
     # Merge data
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
+    # Additional fields
+    num_observation_days = (
+        datetime.now() - pd.to_datetime(df.first_observation_date)
+    ).dt.days + 1
+    num_updates_per_observation_day = df.counts / num_observation_days
+
+    df = df.assign(
+        num_observation_days = num_observation_days,
+        update_frequency=num_updates_per_observation_day
+    )
     # Sort data
-    if sortby_counts:
+    if sortby_updatefreq:
+        sort_column = "update_frequency"
+    elif sortby_counts:
         sort_column = "counts"
     else:
         sort_column = "last_observation_date"
     df = df.sort_values(
         by=sort_column
-    )[["location", "last_observation_date", "counts", "automated", "source_website"]]
+    )[[
+        "location",
+        "last_observation_date",
+        "first_observation_date",
+        "counts",
+        "update_frequency",
+        "num_observation_days",
+        "automated",
+        "source_website"
+    ]]
 
     def _web_type(x):
         if ("facebook" in x.lower()) or ("twitter" in x.lower()):

@@ -121,13 +121,13 @@ class Germany:
         # Export data
         df = df_base.pipe(self.pipeline)
         df.to_csv(
-            paths.tmp_vax_loc(self.location),
+            paths.tmp_vax_out(self.location),
             index=False
         )
         # Export manufacturer data
         df = df_base.pipe(self.pipeline_manufacturer)
         df.to_csv(
-            paths.tmp_vax_loc_man(self.location),
+            paths.tmp_vax_out_man(self.location),
             index=False
         )
 

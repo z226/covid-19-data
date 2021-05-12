@@ -68,7 +68,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
 
 def main(paths):
     source = "https://opendata.digilugu.ee/opendata_covid19_vaccination_total.json"
-    destination = paths.tmp_vax_loc("Estonia")
+    destination = paths.tmp_vax_out("Estonia")
     read(source).pipe(pipeline).to_csv(destination, index=False)
 
 

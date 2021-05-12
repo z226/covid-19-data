@@ -49,6 +49,8 @@ class GSheet:
             "1d_approved",
             "1d_used",
             "1d_codeready",
+            "WHO_from",
+            "WHO_to",
         ]
         cols = cols_stable + cols_extra
         cols_missing = [col for col in cols if col not in df.columns]

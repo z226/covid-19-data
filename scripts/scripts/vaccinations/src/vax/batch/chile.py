@@ -92,11 +92,11 @@ def main(paths):
     # assert condition, "Data in external repository has not been updated for some days now"
 
     data.pipe(postprocess_vaccinations).to_csv(
-        paths.tmp_vax_loc(location),
+        paths.tmp_vax_out(location),
         index=False
     )
     data.pipe(postprocess_manufacturer).to_csv(
-        paths.tmp_vax_loc_man(location),
+        paths.tmp_vax_out_man(location),
         index=False
     )
 

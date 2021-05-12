@@ -1,7 +1,7 @@
 import pandas as pd
 
 from vax.utils.incremental import increment
-
+from vax.utils.checks import VACCINES_ONE_DOSE
 
 # Dict mapping WHO country names -> OWID country names
 COUNTRIES = {
@@ -11,12 +11,17 @@ COUNTRIES = {
 # Dict mapping WHO vaccine names -> OWID vaccine names
 VACCINES = {
     "Beijing CNBG - Inactivated": "Sinopharm/Beijing",
+    "Wuhan CNBG - Inactivated": "Sinopharm/Wuhan",
+    "Sinovac - CoronaVac": "Sinovac",
+    "Gamaleya - Sputnik V": "Sputnik V",
     "Pfizer BioNTech - Comirnaty": "Pfizer/BioNTech",
+    "Moderna - mRNA-1273": "Moderna",
     "SII - Covishield": "Oxford/AstraZeneca",
+    "Bharat - Covaxin": "Covaxin",
+    "SRCVB - EpiVacCorona": "EpiVacCorona",
+    "Janssen - Ad26.COV 2.5": "Johnson&Johnson",
+    "CanSino - Ad5-nCOV": "CanSino",
 }
-
-# List of OWID vaccine names
-ONE_DOSE_VACCINES = ["Johnson&Johnson"]
 
 
 def read(source: str) -> pd.DataFrame:
@@ -41,7 +46,12 @@ def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def vaccine_checks(df: pd.DataFrame) -> pd.DataFrame:
-    vaccines_used = set(df.VACCINES_USED.str.split(",").sum(axis=0))
+    vaccines_used = set(
+        df.VACCINES_USED
+        .dropna()
+        .apply(lambda x: [xx.strip() for xx in x.split(",")])
+        .sum()
+    )
     vaccines_unknown = vaccines_used.difference(VACCINES)
     if vaccines_unknown:
         raise ValueError(f"Unknown vaccines {vaccines_unknown}. Update vax.incremental.who.VACCINES accordingly.")
@@ -49,9 +59,11 @@ def vaccine_checks(df: pd.DataFrame) -> pd.DataFrame:
 
 def map_vaccines_func(row) -> tuple:
     """Replace vaccine names and create column `only_2_doses`."""
+    if pd.isna(row.VACCINES_USED):
+        raise ValueError("Vaccine field is NaN")
     vaccines = pd.Series(row.VACCINES_USED.split(","))
     vaccines = vaccines.replace(VACCINES)
-    only_2doses = all(-vaccines.isin(pd.Series(ONE_DOSE_VACCINES)))
+    only_2doses = all(-vaccines.isin(pd.Series(VACCINES_ONE_DOSE)))
 
     return pd.Series([", ".join(sorted(vaccines.unique())), only_2doses])
 

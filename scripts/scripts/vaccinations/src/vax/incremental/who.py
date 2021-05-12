@@ -95,6 +95,7 @@ def increment_countries(df: pd.DataFrame):
     for row in df.iterrows():
         row = row[1]
         increment(
+            paths=paths,
             location=row["COUNTRY"],
             total_vaccinations=row["TOTAL_VACCINATIONS"],
             people_vaccinated=row["PERSONS_VACCINATED_1PLUS_DOSE"],
@@ -105,7 +106,7 @@ def increment_countries(df: pd.DataFrame):
         )
 
 
-def main():
+def main(paths):
     source_url = "https://covid19.who.int/who-data/vaccination-data.csv"
     df = (
         read(source_url)
@@ -115,7 +116,7 @@ def main():
         .pipe(map_vaccines)
         .pipe(calculate_metrics)
     )
-    increment_countries(df)
+    increment_countries(df, paths)
 
 
 if __name__ == "__main__":

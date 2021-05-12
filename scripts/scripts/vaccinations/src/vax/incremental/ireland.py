@@ -130,7 +130,7 @@ class Ireland:
             .pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_people_fully_vaccinated)
             .pipe(self.pipe_total_vaccinations)
-            # .pipe(self.pipe_corrections_1_dose)
+            .pipe(self.pipe_corrections_1_dose)
             .pipe(self.pipe_date)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)

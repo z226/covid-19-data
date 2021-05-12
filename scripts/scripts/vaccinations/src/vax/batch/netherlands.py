@@ -7,7 +7,7 @@ URL = "https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv"
 VACCINES_ONE_DOSE = ["JANSS"]
 
 
-def main():
+def main(paths):
 
 	df = pd.read_csv(URL, usecols=["YearWeekISO", "FirstDose", "SecondDose", "Region", "Vaccine"])
 
@@ -39,7 +39,7 @@ def main():
 		source_url="https://www.ecdc.europa.eu/en/publications-data/data-covid-19-vaccination-eu-eea",
 		vaccine="Johnson&Johnson, Moderna, Pfizer/BioNTech, Oxford/AstraZeneca",
 	)
-	df.to_csv("output/Netherlands.csv", index=False)
+	df.to_csv(paths.tmp_vax_out("Netherlands"), index=False)
 
 
 if __name__ == "__main__":

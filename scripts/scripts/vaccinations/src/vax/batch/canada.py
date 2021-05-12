@@ -1,3 +1,4 @@
+import os
 import requests
 
 import pandas as pd
@@ -24,9 +25,9 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def main():
+def main(paths):
     source = "https://api.covid19tracker.ca/reports"
-    destination = "output/Canada.csv"
+    destination = paths.tmp_vax_out("Canada")
 
     read(source).pipe(pipeline).to_csv(destination, index=False)
 

@@ -4,7 +4,7 @@ import tempfile
 import pandas as pd
 
 
-def main():
+def main(paths):
 
     source_url = "https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true"
 
@@ -35,7 +35,7 @@ def main():
 
     df = df.sort_values("date")
 
-    df.to_csv("output/Jersey.csv", index=False)
+    df.to_csv(paths.tmp_vax_out("Jersey"), index=False)
 
 
 if __name__ == "__main__":

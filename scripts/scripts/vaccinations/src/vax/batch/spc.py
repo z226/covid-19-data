@@ -97,7 +97,10 @@ def _build_df(dix, country):
         .sort_values(by="date")
         .assign(
             location=country,
-            source_url="https://www.spc.int/updates/blog/did-you-know/2021/04/stat-of-the-week-covid-19-vaccination-in-the-pacific-island",
+            source_url=(
+                "https://stats.pacificdata.org/vis?tm=covid&pg=0&df[ds]=SPC2&df[id]=DF_COVID_VACCINATION&df[ag]=SPC&df"
+                "[vs]=1.0"
+            ),
             vaccine="Oxford/AstraZeneca"
         )
     )
@@ -118,7 +121,7 @@ def merge_legacy(df: pd.DataFrame, country: str) -> pd.DataFrame:
     return pd.concat([df, df_legacy]).sort_values("date")
 
 
-def main():
+def main(paths):
     url_country = "+".join(country_mapping.keys())
     url = (
         f"https://stats-nsi-stable.pacificdata.org/rest/data/SPC,DF_COVID_VACCINATION,1.0/D.{url_country}.?"
@@ -126,7 +129,7 @@ def main():
     )
     data = read(url)
     for c, df in data.items():
-        df.to_csv(f"output/{c}.csv", index=False)
+        df.to_csv(paths.tmp_vax_out(c), index=False)
 
 
 if __name__ == "__main__":

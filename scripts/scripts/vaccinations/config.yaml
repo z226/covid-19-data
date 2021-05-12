@@ -1,0 +1,16 @@
+global:
+  project_dir: !ENV ${OWID_COVID_PROJECT_DIR}
+  credentials: !ENV ${OWID_COVID_VAX_CREDENTIALS_FILE}
+pipeline:
+  get-data:
+    parallel: True
+    countries:
+    njobs: -2
+  process-data:
+    skip_complete:
+    skip_monotonic_check:
+        - Northern Ireland
+        - Malta
+        - Romania
+        - Sweden
+  generate-dataset:

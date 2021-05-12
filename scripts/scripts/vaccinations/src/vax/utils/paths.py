@@ -26,7 +26,7 @@ class Paths:
         return os.path.join(self.project_dir, "scripts", "scripts", "vaccinations")
 
     @property
-    def tmp_vax_out(self):
+    def tmp_vax_out_dir(self):
         return os.path.join(self.tmp_vax, "output")
 
     @property
@@ -38,7 +38,7 @@ class Paths:
         return os.path.join(self.tmp_vax, "metadata.preliminary.csv")
 
     def tmp_vax_out(self, location):
-        return os.path.join(self.tmp_vax_out, f"{location}.csv")
+        return os.path.join(self.tmp_vax_out_dir, f"{location}.csv")
 
     def tmp_vax_out_man(self, location):
-        return os.path.join(self.tmp_vax_out, "by_manufacturer", f"{location}.csv")
+        return os.path.join(self.tmp_vax_out_dir, "by_manufacturer", f"{location}.csv")

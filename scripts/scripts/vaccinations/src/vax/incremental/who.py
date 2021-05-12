@@ -91,7 +91,7 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def increment_countries(df: pd.DataFrame):
+def increment_countries(df: pd.DataFrame, paths):
     for row in df.iterrows():
         row = row[1]
         increment(

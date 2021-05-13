@@ -4,7 +4,7 @@ import pandas as pd
 
 VACCINES_ACCEPTED = [
     "Pfizer/BioNTech", "Moderna", "Oxford/AstraZeneca", "Sputnik V", "Sinopharm/Beijing",
-    "Sinopharm/Wuhan", "Johnson&Johnson", "Sinovac", "Covaxin", "EpiVacCorona", "CanSino"
+    "Sinopharm/Wuhan", "Johnson&Johnson", "Sinovac", "Covaxin", "EpiVacCorona", "CanSino", "Abdala",
 ]
 
 VACCINES_ONE_DOSE = [

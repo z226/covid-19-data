@@ -82,8 +82,17 @@ def import_wb_income_groups(output: str, url: str = None):
         "West Bank and Gaza": "Palestine",
         "Yemen, Rep.": "Yemen",
     }
+    replace_income_groups = {
+        "High income": "High-income countries",
+        "Upper middle income": "Upper-middle-income countries",
+        "Lower middle income": "Lower-middle-income countries",
+        "Low income": "Low-income countries",
+    }
     df_wb.loc[df_wb.Country=="Kosovo", "Code"] = "OWID_KOS"  # Legacy
-    df_wb = df_wb.assign(Country=df_wb.Country.replace(replace_countries))
+    df_wb = df_wb.assign(
+        Country=df_wb.Country.replace(replace_countries)
+    )
+    df_wb["Income group"] = df_wb["Income group"].replace(replace_income_groups)
     df_wb.to_csv(os.path.join(output, "wb", "income_groups.csv"), index=False)  # Folder 'wb' assumed to exist!
 
     # Additional

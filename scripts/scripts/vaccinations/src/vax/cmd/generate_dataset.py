@@ -49,6 +49,14 @@ class DatasetGenerator:
     def build_aggregates(self):
         continent_countries = pd.read_csv(self.inputs.continent_countries, usecols=["Entity", "Unnamed: 3"])
         eu_countries = pd.read_csv(self.inputs.eu_countries, usecols=["Country"], squeeze=True).tolist()
+        income_groups = pd.concat(
+            [
+                pd.read_csv(self.inputs.income_groups, usecols=["Country", "Income group"]),
+                pd.read_csv(self.inputs.income_groups_compl, usecols=["Country", "Income group"]),
+            ],
+            ignore_index=True
+        )
+
         aggregates = {
             "World": {
                 "excluded_locs": ["England", "Northern Ireland", "Scotland", "Wales"], 
@@ -64,6 +72,13 @@ class DatasetGenerator:
                 "excluded_locs": None,
                 "included_locs": (
                     continent_countries.loc[continent_countries["Unnamed: 3"] == continent, "Entity"].tolist()
+                )
+            }
+        for group in income_groups["Income group"].unique():
+            aggregates[group] = {
+                "excluded_locs": None,
+                "included_locs": (
+                    income_groups.loc[income_groups["Income group"] == group, "Country"].tolist()
                 )
             }
         return aggregates
@@ -140,7 +155,7 @@ class DatasetGenerator:
         return agg
 
     def pipe_aggregates(self, df: pd.DataFrame) -> pd.DataFrame:
-        logger.info("Building aggregate regions")
+        logger.info(f"Building aggregate regions {list(self.aggregates.keys())}")
         aggs = []
         for agg_name, value in self.aggregates.items():
             aggs.append(
@@ -514,6 +529,7 @@ def main_generate_dataset(paths):
         continent_countries=os.path.join(paths.project_dir, "scripts/input/owid/continents.csv"),
         eu_countries=os.path.join(paths.project_dir, "scripts/input/owid/eu_countries.csv"),
         income_groups=os.path.join(paths.project_dir, "scripts/input/wb/income_groups.csv"),
+        income_groups_compl=os.path.join(paths.project_dir, "scripts/input/owid/income_groups_complement.csv"),
         manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv")
     )
     outputs = Bucket(

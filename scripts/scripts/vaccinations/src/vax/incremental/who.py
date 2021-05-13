@@ -5,8 +5,14 @@ from vax.utils.checks import VACCINES_ONE_DOSE
 
 # Dict mapping WHO country names -> OWID country names
 COUNTRIES = {
+    "Afghanistan": "Afghanistan",
+    "Angola": "Angola",
+    "Cabo Verde": "Cape Verde",
     "Egypt": "Egypt",
     "Iran (Islamic Republic of)": "Iran",
+    "Libya": "Libya",
+    "Niger": "Niger",
+    "Timor-Leste": "Timor",
 }
 
 # Dict mapping WHO vaccine names -> OWID vaccine names
@@ -94,6 +100,7 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def increment_countries(df: pd.DataFrame, paths):
     for row in df.iterrows():
         row = row[1]
+        print(row["COUNTRY"])
         increment(
             paths=paths,
             location=row["COUNTRY"],

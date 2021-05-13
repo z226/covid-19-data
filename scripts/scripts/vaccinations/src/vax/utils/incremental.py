@@ -38,8 +38,8 @@ def increment(
         people_fully_vaccinated=None):
     assert type(location) == str
     assert isinstance(total_vaccinations, (int, float))
-    assert type(people_vaccinated) == int or people_vaccinated is None
-    assert type(people_fully_vaccinated) == int or people_fully_vaccinated is None
+    assert type(people_vaccinated) == int or pd.isnull(people_vaccinated)
+    assert type(people_fully_vaccinated) == int or pd.isnull(people_fully_vaccinated)
     assert type(date) == str
     assert re.match(r"\d{4}-\d{2}-\d{2}", date)
     assert date <= str(datetime.date.today() + datetime.timedelta(days=1))

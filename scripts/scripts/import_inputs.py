@@ -89,10 +89,10 @@ def import_wb_income_groups(output: str, url: str = None):
     # Additional
     df_extra = pd.DataFrame(
         [
-            ["England","OWID_ENG",2020,"High income"],
-            ["Scotland","OWID_SCT",2020,"High income"],
-            ["Wales","OWID_WLS",2020,"High income"],
-            ["Northern Ireland","OWID_NIR",2020,"High income"],
+            # ["England","OWID_ENG",2020,"High income"],
+            # ["Scotland","OWID_SCT",2020,"High income"],
+            # ["Wales","OWID_WLS",2020,"High income"],
+            # ["Northern Ireland","OWID_NIR",2020,"High income"],
             ["Falkland Islands","FLK",2020,"High income"],
             ["Guernsey","GGY",2020,"High income"],
             ["Jersey","JEY",2020,"High income"],

@@ -82,8 +82,29 @@ def import_wb_income_groups(output: str, url: str = None):
         "West Bank and Gaza": "Palestine",
         "Yemen, Rep.": "Yemen",
     }
+    df_wb.loc[df_wb.Country=="Kosovo", "Code"] = "OWID_KOS"  # Legacy
     df_wb = df_wb.assign(Country=df_wb.Country.replace(replace_countries))
     df_wb.to_csv(os.path.join(output, "wb", "income_groups.csv"), index=False)  # Folder 'wb' assumed to exist!
+
+    # Additional
+    df_extra = pd.DataFrame(
+        [
+            ["England","OWID_ENG",2020,"High income"],
+            ["Scotland","OWID_SCT",2020,"High income"],
+            ["Wales","OWID_WLS",2020,"High income"],
+            ["Northern Ireland","OWID_NIR",2020,"High income"],
+            ["Falkland Islands","FLK",2020,"High income"],
+            ["Guernsey","GGY",2020,"High income"],
+            ["Jersey","JEY",2020,"High income"],
+            ["Saint Helena","SHN",2020,"High income"],
+            ["Montserrat","MSR",2020,"High income"],
+            ["Northern Cyprus","OWID_CYN",2020,"High income"],
+            ["Wallis and Futuna","WLF",2020,"High income"],
+            ["Anguilla","AIA",2020,"High income"],
+        ],
+        columns=["Country", "Code", "Year", "Income group"]
+    )
+    df_extra.to_csv(os.path.join(output, "owid", "income_groups_complement.csv"), index=False)
 
 
 def main():

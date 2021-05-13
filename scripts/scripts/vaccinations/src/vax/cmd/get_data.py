@@ -28,7 +28,7 @@ modules_name = modules_name_batch + modules_name_incremental
 def _get_data_country(module_name: str, paths: str, greece_api_token: str):
     country = module_name.split(".")[-1]
     if country.lower() in SCRAPING_SKIP_COUNTRIES:
-        logger.info(f"{module_name} skipped!")
+        logger.info(f"{module_name}: skipped ⚠️!")
         return {
             "module_name": module_name,
             "success": None,
@@ -43,10 +43,10 @@ def _get_data_country(module_name: str, paths: str, greece_api_token: str):
             module.main(paths)
     except Exception as err:
         success = False
-        logger.error(f"{module_name}: {err}", exc_info=True)
+        logger.error(f"{module_name}: ❌ {err}", exc_info=True)
     else:
         success = True
-        logger.info(f"{module_name}: SUCCESS")
+        logger.info(f"{module_name}: SUCCESS ✅")
     return {
         "module_name": module_name,
         "success": success,

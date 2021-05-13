@@ -34,11 +34,11 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
         page = reader.getPage(0)
         text = page.extractText().replace("\n", "")
     
-    covishield_data = re.search(r"Covishield Vaccine (\d+) (\d+)", text)
+    covishield_data = re.search(r"Covishield Vaccine +(\d+) (\d+)", text)
     covishield_dose1 = clean_count(covishield_data.group(1))
     covishield_dose2 = clean_count(covishield_data.group(2))
-    
-    sinopharm_data = re.search(r"Sinopharm Vaccine \(Chinese Nationals\) (\d+) (\d+)", text)
+
+    sinopharm_data = re.search(r"Sinopharm Vaccine +(\d+) (\d+)", text)
     sinopharm_dose1 = clean_count(sinopharm_data.group(1))
     sinopharm_dose2 = clean_count(sinopharm_data.group(2))
 

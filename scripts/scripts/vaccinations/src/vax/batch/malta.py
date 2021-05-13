@@ -22,8 +22,9 @@ def rename_columns(df: pd.DataFrame, columns: dict) -> pd.DataFrame:
     return df.rename(columns=columns)
 
 
-def add_metrics(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(people_vaccinated=df.total_vaccinations - df.people_fully_vaccinated)
+def correct_data(df: pd.DataFrame) -> pd.DataFrame:
+    df.loc[df.people_fully_vaccinated == 0, "people_vaccinated"] = df.total_vaccinations
+    return df
 
 
 def format_date(df: pd.DataFrame) -> pd.DataFrame:
@@ -50,13 +51,14 @@ def exclude_data_points(df: pd.DataFrame) -> pd.DataFrame:
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pipe(check_columns, expected=3)
+        df.pipe(check_columns, expected=4)
         .pipe(rename_columns, columns={
             "Date": "date",
             "Total Vaccination Doses": "total_vaccinations",
             " Second Dose Taken": "people_fully_vaccinated",
+            "Received one dose": "people_vaccinated",
         })
-        .pipe(add_metrics)
+        .pipe(correct_data)
         .pipe(format_date)
         .pipe(enrich_columns)
         .pipe(exclude_data_points)

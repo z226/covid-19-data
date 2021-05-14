@@ -20,7 +20,7 @@ COUNTRIES = {
     "Liberia": "Liberia",
     "Tajikistan": "Tajikistan",
     "Madagascar": "Madagascar",
-    "Central African Republic": "Liberia",
+    "Central African Republic": "Central African Republic",
     "Sint Maarten": "Sint Maarten (Dutch part)",
     "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
     "Turkmenistan": "Turkmenistan",

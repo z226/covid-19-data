@@ -25,7 +25,6 @@ COUNTRIES = {
     "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
     "Turkmenistan": "Turkmenistan",
     "Benin": "Benin",
-    "Algeria": "Algeria",
     "Lesotho": "Lesotho",
     "Congo": "Congo",
     "Djibouti": "Djibouti",
@@ -70,6 +69,10 @@ def source_checks(df: pd.DataFrame) -> pd.DataFrame:
 def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
     """Get rows from selected countries."""
     df = df[df.DATA_SOURCE == "REPORTING"].copy()
+    df = df[
+        (df.TOTAL_VACCINATIONS >= df.PERSONS_VACCINATED_1PLUS_DOSE) |
+        (df.PERSONS_VACCINATED_1PLUS_DOSE.isnull())
+    ]
     df["COUNTRY"] = df.COUNTRY.replace(COUNTRIES)
     df = df[df.COUNTRY.isin(COUNTRIES.values())]
     return df

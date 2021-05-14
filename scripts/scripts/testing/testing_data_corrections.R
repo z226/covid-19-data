@@ -1,6 +1,10 @@
-# January 2021: very large changes in cumulative tests in Austria, leading to unrealistic PRs
-collated[Country == "Austria" & Date >= "2021-01-01", `Short-term positive rate` := NA]
-collated[Country == "Austria" & Date >= "2021-01-01", `Short-term tests per case` := NA]
+# Austria: The definition of the tests in this dataset was changed on 13 January 2021 to include
+# both antigen and PCR tests. Because historical testing data was added on that date, the timeline
+# cannot be used for continuous calculations. Like most Austrian media outlets and scientific
+# institutions, we have therefore changed our test positive rate calculations to only include data
+# from February 2021 onwards.
+collated[Country == "Austria" & Date < "2021-02-01", `Short-term positive rate` := NA]
+collated[Country == "Austria" & Date < "2021-02-01", `Short-term tests per case` := NA]
 
 # Ecuador: the PR should start from Sept 2020, because the case data prior to that
 # included cases confirmed without PCR tests (while our data only includes PCR tests)

@@ -86,5 +86,5 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
         _get_data_country(module_name, paths, greece_api_token)
     if len(modules_failed_retrial) > 0:
         failed_str = "\n".join([f"* {m}" for m in modules_failed_retrial])
-        logger.warn(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):{failed_str}")
+        print(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):{failed_str}")
     print_eoe()

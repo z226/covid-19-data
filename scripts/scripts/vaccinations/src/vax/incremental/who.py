@@ -35,6 +35,7 @@ VACCINES = {
 def read(source: str) -> pd.DataFrame:
     return pd.read_csv(source)
 
+
 def source_checks(df: pd.DataFrame) -> pd.DataFrame:
     if len(df) > 300:
         raise ValueError(f"Check source, it may contain updates from several dates! Shape found was {df.shape}")
@@ -44,6 +45,7 @@ def source_checks(df: pd.DataFrame) -> pd.DataFrame:
     else:
         raise ValueError("Countries have more than one date update!")
     return df
+
 
 def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
     """Get rows from selected countries."""
@@ -64,6 +66,7 @@ def vaccine_checks(df: pd.DataFrame) -> pd.DataFrame:
     if vaccines_unknown:
         raise ValueError(f"Unknown vaccines {vaccines_unknown}. Update vax.incremental.who.VACCINES accordingly.")
     return df
+
 
 def map_vaccines_func(row) -> tuple:
     """Replace vaccine names and create column `only_2_doses`."""

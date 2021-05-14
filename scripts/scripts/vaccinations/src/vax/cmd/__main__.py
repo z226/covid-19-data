@@ -22,6 +22,7 @@ def main():
             cfg.njobs,
             cfg.countries,
             creds.greece_api_token,
+            cfg.skip_countries,
         )
     elif config.mode == "process-data":
         cfg = config.ProcessDataConfig()

@@ -8,39 +8,34 @@ table](automation_state.csv).
 automated scripts.
 
 ### Content
-- [Directory content](#directory-content)
-- [Development environment](#development-environment)
-- [Update the data](#update-the-data)
-- [Generated files](#generated-files)
-- [Other functions](#other-functions)
-- [Contribute](#contribute)
-- [FAQs](#FAQs)
+1. [Directory content](#1-directory-content)
+2. [Development environment](#2-development-environment)
+3. [The data pipeline](#3-the-data-pipeline)
+4. [Generated files](#4-generated-files)
+5. [Other functions](#5-other-functions)
+6. [Contribute](#6-contribute)
+7. [FAQs](#7-FAQs)
 
-## Directory content
+## 1. Directory content
 This directory contains the following files:
 
 
 | File name      | Description |
 | ----------- | ----------- |
-| [`automations`](automations)      | Deprecated folder. Left for backward compatibility reasons.       |
-| [`output`](output)      | Temporary automated imports are placed here.       |
-| [`src/vax`](src/vax)      | Scripts to automate country data imports.       |
-| [`us_states/input`](us_states/input)      | Data for US-state vaccination data updates.       |
+| [`output/`](output)      | Temporary automated imports are placed here.       |
+| [`src/vax/`](src/vax)      | Scripts to automate country data imports.       |
+| [`config.yaml`](config.yaml)      | Data pipeline configuration.       |
+| [`us_states/input/`](us_states/input)      | Data for US-state vaccination data updates.       |
 | [`MANIFEST.in`](MANIFEST.IN), [`setup.py`](setup.py), [`requirements.txt`](requirements.txt), [`requirements-flake.txt`](requirements-flake.txt)      |     Library development related files   |
 | [`automation_state.csv`](automation_state.csv)      |     List if the data import for a location is automated (TRUE) or manual (FALSE)   |
-| [`generate_dataset.R`](generate_dataset.R)      | R script to generate the final vaccination dataset.       |
-| [`generate_dataset_by_manufacturer.R`](generate_dataset_by_manufacturer.R)      | R script to generate vaccination manufacturer dataset. It is called by `generate_dataset.R`.       |
 | [`source_table.html`](source_table.html)      | Table with sources used, used in OWID website.       |
 | [`vax_update.sh.template`](vax_update.sh.template)      | Template to push vaccination update changes.       |
 
+_*Only most relevant files have been listed_ 
 
-## Update the data
 
-Note that the pipeline currently uses a combination of Python and R. We recommend using a virtual environment for Python
-and an RStudio interactive session for R.
-
-## Development environment
-<details closed>
+## 2. Development environment
+<details open>
 <summary>Show steps ...</summary>
 
 Make sure you have a working environment with R and python 3 installed. We use Python >= 3.7.
@@ -58,7 +53,43 @@ In your environment (shell), run:
 $ pip install -e .
 ```
 
-This will install our development library `owid-covid19-vaccination-dev`.
+This will install our development library `owid-covid19-vaccination-dev`. Additionally, it will install the command
+`cowid-vax`, which provides all the necessary tools to run the data pipeline.
+
+```txt
+usage: cowid-vax [-h] [-c COUNTRIES] [-p] [-j NJOBS] [-s] [--config CONFIG] [--credentials CREDENTIALS] [--checkr]
+                 {get-data,process-data,generate-dataset,export,all}
+
+Execute COVID-19 vaccination data collection pipeline.
+
+positional arguments:
+  {get-data,process-data,generate-dataset,export,all}
+                        Choose a step: i) `get-data` will run automated scripts, 2) `process-data` will get csvs generated in
+                        1 and collect all data from spreadsheet, 3) `generate-dataset` generate the output files, 4) `export`
+                        to generate all final files, 5) `all` will run all steps sequentially.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COUNTRIES, --countries COUNTRIES
+                        Run for a specific country. For a list of countries use commas to separate them (only in mode get-
+                        data)E.g.: peru, norway. Special keywords: 'all' to run all countries, 'incremental' to run
+                        incrementalupdates, 'batch' to run batch updates. Defaults to all countries. (default: all)
+  -p, --parallel        Execution done in parallel (only in mode get-data). (default: False)
+  -j NJOBS, --njobs NJOBS
+                        Number of jobs for parallel processing. Check Parallel class in joblib library for more info (only in
+                        mode get-data). (default: -2)
+  -s, --show-config     Display configuration parameters at the beginning of the execution. (default: False)
+  --config CONFIG       Path to config file (YAML). Will look for file in path given by environment variable
+                        `$OWID_COVID_VAX_CONFIG_FILE`. If not set, will default to ~/.config/cowid/config.yaml (default:
+                        /Users/lucasrodes/repos/covid-19-data/scripts/scripts/vaccinations/config.yaml)
+  --credentials CREDENTIALS
+                        Path to credentials file (JSON). If a config file is being used, the value ther will be prioritized.
+                        (default: vax_dataset_config.json)
+  --checkr              Compare results from generate-dataset with results obtained with former generate_dataset.R script.It
+                        requires that the R script is previously run (without removing temporary files vax & metadata)!
+                        (default: False)
+
+```
 
 ### Configuration file
 
@@ -93,7 +124,7 @@ export OWID_COVID_VAX_CREDENTIALS_FILE=${OWID_COVID_PROJECT_DIR}/scripts/scripts
 ```
 
 ### Credentials file
-The environment variable `OWID_COVID_VAX_CREDENTIALS_FILE` corresponds to the path to the credentials file. This is internal. `Google`-related fields require a valid OAuth JSON credentials file (see [gsheets
+The environment variable `${OWID_COVID_VAX_CREDENTIALS_FILE}` corresponds to the path to the credentials file. This is internal. Google-related fields require a valid OAuth JSON credentials file (see [gsheets
   documentation](https://gsheets.readthedocs.io/en/stable/#quickstart)). The file should have the following structure:
 ```json
 {
@@ -114,7 +145,7 @@ $ tox
 **Note**: This requires tox to be installed (`$ pip install tox`)
 </details>
 
-## Update the data
+## 3. The data pipeline
 To update the data, prior to runing the code, make sure to correctly [set up the development environment](#development-environment).
 
 ### Manual data updates
@@ -171,17 +202,6 @@ If above was not possible, use arguments passed via the command call, i.e. `--pa
 
 For more details check `$ cowid-vax --help`.
 
-### Dataset generation
-Make sure you've succesfully [configured your environment](#0.-dependencies), then run the following script:
-
-```
-$ Rscript generate_dataset.R
-```
-
-Running this script in an interactive environment (typically RStudio) is recommended, as it'll make the
-potential debugging process much easier.
-
-
 ### Megafile generation
 
 This will update the complete COVID dataset, which also includes all vaccination metrics:
@@ -192,7 +212,7 @@ $ python ../megafile.py
 
 **Note**: you can use [vax_update.sh.template](vax_update.sh.template) as an example of how to automate data updates and push them to the repo.
 
-## Generated files
+## 4. Generated files
 Once the automation is successfully executed (see [Update the data](#update-the-data) section), the following files are updated:
 
 | File name      | Description |
@@ -207,7 +227,7 @@ Once the automation is successfully executed (see [Update the data](#update-the-
 
 _You can find more information about these files [here](../../../public/data/vaccinations/README.md)_.
 
-## Other functions
+## 5. Other functions
 ### Tracking
 It is extremely usefull to get some insights on which data are we tracking (and which are we not). This can be done with
 the tool `cowid-vax-track`. Find below some use cases.
@@ -275,7 +295,7 @@ Countries are given from the one with the least to the one with he most number o
 </details>
 
 
-## Contribute
+## 6. Contribute
 We welcome contributions to the projects! Note that due to the nature of our pipeline, **we cannot accept pull requests
 for manually imported country data**. To see which countries are automated and which reaquire manual import, check
 [this file](automation_state.csv).
@@ -328,7 +348,7 @@ but are not limited to, the following:
 You can of course, and we appreciate it very much, create pull requests for other cases.
 
 Note that files in [public folder](https://github.com/owid/covid-19-data/tree/master/public) are not to be manually modified.
-## FAQs
+## 7. FAQs
 
 ### Any question or suggestion?
 Kindly open an [issue](https://github.com/owid/covid-19-data/issues/new). If you have a technical proposal, feel free to

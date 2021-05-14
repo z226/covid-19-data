@@ -14,6 +14,16 @@ COUNTRIES = {
     "Mozambique": "Mozambique",
     "Niger": "Niger",
     "Timor-Leste": "Timor",
+    "Yemen": "Yemen",
+    "Guinea-Bissau": "Guinea-Bissau",
+    "Liberia": "Liberia",
+    "Tajikistan": "Tajikistan",
+    "Madagascar": "Madagascar",
+    "Central African Republic": "Liberia",
+    "Sint Maarten": "Sint Maarten (Dutch part)",
+    "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
+    "Turkmenistan": "Turkmenistan",
+    "Benin": "Benin",
 }
 
 # Dict mapping WHO vaccine names -> OWID vaccine names

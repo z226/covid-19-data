@@ -10,11 +10,11 @@ def _parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "mode", choices=["get-data", "process-data", "generate-dataset", "all"], default="all",
+        "mode", choices=["get-data", "process-data", "generate-dataset", "export", "all"], default="all",
         help=(
             "Choose a step: i) `get-data` will run automated scripts, 2) `process-data` will get csvs generated in 1"
-            " and collect all data from spreadsheet, 3) `generate-dataset` generate the output files, 4) `all` will"
-            " run all steps sequentially."
+            " and collect all data from spreadsheet, 3) `generate-dataset` generate the output files, 4) `export`"
+            " to generate all final files, 5) `all` will  run all steps sequentially."
         )
     )
     parser.add_argument(

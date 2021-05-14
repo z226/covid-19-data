@@ -22,6 +22,14 @@ class Paths:
         return os.path.join(self.tmp_vax, "us_states", "input")
 
     @property
+    def tmp(self):
+        return os.path.join(self.project_dir, "scripts")
+
+    @property
+    def tmp_tmp(self):
+        return os.path.join(self.project_dir, "scripts", "scripts")
+
+    @property
     def tmp_vax(self):
         return os.path.join(self.project_dir, "scripts", "scripts", "vaccinations")
 
@@ -36,6 +44,10 @@ class Paths:
     @property
     def tmp_met_all(self):
         return os.path.join(self.tmp_vax, "metadata.preliminary.csv")
+
+    @property
+    def tmp_html(self):
+        return os.path.join(self.tmp_vax, "source_table.html")
 
     def tmp_vax_out(self, location):
         return os.path.join(self.tmp_vax_out_dir, f"{location}.csv")

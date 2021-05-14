@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from vax.utils.incremental import increment
 from vax.utils.checks import VACCINES_ONE_DOSE
@@ -14,6 +15,23 @@ COUNTRIES = {
     "Mozambique": "Mozambique",
     "Niger": "Niger",
     "Timor-Leste": "Timor",
+    "Yemen": "Yemen",
+    "Guinea-Bissau": "Guinea-Bissau",
+    "Liberia": "Liberia",
+    "Tajikistan": "Tajikistan",
+    "Madagascar": "Madagascar",
+    "Central African Republic": "Liberia",
+    "Sint Maarten": "Sint Maarten (Dutch part)",
+    "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
+    "Turkmenistan": "Turkmenistan",
+    "Benin": "Benin",
+    "Lesotho": "Lesotho",
+    "Congo": "Congo",
+    "Djibouti": "Djibouti",
+    "Somalia": "Somalia",
+    "Mauritius": "Mauritius",
+    "Comoros": "Comoros",
+    "Nicaragua": "Nicaragua",
 }
 
 # Dict mapping WHO vaccine names -> OWID vaccine names
@@ -51,6 +69,10 @@ def source_checks(df: pd.DataFrame) -> pd.DataFrame:
 def filter_countries(df: pd.DataFrame) -> pd.DataFrame:
     """Get rows from selected countries."""
     df = df[df.DATA_SOURCE == "REPORTING"].copy()
+    df = df[
+        (df.TOTAL_VACCINATIONS >= df.PERSONS_VACCINATED_1PLUS_DOSE) |
+        (df.PERSONS_VACCINATED_1PLUS_DOSE.isnull())
+    ]
     df["COUNTRY"] = df.COUNTRY.replace(COUNTRIES)
     df = df[df.COUNTRY.isin(COUNTRIES.values())]
     return df
@@ -94,27 +116,30 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
         df.TOTAL_VACCINATIONS - df.PERSONS_VACCINATED_1PLUS_DOSE
     )
     df.loc[~df.only_2doses, "people_fully_vaccinated"] = None
-    df[["TOTAL_VACCINATIONS", "PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]] = (
-        df[["TOTAL_VACCINATIONS", "PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]]
+    df[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]] = (
+        df[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated"]]
         .astype("Int64").fillna(pd.NA)
     )
+    df.loc[:, "TOTAL_VACCINATIONS"] = df["TOTAL_VACCINATIONS"].fillna(np.nan)
     return df
 
 
 def increment_countries(df: pd.DataFrame, paths):
     for row in df.iterrows():
         row = row[1]
-        print(row["COUNTRY"])
-        increment(
-            paths=paths,
-            location=row["COUNTRY"],
-            total_vaccinations=row["TOTAL_VACCINATIONS"],
-            people_vaccinated=row["PERSONS_VACCINATED_1PLUS_DOSE"],
-            people_fully_vaccinated=row["people_fully_vaccinated"],
-            date=row["DATE_UPDATED"],
-            vaccine=row["VACCINES_USED"],
-            source_url="https://covid19.who.int/",
-        )
+        print(row["COUNTRY"])        
+        cond = row[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated", "TOTAL_VACCINATIONS"]].isnull().all()
+        if not cond:
+            increment(
+                paths=paths,
+                location=row["COUNTRY"],
+                total_vaccinations=row["TOTAL_VACCINATIONS"],
+                people_vaccinated=row["PERSONS_VACCINATED_1PLUS_DOSE"],
+                people_fully_vaccinated=row["people_fully_vaccinated"],
+                date=row["DATE_UPDATED"],
+                vaccine=row["VACCINES_USED"],
+                source_url="https://covid19.who.int/",
+            )
 
 
 def main(paths):

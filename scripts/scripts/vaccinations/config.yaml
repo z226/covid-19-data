@@ -6,6 +6,8 @@ pipeline:
     parallel: True
     countries:
     njobs: -2
+    skip_countries:
+      - Colombia
   process-data:
     skip_complete:
     skip_monotonic_check:

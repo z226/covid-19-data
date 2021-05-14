@@ -4,9 +4,6 @@ Vaccination data is updated on a daily basis. For some countries, the update is 
 while others require some manual work. To keep track of the currently automated processes, check [this
 table](automation_state.csv). 
 
- and [`batch`](src/vax/batch) and [`incremental`](src/vax/incremental) folders for
-automated scripts.
-
 ### Content
 1. [Directory content](#1-directory-content)
 2. [Development environment](#2-development-environment)

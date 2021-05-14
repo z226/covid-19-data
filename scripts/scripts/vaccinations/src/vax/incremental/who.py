@@ -11,6 +11,7 @@ COUNTRIES = {
     "Egypt": "Egypt",
     "Iran (Islamic Republic of)": "Iran",
     "Libya": "Libya",
+    "Mozambique": "Mozambique",
     "Niger": "Niger",
     "Timor-Leste": "Timor",
 }

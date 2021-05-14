@@ -4,6 +4,7 @@ import json
 
 from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
 from vax.cmd._parser import _parse_args
+from vax.cmd.utils import normalize_country_name
 
 
 def get_config():
@@ -94,6 +95,9 @@ class ConfigParams(object):
             "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
             "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
             "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
+            "skip_countries": list(map(
+                normalize_country_name, self._return_value_pipeline("get-data", "skip_countries", [])
+            )),
         })
 
     def ProcessDataConfig(self):

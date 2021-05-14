@@ -12,5 +12,9 @@ def get_logger():
     return logger
 
 
+def normalize_country_name(country_name: str):
+    return country_name.strip().replace(" ", "_").lower()
+
+
 def print_eoe():
     print("----------------------------\n----------------------------\n----------------------------\n")

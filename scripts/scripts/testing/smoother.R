@@ -3,7 +3,7 @@ add_smoothed_series <- function(collated) {
     # Identify gaps of >3 weeks
     testing_dates <- collated$Date
     gaps <- testing_dates - lag(testing_dates)
-    to_be_removed_idx <- which(gaps > 21)
+    to_be_removed_idx <- which(gaps > 31)
 
     # Create empty time series to fill
     start_date <- min(collated$Date)

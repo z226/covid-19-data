@@ -63,7 +63,7 @@ def load_wb_income_groups():
         WB_INCOME_GROUPS_CSV_PATH,
         keep_default_na=False,
         header=0,
-        names=['location', 'year', 'income_group'],
+        names=['location', 'code', 'income_group', 'year'],
         usecols=['location', 'income_group']
     )
 

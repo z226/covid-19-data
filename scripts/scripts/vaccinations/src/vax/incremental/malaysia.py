@@ -1,6 +1,4 @@
-import os
 from datetime import datetime
-import json
 
 import pandas as pd
 import requests

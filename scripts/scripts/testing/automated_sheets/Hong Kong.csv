@@ -1,20 +1,20 @@
-Date,Cumulative total,Country,Units,Source URL,Source label,Notes,Testing type
-2020-01-31,3610,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-02-29,30593,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-03-31,96598,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-04-30,162935,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-05-31,238046,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-06-30,347434,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-07-31,729436,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-08-31,1418251,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-09-15,3201483,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-09-30,3444257,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-10-19,3461059,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-10-31,3763315,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-11-30,4421227,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2020-12-31,5810705,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2021-01-31,7111681,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2021-02-28,9137032,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2021-03-31,11900511,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2021-04-30,14302470,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
-2021-05-04,14841321,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,PCR only
+Date,Cumulative total,Positive rate,Country,Units,Source URL,Source label,Notes,Testing type
+2020-01-31,3610,,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-02-29,30593,0.003,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-03-31,96598,0.00888,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-04-30,162935,0.00538,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-05-31,238046,0.00063,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-06-30,347434,0.00111,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-07-31,729436,0.00541,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-08-31,1418251,0.00223,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-09-15,3201483,0.00009,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-09-30,3444257,0.00046,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-10-19,3461059,0.01006,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-10-31,3763315,0.00022,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-11-30,4421227,0.00151,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2020-12-31,5810705,0.00182,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2021-01-31,7111681,0.00123,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2021-02-28,9137032,0.00027,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2021-03-31,11900511,0.00017,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2021-04-30,14302470,0.00013,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear
+2021-05-04,14841321,0.00003,Hong Kong,tests performed,http://www.chp.gov.hk/files/misc/statistics_on_covid_19_testing_cumulative.csv,Department of Health,,unclear

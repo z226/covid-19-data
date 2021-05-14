@@ -18,7 +18,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     data = pd.Series({
         "date": parse_date(soup),
         "total_vaccinations": parse_metric(soup, "Total Doses Administered"),
-        "people_vaccinated": parse_metric(soup, "Received First Dose"),
+        "people_vaccinated": parse_metric(soup, "Received at least First Dose"),
         "people_fully_vaccinated": parse_metric(soup, "Completed Full Vaccination Regimen"),
     })
     return data

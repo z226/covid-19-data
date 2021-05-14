@@ -87,7 +87,7 @@ Guinea,GIN,2020,13132792
 Guinea-Bissau,GNB,2020,1967998
 Guyana,GUY,2020,786559
 Haiti,HTI,2020,11402533
-High-income countries,OWID_HII,2020,1263092934
+High income,OWID_HIC,2020,1263092934
 Honduras,HND,2020,9904608
 Hong Kong,HKG,2020,7496988
 Hungary,HUN,2020,9660350
@@ -120,8 +120,8 @@ Liberia,LBR,2020,5057677
 Libya,LBY,2020,6871287
 Liechtenstein,LIE,2020,38137
 Lithuania,LTU,2020,2722291
-Low-income countries,OWID_LOI,2020,775710612
-Lower-middle-income countries,OWID_LMI,2020,3098235284
+Low income,OWID_LIC,2020,775710612
+Lower middle income,OWID_LMC,2020,3098235284
 Luxembourg,LUX,2020,625976
 Macao,MAC,2020,649342
 North Macedonia,MKD,2020,2083380
@@ -138,7 +138,6 @@ Melanesia,OWID_MNS,2020,11122990
 Mexico,MEX,2020,128932753
 Micronesia,,2020,548927
 Micronesia (country),FSM,2020,115021
-Middle-income countries,,2020,5753051615
 Moldova,MDA,2020,4033963
 Monaco,MCO,2020,39244
 Mongolia,MNG,2020,3278292
@@ -229,7 +228,7 @@ United Arab Emirates,ARE,2020,9890400
 United Kingdom,GBR,2020,67886004
 United States,USA,2020,331002647
 United States Virgin Islands,VIR,2020,104423
-Upper-middle-income countries,OWID_UMI,2020,2654816331
+Upper middle income,OWID_UMC,2020,2654816331
 Uruguay,URY,2020,3473727
 Uzbekistan,UZB,2020,33469199
 Vanuatu,VUT,2020,307150

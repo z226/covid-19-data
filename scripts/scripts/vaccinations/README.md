@@ -121,9 +121,12 @@ Check for new updates and manually add them in the internal spreadsheet:
 - Look for new data based on previously-used source URLs.
 
 ### Automated process
-Once all manual processes have been finished, it  is time to run the automated ones using tool `cowid-vax`. This step is
+Once all manual processes have been finished, it  is time to leverage the tool `cowid-vax`. The automation step is
 further broken into 4 sub-steps, which we explain below. While these can all be run at once, we recommend running them
 one by one. Prior to runing these, make sure you are correctly using your [configuration file](#configuration-file).
+
+*Note*: you can use [vax_update.sh.template](vax_update.sh.template) as an example of how to run the data pipeline
+automated step.
 
 #### Data pipeline configuration
 To correctly use the configuration in your [config.yaml](config.yaml), you can:
@@ -134,7 +137,7 @@ If above was not possible, use arguments passed via the command call, i.e. `--pa
 
 
 <details closed>
-<summary markdown='span'>For more details check `$ cowid-vax --help`</summary>
+<summary markdown='span'>For more details run: cowid-vax --help</summary>
 
 ```txt
 usage: cowid-vax [-h] [-c COUNTRIES] [-p] [-j NJOBS] [-s] [--config CONFIG] [--credentials CREDENTIALS] [--checkr]
@@ -182,7 +185,7 @@ $ cowid-vax get-data
 This step runs the scrips for [batch](src/vax/batch) and [incremental](src/vax/incremental) updates. It will then generate
 individual country files and save them in [`output`](output).
 
-**Note:** This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
+*Note:* This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
 (e.g. due to changes in the source). Try to keep the scripts up to date.
 #### Process the data
 
@@ -217,10 +220,8 @@ $ cowid-vax export
 Final pipeline step. This updates few more output files. Also, this opens OWID's vaccination website, in order to update
 the table references (HTML is automatically copied to clipboard).
 
-**Note**: you can use [vax_update.sh.template](vax_update.sh.template) as an example of how to automate data updates and push them to the repo.
-
 #### Generated files
-Once the automation is successfully executed (see [Update the data](#update-the-data) section), the following files are updated:
+Once the automation is successfully executed, the following files and directories are updated:
 
 | File name      | Description |
 | ----------- | ----------- |
@@ -242,11 +243,10 @@ _You can find more information about these files [here](../../../public/data/vac
 It is extremely usefull to get some insights on which data are we tracking (and which are we not). This can be done with
 the tool `cowid-vax-track`. Find below some use cases.
 
-**Note**: Use uption `--to-csv` to export results as csv files (a default filename is used).
+*Note*: Use uption `--to-csv` to export results as csv files (a default filename is used).
 
-#### Which countries are missing?
 <details closed>
-<summary>Show</summary>
+<summary><strong>Which countries are missing?</strong></summary>
 Run 
 
 ```
@@ -255,9 +255,8 @@ $ cowid-vax-track countries-missing
 Countries are given from most to least populated.
 </details>
 
-#### Which countries have been updated unfrequently?
 <details closed>
-<summary>Show</summary>
+<summary><strong>Which countries have been updated unfrequently?</strong></summary>
 Get the list of countries sorted by least frequently updated. The update frequency is defined by the ratio between the 
 number of days with an update and the number of days of observation (i.e. days since first update).
 
@@ -268,9 +267,8 @@ $ cowid-vax-track countries-least-updatedfreq
 Countries are given from least to most frequently updated.
 </details>
 
-#### Which countries haven't been updated for some time?
 <details closed>
-<summary>Show</summary>
+<summary><strong>Which countries haven't been updated for some time?</strong></summary>
 Get the list of countries and their last update by running:
 
 ```
@@ -280,9 +278,8 @@ $ cowid-vax-track countries-last-updated
 Countries are given from least to most recently updated.
 </details>
 
-#### Which countries have been updated few times?
 <details closed>
-<summary>Show</summary>
+<summary><strong>Which countries have been updated few times?</strong></summary>
 Get the list of countries least updated (in absolute counts):
 
 ```
@@ -292,9 +289,8 @@ $ cowid-vax-track countries-least-updated
 Countries are given from least to most frequently updated.
 </details>
 
-#### Which vaccines are missing?
 <details closed>
-<summary>Show</summary>
+<summary><strong>Which vaccines are missing?</strong></summary>
 Get the list of countries with missing vaccines:
 
 ```
@@ -326,7 +322,7 @@ can check column `automated` in [this file](automation_state.csv).
   - If this seems too complicated, alternatively, you may simply add a comment to thread
 [#230](https://github.com/owid/covid-19-data/issues/230). 
 
-**Note**: We only accept official sources or news correctly citing official sources.
+*Note*: We only accept official sources or news correctly citing official sources.
 ### Add new automated data collections
 The scripts that automate country imports are located in [`src/vax/batch`](src/vax/batch) or
 [`src/vax/incremental`](src/vax/incremental), depending on whether they import the data in batch (i.e. all the

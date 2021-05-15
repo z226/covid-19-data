@@ -50,7 +50,8 @@ def enrich_metadata(df: pd.DataFrame) -> pd.DataFrame:
 
 def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pipe(format_columns)
+        df
+        .pipe(format_columns)
         .pipe(aggregate)
         .pipe(enrich_people_fully_vaccinated)
         .pipe(replace_nulls_with_nans)

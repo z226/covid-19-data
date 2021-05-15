@@ -28,12 +28,12 @@ def read(source: str) -> pd.Series:
     date = clean_date(date, "%d.%m.%y")
 
     people_vaccinated = re.search(
-        r"([\d\s]+) чел\. \([\d\.]+% от населения\) - привито хотя бы одним компонентом вакцины", text
+        r"([\d\s]+) чел\. \([\d\.]+% от населения.*\) - привито хотя бы одним компонентом вакцины", text
     ).group(1)
     people_vaccinated = clean_count(people_vaccinated)
 
     people_fully_vaccinated = re.search(
-        r"([\d\s]+) чел\. \([\d\.]+% от населения\) - полностью привито", text
+        r"([\d\s]+) чел\. \([\d\.]+% от населения,?.*\) - полностью привито", text
     ).group(1)
     people_fully_vaccinated = clean_count(people_fully_vaccinated)
 

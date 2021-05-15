@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import increment
+from vax.utils.incremental import increment, clean_count
 
 
 VACCINE_PROTOCOLS = {
@@ -48,14 +48,17 @@ def main(paths):
         protocol = VACCINE_PROTOCOLS[row[1][0]]
 
         if protocol == 1:
-            total_vaccinations += row[1]["Fullbólusettir"]
-            people_vaccinated += row[1]["Fullbólusettir"]
-            people_fully_vaccinated += row[1]["Fullbólusettir"]
+            fv = clean_count(row[1]["Fullbólusettir"])
+            total_vaccinations += fv
+            people_vaccinated += fv
+            people_fully_vaccinated += fv
 
         elif protocol == 2:
-            total_vaccinations += row[1]["Fullbólusettir"] * 2 + row[1]["Bólusetning hafin"]
-            people_vaccinated += row[1]["Fullbólusettir"] + row[1]["Bólusetning hafin"]
-            people_fully_vaccinated += row[1]["Fullbólusettir"]
+            fv = clean_count(row[1]["Fullbólusettir"])
+            pv = clean_count(row[1]["Bólusetning hafin"])
+            total_vaccinations += fv * 2 + pv
+            people_vaccinated += fv + pv
+            people_fully_vaccinated += fv
 
     date = json_data["updatedAt"][:10]
 
@@ -67,7 +70,7 @@ def main(paths):
         people_fully_vaccinated=people_fully_vaccinated,
         date=date,
         source_url="https://www.covid.is/tolulegar-upplysingar-boluefni",
-        vaccine="Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        vaccine="Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
     )
 
     # By manufacturer

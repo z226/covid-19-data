@@ -1,6 +1,6 @@
-import os
-
 import pandas as pd
+
+from vax.utils.utils import date_formatter
 
 
 def read(source: str) -> pd.DataFrame:
@@ -28,14 +28,27 @@ def correct_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def format_date(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(date=pd.to_datetime(df.date, format="%d/%m/%Y").dt.date)
+    return df.assign(date=date_formatter(df.date, "%d/%m/%Y", "%Y-%m-%d"))
+
+
+def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
+    def _enrich_vaccine_name(date: str) -> str:
+        # See timeline in:
+        if date < "2021-02-03":
+            return "Pfizer/BioNTech"
+        if "2021-02-03" <= date < "2021-02-10":
+            return "Moderna, Pfizer/BioNTech"
+        elif "2021-02-10" <= date < "2021-05-06":
+            return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        elif "2021-05-06" <= date:
+            return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+    return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 
 def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(
         location="Malta",
         source_url="https://github.com/COVID19-Malta/COVID19-Cases",
-        vaccine="Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",
     )
 
 
@@ -61,6 +74,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
         .pipe(correct_data)
         .pipe(format_date)
         .pipe(enrich_columns)
+        .pipe(enrich_vaccine_name)
         .pipe(exclude_data_points)
     )
 

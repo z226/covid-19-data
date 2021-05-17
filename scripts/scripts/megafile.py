@@ -494,7 +494,10 @@ def generate_megafile():
 
     print("\nFetching vaccination dataset…")
     vax = get_vax()
-    vax = vax[-vax.location.isin(["England", "Northern Ireland", "Scotland", "Wales"])]
+    vax = vax[-vax.location.isin([
+        "England", "Northern Ireland", "Scotland", "Wales",
+        "High income", "Upper middle income", "Lower middle income", "Low income",
+    ])]
 
     print("\nFetching OxCGRT dataset…")
     cgrt = get_cgrt()

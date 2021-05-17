@@ -81,10 +81,13 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
     modules_failed = [m["module_name"] for m in modules_execution_results if m["success"] is False]
     # Retry failed modules
     logger.info(f"\n---\n\nRETRIALS ({len(modules_failed)})")
-    modules_failed_retrial = []
+    modules_execution_results = []
     for module_name in modules_failed:
-        _get_data_country(module_name, paths, greece_api_token, skip_countries)
+        modules_execution_results.append(
+            _get_data_country(module_name, paths, greece_api_token, skip_countries)
+        )
+    modules_failed_retrial = [m["module_name"] for m in modules_execution_results if m["success"] is False]
     if len(modules_failed_retrial) > 0:
         failed_str = "\n".join([f"* {m}" for m in modules_failed_retrial])
-        print(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):{failed_str}")
+        print(f"\n---\n\nThe following scripts failed to run ({len(modules_failed_retrial)}):\n{failed_str}")
     print_eoe()

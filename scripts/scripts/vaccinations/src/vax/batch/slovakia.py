@@ -18,6 +18,9 @@ def import_iza():
         usecols=["Date", "first_dose", "second_dose"],
         sep=";"
     )
+    
+    iza["first_dose"] = pd.to_numeric(iza.first_dose, errors="coerce")
+    iza["second_dose"] = pd.to_numeric(iza.second_dose, errors="coerce")
 
     iza = (
         iza.groupby("Date", as_index=False)
@@ -64,6 +67,10 @@ def main(paths):
 
     dashboard = dashboard[dashboard["date"] > iza["date"].max()]
     df = pd.concat([iza, dashboard]).sort_values("date")
+
+    df[["people_vaccinated", "people_fully_vaccinated", "total_vaccinations"]] = (
+        df[["people_vaccinated", "people_fully_vaccinated", "total_vaccinations"]].astype("Int64")
+    )
 
     df.loc[:, "location"] = "Slovakia"
     df.loc[:, "vaccine"] = "Pfizer/BioNTech"

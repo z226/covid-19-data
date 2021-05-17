@@ -2,8 +2,9 @@ import re
 import time
 
 import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+import json 
+
+import gspread
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import clean_date
@@ -12,22 +13,25 @@ from vax.utils.dates import clean_date
 def read(source: str) -> pd.Series:
     return connect_parse_data(source)
 
+def open_google_sheet(source: str):
+    vax_credentials_file = os.environ['OWID_COVID_VAX_CREDENTIALS_FILE']
+    with open(vax_credentials_file) as f:
+        data = json.load(f)
+        google_credentials_json = data['google_credentials']
+
+    gc = gspread.service_account(google_credentials_json)
+
+    ssh = gc.open_by_url(source)
+    wks = ssh.get_worksheet(1)
+
+    return wks
 
 def connect_parse_data(source: str) -> pd.Series:
-    op = Options()
-    op.add_argument("--headless")
+    sheet = open_google_sheet(source)
 
-    with webdriver.Chrome(options=op) as driver:
-        driver.get(source)
-        time.sleep(10)
-
-        date = re.search(r"Fecha de corte : ([\d/]{10})", driver.page_source).group(1)
-
-        for block in driver.find_elements_by_class_name("unselectable"):
-            if block.get_attribute("aria-label") == "Dosis aplicadas Card":
-                total_vaccinations = clean_count(block.find_element_by_class_name("value").text)
-            elif block.get_attribute("aria-label") == "Segundas dosis aplicadas Card":
-                people_fully_vaccinated = clean_count(block.find_element_by_class_name("value").text)
+    date = sheet.get('C44').first().strip()
+    total_vaccinations = int(sheet.get('K16').first().strip().replace(',', ''))
+    people_fully_vaccinated = int(sheet.get('K27').first().strip().replace(',', ''))
 
     people_vaccinated = total_vaccinations - people_fully_vaccinated
 
@@ -62,10 +66,10 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 def main(paths):
     source = (
-        "https://app.powerbi.com/view?r=eyJrIjoiYjc0NTBhZGMtZGM2NS00YjA0LTljNGYtYTJkNWI1YTJlYzAwIiwid"
-        "CI6Ijc0YzBjMjUwLTFjNzctNDA1ZC05YjFlLTlhYzFmNTA4YWJlMyIsImMiOjR9&pageName=ReportSectionad9662980220d3261e68"
+        "https://docs.google.com/spreadsheets/d/1eblBeozGn1soDGXbOIicwyEDkUqNMzzpJoAKw84TTA4"
     )
     data = read(source).pipe(pipeline, source)
+
     increment(
         paths=paths,
         location=data["location"],

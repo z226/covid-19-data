@@ -7,7 +7,6 @@ pipeline:
     countries:
     njobs: -2
     skip_countries:
-      - Colombia
       - North Macedonia
       - Philippines
       - South Africa

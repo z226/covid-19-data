@@ -5,7 +5,7 @@ from pyaml_env import parse_config
 from itertools import chain
 
 from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
-from vax.cmd._parser import _parse_args
+from vax.cmd._parser import _parse_args, CHOICES
 from vax.cmd.utils import normalize_country_name
 
 
@@ -46,12 +46,15 @@ class ConfigParams(object):
 
     @classmethod
     def from_args(cls, args):
+        mode = args.mode
+        if mode == "all":
+            mode = CHOICES
         return cls(
             config_file=args.config,
             parallel=args.parallel,
             njobs=args.njobs,
             countries=args.countries,
-            mode=args.mode,
+            mode=mode,
             display=args.show_config,
             credentials_file=args.credentials,
             check_r=args.checkr
@@ -171,16 +174,10 @@ class ConfigParams(object):
         else:
             s = f"CONFIGURATION PARAMS:\nNo config file\n\n"
             s += "*************************\n"
-        if self.mode == "get-data":
+        if "get" in self.mode:
             s += f"Get Data: \n{self.GetDataConfig().__str__()}"
-        elif self.mode == "process-data":
+        if "process" in self.mode:
             s += f"Process Data: \n{self.ProcessDataConfig().__str__()}"
-        elif self.mode == "all":
-            s += f"Get Data: \n{self.GetDataConfig().__str__()}"
-            s += "\n*************************\n\n"
-            s += f"Process Data: \n{self.ProcessDataConfig().__str__()}"
-        else:
-            raise ValueError("Not a valid mode!")
         s += "\n*************************\n\n"
         # s += f"Secrets: \n{self.CredentialsConfig().__str__()}"
         return s

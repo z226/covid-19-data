@@ -5,9 +5,9 @@ set -e
 git pull origin master
 
 # Update source table on website
-cowid-vax get-data
-cowid-vax process-data
-cowid-vax generate-dataset
+cowid-vax get
+cowid-vax process
+cowid-vax generate
 cowid-vax export
 
 ​

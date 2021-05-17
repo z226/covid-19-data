@@ -31,7 +31,7 @@ _*Only most relevant files have been listed_
 
 
 ## 2. Development environment
-<details open>
+<details closed>
 <summary>Show steps ...</summary>
 Follow the steps below to correctly set up your virtual environment.
 
@@ -177,7 +177,7 @@ optional arguments:
 Run: 
 
 ```
-$ cowid-vax get-data
+$ cowid-vax get
 ```
 This step runs the scrips for [batch](src/vax/batch) and [incremental](src/vax/incremental) updates. It will then generate
 individual country files and save them in [`output`](output).
@@ -189,7 +189,7 @@ individual country files and save them in [`output`](output).
 Run: 
 
 ```
-$ cowid-vax process-data
+$ cowid-vax process
 ```
 
 Collect manually updated data from the spreadsheet and data generated in (1). Process this data, and generate public country data in
@@ -201,7 +201,7 @@ Collect manually updated data from the spreadsheet and data generated in (1). Pr
 Run: 
 
 ```
-$ cowid-vax generate-dataset
+$ cowid-vax generate
 ```
 
 Generate pipeline output files.
@@ -234,6 +234,14 @@ Once the automation is successfully executed, the following files and directorie
 
 
 _You can find more information about these files [here](../../../public/data/vaccinations/README.md)_.
+
+#### Notes
+
+You can run several steps at once, e.g.
+
+```sh
+$ cowid-vax get process
+```
 
 ## 4. Other functions
 ### Tracking

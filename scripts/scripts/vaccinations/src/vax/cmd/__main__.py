@@ -15,7 +15,9 @@ def main():
     if config.display:
         print(config)
     
-    if config.mode == "get-data":
+    print(config.mode)
+
+    if "get" in config.mode:
         cfg = config.GetDataConfig()
         main_get_data(
             paths,
@@ -25,7 +27,7 @@ def main():
             creds.greece_api_token,
             cfg.skip_countries,
         )
-    elif config.mode == "process-data":
+    if "process" in config.mode:
         cfg = config.ProcessDataConfig()
         main_process_data(
             paths,
@@ -34,38 +36,19 @@ def main():
             cfg.skip_complete,
             cfg.skip_monotonic_check,
         )
-    elif config.mode == "generate-dataset":
+    if "generate" in config.mode:
         if config.check_r:
             test_check_with_r(paths)
         else:
             main_generate_dataset(
                 paths,
             )
-    elif config.mode == "export":
+    if "export" in config.mode:
         main_export(
             paths,
             creds.owid_cloud_table_post
         )
-    elif config.mode == "all":
-        cfg = config.GetDataConfig()
-        main_get_data(
-            paths,
-            cfg.parallel,
-            cfg.njobs,
-            cfg.countries,
-            cfg.greece_api_token,
-        )
-        cfg = config.ProcessDataConfig()
-        main_process_data(
-            paths,
-            cfg.google_credentials,
-            cfg.google_spreadsheet_vax_id,
-            cfg.skip_complete,
-            cfg.skip_monotonic_check,
-        )
-        main_generate_dataset(
-            paths,
-        )
+
 
 if __name__ == "__main__":
     main()

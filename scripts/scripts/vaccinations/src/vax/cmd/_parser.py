@@ -1,7 +1,30 @@
 import argparse
 import os
+from difflib import SequenceMatcher
 
-from vax.cmd.utils import normalize_country_name
+from vax.cmd.utils import normalize_country_name, get_logger
+
+
+CHOICES = ["get", "process", "generate", "export"]
+logger = get_logger()
+
+
+def similar(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def choice_check(x):
+    x = x.lower()
+    if x not in CHOICES:
+        similarities = []
+        for choice in CHOICES:
+            if choice in x:
+                logger.error(f"Mode `{x}` is unknown. Maybe you meant `{choice}`")
+            similarities.append(similar(x, choice))
+        i = similarities.index(max(similarities))
+        if similarities[i] >= 0.6:
+            logger.error(f"Mode `{x}` is unknown. Did you mean `{CHOICES[i]}` instead?")
+    return x
 
 
 def _parse_args():
@@ -10,10 +33,14 @@ def _parse_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "mode", choices=["get-data", "process-data", "generate-dataset", "export", "all"], default="all",
+        "mode",
+        choices=CHOICES + ["all"],
+        default="all",
+        nargs="*",
+        type=lambda x: choice_check(x),
         help=(
-            "Choose a step: i) `get-data` will run automated scripts, 2) `process-data` will get csvs generated in 1"
-            " and collect all data from spreadsheet, 3) `generate-dataset` generate the output files, 4) `export`"
+            "Choose a step: i) `get` will run automated scripts, 2) `process` will get csvs generated in 1"
+            " and collect all data from spreadsheet, 3) `generate` generate the output files, 4) `export`"
             " to generate all final files, 5) `all` will  run all steps sequentially."
         )
     )
@@ -23,7 +50,7 @@ def _parse_args():
         help=(
             "Run for a specific country. For a list of countries use commas to separate them (only in mode get-data)"
             "E.g.: peru, norway. \nSpecial keywords: 'all' to run all countries, 'incremental' to run incremental"
-            "updates, 'batch' to run batch updates. Defaults to all countries."
+            "updates, 'batch' to run batch updates, 'who' for WHO-sourced countries, 'spc' for SPC-sourced countries. Defaults to all countries."
         )
     )
     parser.add_argument(

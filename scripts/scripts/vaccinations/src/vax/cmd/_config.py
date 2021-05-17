@@ -1,6 +1,8 @@
-from pyaml_env import parse_config
 import os
 import json
+from datetime import date
+from pyaml_env import parse_config
+from itertools import chain
 
 from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
 from vax.cmd._parser import _parse_args
@@ -104,7 +106,7 @@ class ConfigParams(object):
         """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({
             "skip_complete": self._return_value_pipeline("process-data", "skip_complete", []),
-            "skip_monotonic_check": self._return_value_pipeline("process-data", "skip_monotonic_check", []),
+            "skip_monotonic_check": self._get_skip_monotonic_check(),
         })
 
     def CredentialsConfig(self):
@@ -122,6 +124,34 @@ class ConfigParams(object):
             if v:
                 return v
         raise AttributeError(f"Missing field {feature_name} or value was None in credentials")
+
+    def _get_skip_monotonic_check(self):
+        def _valid_value(x):
+            if not isinstance(x, list):
+                return False
+            keys = list(chain.from_iterable(xx.keys() for xx in x))
+            if set(keys).difference({"date", "metrics"}):
+                return False
+            if not all(isinstance(xx["metrics"], (list, str)) for xx in x):
+                return False
+            if not all(isinstance(xx["date"], date) for xx in x):
+                return False
+            return True
+        x = self._return_value_pipeline("process-data", "skip_monotonic_check", {})
+        for _, v in x.items():
+            if v is None:
+                raise ValueError(
+                    "Field skip_monotonic_check must be a dictionary with list values. Each element in list values"
+                    "Is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics`"
+                    "can be either a single string or a list of strings."
+                )
+            elif not _valid_value(v):
+                raise ValueError(
+                    "Field skip_monotonic_check must be a dictionary with list values. Each element in list values"
+                    "Is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics`"
+                    "can be either a single string or a list of strings."
+                )
+        return x
 
     def _return_value_pipeline(self, step, feature_name, feature_from_args):
         try:

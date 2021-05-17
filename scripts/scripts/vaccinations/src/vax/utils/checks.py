@@ -1,4 +1,6 @@
 from datetime import datetime
+from itertools import chain
+
 import pandas as pd
 
 
@@ -13,17 +15,33 @@ VACCINES_ONE_DOSE = [
 ]
 
 def country_df_sanity_checks(
-        df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check: bool = True) -> pd.DataFrame:
-    checker = CountryChecker(df, monotonic_check=monotonic_check)
+        df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = []) -> pd.DataFrame:
+    checker = CountryChecker(df, monotonic_check_skip=monotonic_check_skip)
     checker.run()
 
 
 class CountryChecker:
-    def __init__(self, df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check: bool = True):
-        self.location = df.loc[:, "location"].unique()
+    def __init__(self, df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = []):
+        self.location = self._get_location(df)
         self.df = df
         self.allow_extra_cols = allow_extra_cols
-        self.monotonic_check = monotonic_check
+        self.skip_monocheck_ids = self._skip_monocheck_ids(monotonic_check_skip)
+
+    def _get_location(self, df):
+        x = df.loc[:, "location"].unique()
+        if len(x) != 1:
+            raise ValueError("More than one location found")
+        return x[0]
+
+    def _skip_monocheck_ids(self, monotonic_check_skip):
+        def _f(x):
+            dt = x["date"].strftime("%Y%m%d")
+            if isinstance(x["metrics"], list):
+                return [dt + m for m in x["metrics"]]
+            return [x["date"].strftime("%Y%m%d") + x["metrics"]]
+    
+        res = [_f(x) for x in monotonic_check_skip]
+        return list(chain.from_iterable(res))
 
     @property
     def metrics_present(self):
@@ -79,22 +97,24 @@ class CountryChecker:
             )
 
     def check_metrics(self):
-        df = self.df.sort_values(by="date")[self.metrics_present]
+        df = self.df.sort_values(by="date")# [self.metrics_present]
         # Monotonically
-        if self.monotonic_check:
-            self._check_metrics_monotonic(df)
+        self._check_metrics_monotonic(df)
         # Inequalities
         self._check_metrics_inequalities(df)
 
     def _check_metrics_monotonic(self, df: pd.DataFrame):
+        # Use info from monotonic_check_skip to raise exception or not
         for col in self.metrics_present:
-            _x = df[col].dropna()
-            if not _x.is_monotonic:
-                idx_wrong = _x.diff() < 0
-                wrong = _x.loc[idx_wrong]
-                raise ValueError(
-                    f"{self.location} -- Column {col} must be monotonically increasing! Check:\n{wrong}"
-                )
+            _x = df.dropna(subset=[col])
+            if not _x[col].is_monotonic:
+                idx_wrong = _x[col].diff() < 0
+                wrong_rows = _x.loc[idx_wrong]
+                wrong_ids = wrong_rows.date.dt.strftime("%Y%m%d") + col
+                if not wrong_ids.isin(self.skip_monocheck_ids).all():
+                    raise ValueError(
+                        f"{self.location} -- Column {col} must be monotonically increasing! Check:\n{wrong_rows}"
+                    )
 
     def _check_metrics_inequalities(self, df: pd.DataFrame):
         if ("total_vaccinations" in df.columns) and ("people_vaccinated" in df.columns):

@@ -11,8 +11,7 @@ pipeline:
   process-data:
     skip_complete:
     skip_monotonic_check:
-        - Northern Ireland
-        - Malta
-        - Romania
-        - Sweden
+      Northern Ireland:
+        - date: 2021-04-29
+          metrics: people_vaccinated
   generate-dataset:

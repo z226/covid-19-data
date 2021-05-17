@@ -11,7 +11,7 @@ logger = get_logger()
 
 
 def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id: str, skip_complete: list = None,
-                      skip_monotonic: list = None):
+                      skip_monotonic: dict = {}):
     print("-- Processing data... --")
     # Get data from sheets
     logger.info("Getting data from Google Spreadsheet...")
@@ -32,8 +32,8 @@ def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id:
 
     # Process locations
     def _process_location(df):
-        check = False if df.loc[0, "location"] in skip_monotonic else True
-        return process_location(df, check)
+        monotonic_check_skip = skip_monotonic.get(df.loc[0, "location"], [])
+        return process_location(df, monotonic_check_skip)
 
     logger.info("Processing and exporting data...")
     vax = [

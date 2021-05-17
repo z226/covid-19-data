@@ -1,8 +1,6 @@
 import os
 import re
 
-import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
@@ -47,8 +45,12 @@ def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
             return "Pfizer/BioNTech"
         elif "2021-01-14" <= date < "2021-02-09":
             return "Moderna, Pfizer/BioNTech"
-        elif "2021-02-09" <= date: 
+        elif "2021-02-09" <= date < "2021-04-14": 
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        elif "2021-04-14" <= date:
+            # https://vaktsineeri.ee/covid-19/vaktsineerimine-eestis/
+            # https://vaktsineeri.ee/uudised/sel-nadalal-alustatakse-lamavate-haigete-ja-liikumisraskustega-inimeste-kodus-vaktsineerimist/
+            return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
     return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
 

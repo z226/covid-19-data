@@ -31,7 +31,7 @@ def main(paths):
     df["week_number"] = df.date.str[-2:].astype(int)
     df["date"] = pd.to_datetime("2021-01-03")
     df["date"] = (df.date + df.week_number * pd.DateOffset(days=7)).dt.date
-    df.loc[df.date > date.today(), "date"] = date.today() - timedelta(days=1)
+    df.loc[df.date >= date.today(), "date"] = date.today() - timedelta(days=1)
 
     df = df.drop(columns="week_number")
     df = df.assign(
@@ -39,7 +39,6 @@ def main(paths):
         source_url="https://www.ecdc.europa.eu/en/publications-data/data-covid-19-vaccination-eu-eea",
     )
     df = df.pipe(enrich_vaccine_name)
-    print(df.columns)
     df.to_csv(paths.tmp_vax_out("Netherlands"), index=False)
 
 

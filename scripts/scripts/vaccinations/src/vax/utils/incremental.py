@@ -87,7 +87,7 @@ def increment(
 def _increment(filepath, location, total_vaccinations, date, vaccine, source_url, people_vaccinated=None,
                people_fully_vaccinated=None):
     prev = pd.read_csv(filepath)
-    if total_vaccinations <= prev["total_vaccinations"].max():
+    if total_vaccinations <= prev["total_vaccinations"].max() or date < prev["date"].max():
         df = prev.copy()
     elif date == prev["date"].max():
         df = prev.copy()

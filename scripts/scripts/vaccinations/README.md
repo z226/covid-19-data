@@ -68,13 +68,26 @@ pipeline:
     parallel: True
     countries:
     njobs: -2
+    skip_countries:
+      - Colombia
   process-data:
     skip_complete:
     skip_monotonic_check:
-        - Northern Ireland
-        - Malta
-        - Romania
-        - Sweden
+      Northern Ireland:
+        - date: 2021-04-29
+          metrics: people_vaccinated
+    skip_anomaly_check:
+      Bahrain:
+        - date: 2021-03-06
+          metrics: total_vaccinations
+      Bolivia:
+        - date: 2021-03-06
+          metrics: people_vaccinated
+      Brazil:
+        - date: 2021-01-21
+          metrics: 
+           - total_vaccinations
+           - people_vaccinated
   generate-dataset:
 ```
 

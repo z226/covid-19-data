@@ -106,7 +106,8 @@ class ConfigParams(object):
         """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({
             "skip_complete": self._return_value_pipeline("process-data", "skip_complete", []),
-            "skip_monotonic_check": self._get_skip_monotonic_check(),
+            "skip_monotonic_check": self._get_skip_check("skip_monotonic_check"),
+            "skip_anomaly_check": self._get_skip_check("skip_anomaly_check"),
         })
 
     def CredentialsConfig(self):
@@ -125,7 +126,7 @@ class ConfigParams(object):
                 return v
         raise AttributeError(f"Missing field {feature_name} or value was None in credentials")
 
-    def _get_skip_monotonic_check(self):
+    def _get_skip_check(self, metric):
         def _valid_value(x):
             if not isinstance(x, list):
                 return False
@@ -137,19 +138,19 @@ class ConfigParams(object):
             if not all(isinstance(xx["date"], date) for xx in x):
                 return False
             return True
-        x = self._return_value_pipeline("process-data", "skip_monotonic_check", {})
+        x = self._return_value_pipeline("process-data", metric, {})
         for _, v in x.items():
             if v is None:
                 raise ValueError(
-                    "Field skip_monotonic_check must be a dictionary with list values. Each element in list values"
-                    "Is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics`"
-                    "can be either a single string or a list of strings."
+                    f"Field {metric} must be a dictionary with list values. Each element in list values "
+                    "is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics` "
+                    f"can be either a single string or a list of strings. Given was {x}"
                 )
             elif not _valid_value(v):
                 raise ValueError(
-                    "Field skip_monotonic_check must be a dictionary with list values. Each element in list values"
-                    "Is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics`"
-                    "can be either a single string or a list of strings."
+                    f"Field {metric} must be a dictionary with list values. Each element in list values "
+                    "is expected to be a dictionary of shape {'date': YYYY-MM-DD, 'metrics': metrics}. `metrics` "
+                    f"can be either a single string or a list of strings. Given was {x}"
                 )
         return x
 

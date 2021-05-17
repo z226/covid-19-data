@@ -3,6 +3,9 @@ from itertools import chain
 
 import pandas as pd
 
+from vax.cmd.utils import get_logger
+
+logger = get_logger()
 
 VACCINES_ACCEPTED = [
     "Pfizer/BioNTech", "Moderna", "Oxford/AstraZeneca", "Sputnik V", "Sinopharm/Beijing",
@@ -15,17 +18,23 @@ VACCINES_ONE_DOSE = [
 ]
 
 def country_df_sanity_checks(
-        df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = []) -> pd.DataFrame:
-    checker = CountryChecker(df, monotonic_check_skip=monotonic_check_skip)
+        df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = [],
+        anomalies: bool = True, anomaly_check_skip: list = []) -> pd.DataFrame:
+    checker = CountryChecker(
+        df, monotonic_check_skip=monotonic_check_skip, anomalies=anomalies, anomaly_check_skip=anomaly_check_skip
+    )
     checker.run()
 
 
 class CountryChecker:
-    def __init__(self, df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = []):
+    def __init__(self, df: pd.DataFrame, allow_extra_cols: bool = True, monotonic_check_skip: list = [],
+                 anomalies: bool = True, anomaly_check_skip: list = []):
         self.location = self._get_location(df)
         self.df = df
         self.allow_extra_cols = allow_extra_cols
-        self.skip_monocheck_ids = self._skip_monocheck_ids(monotonic_check_skip)
+        self.skip_monocheck_ids = self._skip_check_ids(monotonic_check_skip)
+        self.anomalies = anomalies
+        self.skip_anomalcheck_ids = self._skip_check_ids(anomaly_check_skip)
 
     def _get_location(self, df):
         x = df.loc[:, "location"].unique()
@@ -33,14 +42,14 @@ class CountryChecker:
             raise ValueError("More than one location found")
         return x[0]
 
-    def _skip_monocheck_ids(self, monotonic_check_skip):
+    def _skip_check_ids(self, check_skip):
         def _f(x):
             dt = x["date"].strftime("%Y%m%d")
             if isinstance(x["metrics"], list):
                 return [dt + m for m in x["metrics"]]
             return [x["date"].strftime("%Y%m%d") + x["metrics"]]
     
-        res = [_f(x) for x in monotonic_check_skip]
+        res = [_f(x) for x in check_skip]
         return list(chain.from_iterable(res))
 
     @property
@@ -102,6 +111,9 @@ class CountryChecker:
         self._check_metrics_monotonic(df)
         # Inequalities
         self._check_metrics_inequalities(df)
+        # Anomalies
+        if self.anomalies:
+            self._check_metrics_anomalies(df)
 
     def _check_metrics_monotonic(self, df: pd.DataFrame):
         # Use info from monotonic_check_skip to raise exception or not
@@ -129,6 +141,30 @@ class CountryChecker:
             df = df[["people_fully_vaccinated", "total_vaccinations"]].dropna()
             if (df["total_vaccinations"] < df["people_fully_vaccinated"]).any():
                 raise ValueError(f"{self.location} -- people_fully_vaccinated can't be < people_vaccinated!")
+
+    def _check_metrics_anomalies(self, df):
+        for metric in self.metrics_present:
+            self._check_anomalies(df, metric)
+
+    def _check_anomalies(self, df, metric, th=6):
+        # Get metric values above 10,000
+        df_ = df.set_index("date")
+        df_metric = df_.loc[(df_[metric] > 10000), metric]
+        # Compute rolling average, 7 days. NaNs are filled with non-smoothed values
+        window_size = "7d"
+        m = df_metric.rolling(window_size, min_periods=2).mean().shift(1)
+        m.loc[m.isnull()] = df_metric[m.isnull()]
+        # Compute ratio between rolling average and value. Build Anomalies dataframe
+        t = df_metric / (m+1e-9)
+        t = pd.DataFrame({
+            f"{metric}_{window_size}": m[t > th],
+            f"{metric}_ratio": t[t > th],
+        })
+        anomalies = df_.loc[t.index, [metric]].merge(t, on="date").reset_index()
+        if not anomalies.empty:
+            wrong_ids = anomalies.date.dt.strftime("%Y%m%d") + metric
+            if not wrong_ids.isin(self.skip_anomalcheck_ids).all():
+                logger.warn(f"{self.location} -- Potential anomalies found ⚠️:\n{anomalies}")
 
     def run(self):
         # Ensure required columns are present

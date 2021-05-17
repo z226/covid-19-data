@@ -11,7 +11,7 @@ logger = get_logger()
 
 
 def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id: str, skip_complete: list = None,
-                      skip_monotonic: dict = {}):
+                      skip_monotonic: dict = {}, skip_anomaly: dict = {}):
     print("-- Processing data... --")
     # Get data from sheets
     logger.info("Getting data from Google Spreadsheet...")
@@ -33,7 +33,8 @@ def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id:
     # Process locations
     def _process_location(df):
         monotonic_check_skip = skip_monotonic.get(df.loc[0, "location"], [])
-        return process_location(df, monotonic_check_skip)
+        anomaly_check_skip = skip_anomaly.get(df.loc[0, "location"], [])
+        return process_location(df, monotonic_check_skip, anomaly_check_skip)
 
     logger.info("Processing and exporting data...")
     vax = [
@@ -47,5 +48,5 @@ def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id:
     df = pd.concat(vax).sort_values(by=["location", "date"])
     df.to_csv(paths.tmp_vax_all, index=False)
     gsheet.metadata.to_csv(paths.tmp_met_all, index=False)
-    logger.info("Exported")
+    logger.info("Exported ✅")
     print_eoe()

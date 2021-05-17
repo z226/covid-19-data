@@ -28,7 +28,7 @@ class Greece:
         metrics_mapping = {
             "Συνολικοί εμβολιασμοί με τουλάχιστον 1 δόση": "people_partly_vaccinated",
             "Συνολικοί ολοκληρωμένοι εμβολιασμοί": "people_fully_vaccinated",
-            "Συνολικοί εμβολιασμοί": "total_vacinations",
+            "Συνολικοί εμβολιασμοί": "total_vaccinations",
             "Σύνολο ατόμων που έχουν εμβολιαστεί ": "people_vaccinated",
         }
         dfs = [
@@ -43,7 +43,7 @@ class Greece:
         return df.assign(people_fully_vaccinated=df.people_fully_vaccinated.replace(0, pd.NA))
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(date=df.date.apply(lambda x: date_formatter(x, "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d")))
+        return df.assign(date=date_formatter(df.date, "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"))
 
     def pipe_metadata(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
@@ -63,7 +63,7 @@ class Greece:
                 return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         return df.assign(vaccine=df.date.apply(_enrich_vaccine_name))
 
-    def pipe_select_output_columns(df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[[
             "date",
             "location",

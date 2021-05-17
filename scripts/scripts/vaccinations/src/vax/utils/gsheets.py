@@ -152,5 +152,5 @@ def read_csv_and_check(filepath):
     if not df.date.is_monotonic:
         raise ValueError(f"{location} -- Check that date field is monotonically increasing.")
     # Checks
-    country_df_sanity_checks(df)
+    country_df_sanity_checks(df, anomalies=False)
     return df

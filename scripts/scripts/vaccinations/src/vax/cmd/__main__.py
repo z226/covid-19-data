@@ -20,33 +20,34 @@ def main():
     if "get" in config.mode:
         cfg = config.GetDataConfig()
         main_get_data(
-            paths,
-            cfg.parallel,
-            cfg.njobs,
-            cfg.countries,
-            creds.greece_api_token,
-            cfg.skip_countries,
+            paths=paths,
+            parallel=cfg.parallel,
+            njobs=cfg.njobs,
+            countries=cfg.countries,
+            greece_api_token=creds.greece_api_token,
+            skip_countries=cfg.skip_countries,
         )
     if "process" in config.mode:
         cfg = config.ProcessDataConfig()
         main_process_data(
-            paths,
-            creds.google_credentials,
-            creds.google_spreadsheet_vax_id,
-            cfg.skip_complete,
-            cfg.skip_monotonic_check,
+            paths=paths,
+            google_credentials=creds.google_credentials,
+            google_spreadsheet_vax_id=creds.google_spreadsheet_vax_id,
+            skip_complete=cfg.skip_complete,
+            skip_monotonic=cfg.skip_monotonic_check,
+            skip_anomaly=cfg.skip_anomaly_check,
         )
     if "generate" in config.mode:
         if config.check_r:
-            test_check_with_r(paths)
+            test_check_with_r(paths=paths)
         else:
             main_generate_dataset(
-                paths,
+                paths=paths,
             )
     if "export" in config.mode:
         main_export(
-            paths,
-            creds.owid_cloud_table_post
+            paths=paths,
+            url=creds.owid_cloud_table_post
         )
 
 

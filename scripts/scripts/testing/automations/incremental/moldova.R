@@ -2,8 +2,8 @@ url <- "https://noi.md/md/societate/coronavirus-in-moldova-statistica-infectaril
 
 count <- read_html(url) %>%
     html_nodes('p') %>%
-    extract(7) %>%
-    html_text() %>% 
+    magrittr::extract(7) %>%
+    html_text() %>%
     str_replace_all(fixed(" "), "") %>%
     as.integer()
 
@@ -13,5 +13,6 @@ add_snapshot(
     country = "Moldova",
     units = "tests performed",
     source_url = url,
-    source_label = "Moldova Ministry of Health, Labour and Social Protection"
+    source_label = "Moldova Ministry of Health, Labour and Social Protection",
+    testing_type = "includes non-PCR"
 )

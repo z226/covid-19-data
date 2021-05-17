@@ -42,7 +42,7 @@ def main():
             test_check_with_r(paths=paths)
         else:
             main_generate_dataset(
-                patjs=paths,
+                paths=paths,
             )
     if "export" in config.mode:
         main_export(

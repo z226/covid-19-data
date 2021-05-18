@@ -23,7 +23,9 @@ def rename_columns(df: pd.DataFrame, columns: dict) -> pd.DataFrame:
 
 
 def correct_data(df: pd.DataFrame) -> pd.DataFrame:
-    df.loc[df.people_fully_vaccinated == 0, "people_vaccinated"] = df.total_vaccinations
+    df.loc[
+        (df.people_fully_vaccinated == 0) | df.people_fully_vaccinated.isnull(), "people_vaccinated"
+    ] = df.total_vaccinations
     return df
 
 
@@ -56,9 +58,6 @@ def exclude_data_points(df: pd.DataFrame) -> pd.DataFrame:
     # The data contains an error that creates a negative change in the people_vaccinated series
     df = df[df.date.astype(str) != "2021-01-24"]
 
-    # Check that data logic is valid
-    assert all(df.people_fully_vaccinated <= df.people_vaccinated)
-
     return df
 
 
@@ -68,7 +67,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
         .pipe(rename_columns, columns={
             "Date": "date",
             "Total Vaccination Doses": "total_vaccinations",
-            " Second Dose Taken": "people_fully_vaccinated",
+            "Fully vaccinated (2 of 2 or 1 of 1)": "people_fully_vaccinated",
             "Received one dose": "people_vaccinated",
         })
         .pipe(correct_data)

@@ -17,6 +17,7 @@ VACCINES_ACCEPTED = [
     "Moderna",
     "Oxford/AstraZeneca",
     "Pfizer/BioNTech",
+    "RBD-Dimer",
     "Sinopharm/Beijing",
     "Sinopharm/HayatVax",
     "Sinopharm/Wuhan",

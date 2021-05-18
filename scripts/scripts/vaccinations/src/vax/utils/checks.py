@@ -8,8 +8,20 @@ from vax.cmd.utils import get_logger
 logger = get_logger()
 
 VACCINES_ACCEPTED = [
-    "Pfizer/BioNTech", "Moderna", "Oxford/AstraZeneca", "Sputnik V", "Sinopharm/Beijing",
-    "Sinopharm/Wuhan", "Johnson&Johnson", "Sinovac", "Covaxin", "EpiVacCorona", "CanSino", "Abdala",
+    "Abdala",
+    "CanSino",
+    "Covaxin",
+    "EpiVacCorona",
+    "Johnson&Johnson",
+    "QazVac"
+    "Moderna",
+    "Oxford/AstraZeneca",
+    "Pfizer/BioNTech",
+    "Sinopharm/Beijing",
+    "Sinopharm/HayatVax",
+    "Sinopharm/Wuhan",
+    "Sinovac",
+    "Sputnik V",
 ]
 
 VACCINES_ONE_DOSE = [

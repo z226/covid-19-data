@@ -14,10 +14,10 @@ from vax.utils.incremental import clean_count, enrich_data, increment
 
 def read(source: str):
     url_pdf = parse_pdf_link(source)
-    print(url_pdf)
     pdf_text = get_text_from_pdf(url_pdf)
     return pd.Series({
         "people_vaccinated": parse_people_vaccinated(pdf_text),
+        "people_fully_vaccinated": parse_people_fully_vaccinated(pdf_text),
         "date": parse_date(pdf_text),
         "source_url": url_pdf
     })
@@ -60,6 +60,11 @@ def parse_people_vaccinated(pdf_text: str):
     return clean_count(re.search(regex, pdf_text).group(1))
 
 
+def parse_people_fully_vaccinated(pdf_text: str):
+    regex = r"(\d+)[ ]?People Vaccinated \(Second Dose\)"
+    return clean_count(re.search(regex, pdf_text).group(1))
+
+
 def _get_month(month_raw: str):
     months_dix = {
         "January": 1,
@@ -89,7 +94,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
 
 
 def add_totals(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "total_vaccinations", ds.people_vaccinated)
+    return enrich_data(ds, "total_vaccinations", ds.people_vaccinated + ds.people_fully_vaccinated)
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
@@ -109,6 +114,7 @@ def main(paths):
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],
+        people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"]

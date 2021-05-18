@@ -13,7 +13,7 @@ VACCINES_ACCEPTED = [
     "Covaxin",
     "EpiVacCorona",
     "Johnson&Johnson",
-    "QazVac"
+    "QazVac",
     "Moderna",
     "Oxford/AstraZeneca",
     "Pfizer/BioNTech",

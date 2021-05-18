@@ -2,6 +2,7 @@ from datetime import datetime
 import pandas as pd
 
 from vax.utils.checks import country_df_sanity_checks
+from vax.process.urls import clean_urls
 
 
 def process_location(df: pd.DataFrame, monotonic_check_skip: list = [], anomaly_check_skip: list = []) -> pd.DataFrame:
@@ -35,4 +36,6 @@ def process_location(df: pd.DataFrame, monotonic_check_skip: list = [], anomaly_
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
     # Date format
     df = df.assign(date=df.date.dt.strftime("%Y-%m-%d"))
+    # Clean URLs
+    df = clean_urls(df)
     return df

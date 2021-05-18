@@ -8,6 +8,7 @@ pipeline:
     njobs: -2
     skip_countries:
       - Colombia
+      - North Macedonia
   process-data:
     skip_complete:
     skip_monotonic_check:

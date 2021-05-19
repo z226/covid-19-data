@@ -52,7 +52,7 @@ class CountryChecker:
     def _get_location(self, df):
         x = df.loc[:, "location"].unique()
         if len(x) != 1:
-            raise ValueError("More than one location found")
+            raise ValueError(f"More than one location found: {df.loc[:, 'location'].unique()}")
         return x[0]
 
     def _skip_check_ids(self, check_skip):

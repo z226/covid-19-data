@@ -9,7 +9,7 @@ url = 'https://www.gouv.bj/coronavirus/'
 req = urllib.request.urlopen(url)
 soup = BeautifulSoup(req.read(), 'html.parser')
 
-stats = soup.find_all('h2',attrs={'class','h1 adapt white regular'})
+stats = soup.find_all('h2', attrs={'class', 'h1 adapt white regular'})
 
 count = int(stats[0].text) + int(stats[1].text)
 date_str = date.today().strftime("%Y-%m-%d")

@@ -17,7 +17,7 @@ df = pd.DataFrame({
     'Cumulative total': count,
     'Source URL': url,
     'Source label': 'CDCMOH',
-    'Units': 'unclear'
+    'Units': 'unclear',
 })
 
 output_file = 'automated_sheets/Cambodia.csv'

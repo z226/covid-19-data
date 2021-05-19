@@ -14,7 +14,7 @@ stats = soup.select('div.stats-number.ult-responsive')
 count = int(stats[0]['data-counter-value'])
 print(count)
 
-date = str(date.today())
+date = date.today().strftime("%Y-%m-%d")
 df = pd.DataFrame({'Country': 'Belize',
                    'Date': [date],
                    'Cumulative total': count,

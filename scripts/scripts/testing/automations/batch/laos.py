@@ -1,27 +1,33 @@
+import os
+
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 from datetime import date
-import urllib
 
 url = 'https://www.covid19.gov.la/index.php'
 #Only works when making two requests. The first always returns an error.
 try:
-    data = BeautifulSoup(requests.get(url).text)
+    data = BeautifulSoup(requests.get(url).text, features="lxml")
 except:
-    data = BeautifulSoup(requests.get(url).text)
+    data = BeautifulSoup(requests.get(url).text, features="lxml")
 
 stats = data.find_all('p')
-count = int(stats[11].text.split(' ')[0].replace(',',''))
+count = int(stats[11].text.split(' ')[0].replace(',', ''))
 
-date = str(date.today())
-new = pd.DataFrame({'Country': 'Laos',
-                   'Date': [date],
-                   'Cumulative total': count,
-                   'Source URL': url,
-                   'Source label': 'Government of Laos',
-                   'Units': 'unclear'})
+date_str = date.today().strftime("%Y-%m-%d")
+df = pd.DataFrame({
+    'Country': 'Laos',
+    'Date': [date_str],
+    'Cumulative total': count,
+    'Source URL': url,
+    'Source label': 'Government of Laos',
+    'Units': 'unclear'
+})
 
-existing = pd.read_csv('automated_sheets/Laos.csv')
-df = pd.concat([new,existing]).sort_values('Date',ascending=False)
-df.to_csv('automated_sheets/Laos.csv',index=False)
+output_file = 'automated_sheets/Laos.csv'
+if os.path.isfile(output_file):
+    existing = pd.read_csv(output_file)
+    df = pd.concat([df, existing]).sort_values('Date', ascending=False)
+
+df.to_csv(output_file, index=False)

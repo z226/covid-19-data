@@ -1,3 +1,4 @@
+import locale
 import re
 
 from bs4 import BeautifulSoup
@@ -47,6 +48,7 @@ def pipeline(ds: pd.Series) -> pd.Series:
 
 
 def main(paths):
+    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://ncoc.gov.pk/covid-vaccination-en.php"
     data = read(source).pipe(pipeline)
     increment(

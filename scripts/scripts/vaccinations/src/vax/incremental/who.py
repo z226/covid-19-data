@@ -3,6 +3,8 @@ import numpy as np
 
 from vax.utils.incremental import increment
 from vax.utils.checks import VACCINES_ONE_DOSE
+from vax.utils.who import VACCINES_WHO_MAPPING
+
 
 # Dict mapping WHO country names -> OWID country names
 COUNTRIES = {
@@ -37,22 +39,6 @@ COUNTRIES = {
     "Timor-Leste": "Timor",
     "Turkmenistan": "Turkmenistan",
     "Yemen": "Yemen",
-}
-
-# Dict mapping WHO vaccine names -> OWID vaccine names
-VACCINES = {
-    "Beijing CNBG - Inactivated": "Sinopharm/Beijing",
-    "Wuhan CNBG - Inactivated": "Sinopharm/Wuhan",
-    "Sinovac - CoronaVac": "Sinovac",
-    "Gamaleya - Sputnik V": "Sputnik V",
-    "Pfizer BioNTech - Comirnaty": "Pfizer/BioNTech",
-    "Moderna - mRNA-1273": "Moderna",
-    "SII - Covishield": "Oxford/AstraZeneca",
-    "AstraZeneca - AZD1222": "Oxford/AstraZeneca",
-    "Bharat - Covaxin": "Covaxin",
-    "SRCVB - EpiVacCorona": "EpiVacCorona",
-    "Janssen - Ad26.COV 2.5": "Johnson&Johnson",
-    "CanSino - Ad5-nCOV": "CanSino",
 }
 
 
@@ -90,9 +76,11 @@ def vaccine_checks(df: pd.DataFrame) -> pd.DataFrame:
         .apply(lambda x: [xx.strip() for xx in x.split(",")])
         .sum()
     )
-    vaccines_unknown = vaccines_used.difference(VACCINES)
+    vaccines_unknown = vaccines_used.difference(VACCINES_WHO_MAPPING)
     if vaccines_unknown:
-        raise ValueError(f"Unknown vaccines {vaccines_unknown}. Update vax.incremental.who.VACCINES accordingly.")
+        raise ValueError(
+            f"Unknown vaccines {vaccines_unknown}. Update `vax.utils.who.VACCINES_WHO_MAPPING` accordingly."
+        )
     return df
 
 
@@ -101,7 +89,7 @@ def map_vaccines_func(row) -> tuple:
     if pd.isna(row.VACCINES_USED):
         raise ValueError("Vaccine field is NaN")
     vaccines = pd.Series(row.VACCINES_USED.split(","))
-    vaccines = vaccines.replace(VACCINES)
+    vaccines = vaccines.replace(VACCINES_WHO_MAPPING)
     only_2doses = all(-vaccines.isin(pd.Series(VACCINES_ONE_DOSE)))
 
     return pd.Series([", ".join(sorted(vaccines.unique())), only_2doses])

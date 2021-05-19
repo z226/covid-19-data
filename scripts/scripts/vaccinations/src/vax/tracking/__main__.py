@@ -2,7 +2,7 @@ import os
 import argparse
 
 from vax.tracking.countries import countries_missing, country_updates_summary
-from vax.tracking.vaccines import vaccines_missing
+from vax.tracking.vaccines import vaccines_missing, vaccines_comparison_with_who
 
 
 def _parse_args():
@@ -14,15 +14,16 @@ def _parse_args():
             "countries-least-updated",
             "countries-least-updatedfreq",
             "vaccines-missing",
+            "vaccines-missing-who",
         ],
         default="countries-last-updated",
         help=(
-            "Choose a step: i) countries-missing will get table with countries not included in dataset, 2) "
-            "countries-last-updated will get table with countries last updated, 3) countries-least-updated will "
-            "get table with countries least updated, 4) countries-least-updatedfreq will g et table with countries "
+            "Choose a step: 1) `countries-missing` will get table with countries not included in dataset, 2) "
+            "`countries-last-updated` will get table with countries last updated, 3) `countries-least-updated` will "
+            "get table with countries least updated, 4) `countries-least-updatedfreq` will g et table with countries "
             "least frequently updated (ratio of number of updates and time since first observation), "
-            "5) vaccines-missing will get table with missing vaccines.Unapproved (but tracked) and Untracked (but "
-            "approved)."
+            "5) `vaccines-missing` will get table with missing vaccines: Unapproved (but tracked) and Untracked (but "
+            "approved), 6) `vaccines-missing-who` get comparison with WHO vaccine record."
         )
     )
     parser.add_argument(
@@ -75,7 +76,14 @@ def main():
         print(df)
         print("----------------------------\n----------------------------\n----------------------------\n")
         if args.to_csv:
-            export_to_csv(df, filename="vaccines-missing.tmp.csv")
+            export_to_csv(df, filename="vaccines-missing-who.tmp.csv")
+    if args.mode == "vaccines-missing-who":
+        print("-- Missing vaccines (WHO)... --")
+        df = vaccines_comparison_with_who()
+        print(df)
+        print("----------------------------\n----------------------------\n----------------------------\n")
+        if args.to_csv:
+            export_to_csv(df, filename="vaccines-missing-who.tmp.csv")
 
 
 if __name__ == "__main__":

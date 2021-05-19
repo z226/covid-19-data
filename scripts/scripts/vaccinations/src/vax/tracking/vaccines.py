@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from vax.utils.utils import get_soup, get_headers
+from vax.utils.who import VACCINES_WHO_MAPPING
 
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -207,3 +208,36 @@ def vaccines_missing(aggregated: bool = False, verbose: bool = False):
         df = df[["location", "unapproved", "num_unapproved", "untracked", "num_untracked"]]
         df = df.sort_values(by="num_untracked", ascending=False)
         return df
+
+
+def vaccines_comparison_with_who():
+    # Load WHO
+    url = "https://covid19.who.int/who-data/vaccination-metadata.csv"
+    df_who = pd.read_csv(url)
+    vaccines_used_who = df_who.groupby("ISO3").apply(
+        lambda x: set(
+            VACCINES_WHO_MAPPING[xx] for xx in x[~x.START_DATE.isnull()].VACCINE_NAME
+        )
+    )
+    vaccines_used_who.name = "vaccines_used_who"
+
+    # Load OWID
+    url = "https://github.com/owid/covid-19-data/raw/master/public/data/vaccinations/locations.csv"
+    df_owid = pd.read_csv(url)
+    vaccines_used_owid = df_owid.assign(
+        vaccines_used_owid=(
+            df_owid
+            .vaccines.apply(lambda x: set(xx.strip() for xx in x.split(", ")))
+        )
+    )[["iso_code", "location", "vaccines_used_owid"]].set_index("iso_code")
+
+    # Merge
+    vaccines_used = vaccines_used_owid.merge(vaccines_used_who, right_index=True, left_index=True)
+
+    # Obtain differences
+    vaccines_used = vaccines_used.assign(
+        missing_in_who=vaccines_used.apply(lambda x: x.vaccines_used_owid.difference(x.vaccines_used_who), axis=1),
+        missing_in_owid=vaccines_used.apply(lambda x: x.vaccines_used_who.difference(x.vaccines_used_owid), axis=1),
+    )
+
+    return vaccines_used

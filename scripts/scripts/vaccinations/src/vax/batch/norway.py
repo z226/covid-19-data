@@ -5,6 +5,8 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+from vax.utils.utils import date_formatter
+
 
 def read_csv_multiple_separators(filepath: str, separators: list, usecols: list) -> pd.DataFrame:
     """Read a csv using potential separator candidates.
@@ -75,10 +77,11 @@ def main(paths):
 
     df["total_vaccinations"] = df["people_vaccinated"] + df["people_fully_vaccinated"].fillna(0)
 
-    df["date"] = pd.to_datetime(df["date"], format="%Y-%m-%d")
+    df["date"] = date_formatter(df.date, "%Y-%m-%d", "%Y-%m-%d")
 
     df.loc[:, "location"] = "Norway"
-    df.loc[:, "vaccine"] = "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+    # df.loc[:, "vaccine"] = "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+    df = enrich_vaccine(df)
     df.loc[:, "source_url"] = url
 
     assert len(df) > 10
@@ -86,6 +89,19 @@ def main(paths):
     df.to_csv(paths.tmp_vax_out("Norway"), index=False)
 
     os.remove("./antall-personer-vaksiner.csv")
+
+
+def enrich_vaccine(df: pd.DataFrame) -> pd.DataFrame:
+    def _enrich_vaccine(date: str):
+        if date < '2021-01-15':
+            return 'Pfizer/BioNTech'
+        elif '2021-01-15' <= date < '2021-02-10':
+            return "Moderna, Pfizer/BioNTech"
+        elif '2021-02-10' <= date < '2021-03-11':
+            return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+        elif '2021-03-11' <= date:
+            return "Moderna, Pfizer/BioNTech"
+    return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
 
 if __name__ == "__main__":

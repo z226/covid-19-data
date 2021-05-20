@@ -330,6 +330,12 @@ log <- sprintf(
     length(countries),
     old_updates
 )
+
+# Timestamp
+tm <- as.POSIXlt(Sys.time(), "UTC")
+tm <- strftime(tm, "%Y-%m-%dT%H:%M:%S")
+writeLines(tm, "../timestamp/owid-covid-data-last-updated-timestamp-test.txt")
+
 message("-----")
 message(log)
 message("-----")

@@ -15,6 +15,7 @@ import pandas as pd
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../input/"))
+TIMESTAMP_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../timestamp/"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../grapher/"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../public/data/"))
 
@@ -578,11 +579,17 @@ def generate_megafile():
     create_internal(all_covid)
 
     # Store the last updated time
-    timestamp_filename = os.path.join(DATA_DIR, "owid-covid-data-last-updated-timestamp.txt")
-    with open(timestamp_filename, "w") as timestamp_file:
-        timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())
+    timestamp_filename = os.path.join(DATA_DIR, "owid-covid-data-last-updated-timestamp.txt")  # @deprecate
+    export_timestamp(timestamp_filename)  # @deprecate
+    timestamp_filename = os.path.join(TIMESTAMP_DIR, "owid-covid-data-last-updated-timestamp-root.txt")
+    export_timestamp(timestamp_filename)
 
     print("All done!")
+
+
+def export_timestamp(timestamp_filename):
+    with open(timestamp_filename, "w") as timestamp_file:
+        timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())
 
 
 if __name__ == '__main__':

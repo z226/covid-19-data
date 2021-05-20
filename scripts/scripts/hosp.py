@@ -13,10 +13,12 @@ CURRENT_DIR = os.path.dirname(__file__)
 sys.path.append(CURRENT_DIR)
 
 from utils.db_imports import import_dataset
+from utils.utils import export_timestamp
 
 
 SOURCE_URL = "https://opendata.ecdc.europa.eu/covid19/hospitalicuadmissionrates/csv/data.csv"
 INPUT_PATH = os.path.join(CURRENT_DIR, "../input/")
+TIMESTAMP_PATH = os.path.join(CURRENT_DIR, "../timestamp/")
 GRAPHER_PATH = os.path.join(CURRENT_DIR, "../grapher/")
 DATASET_NAME = "COVID-2019 - Hospital & ICU"
 ZERO_DAY = "2020-01-21"
@@ -252,6 +254,9 @@ def generate_dataset():
     df = owid_format(df)
     df = date_to_owid_year(df)
     df.to_csv(os.path.join(GRAPHER_PATH, "COVID-2019 - Hospital & ICU.csv"), index=False)
+    # Timestamp
+    filename = os.path.join(TIMESTAMP_PATH, "owid-covid-data-last-updated-timestamp-hosp.txt")
+    export_timestamp(filename)
 
 
 def update_db():

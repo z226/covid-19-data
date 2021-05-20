@@ -22,6 +22,7 @@ VACCINES_ACCEPTED = [
     "Sinopharm/HayatVax",
     "Sinopharm/Wuhan",
     "Sinovac",
+    "Soberana02",
     "Sputnik V",
 ]
 

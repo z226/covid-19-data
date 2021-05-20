@@ -12,7 +12,6 @@ metrics_mapping = {
     "COVIDVACADT": "total_vaccinations"
 }
 country_mapping = {
-    "PG": "Papua New Guinea",
     "SB": "Solomon Islands",
     "TV": "Tuvalu",
     "TO": "Tonga",

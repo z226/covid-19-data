@@ -56,12 +56,12 @@ def parse_date(pdf_text: str):
 
 
 def parse_people_vaccinated(pdf_text: str):
-    regex = r"(\d+)[ ]?Total people vaccinated"
+    regex = r"(\d+)\*? ?Total people vaccinated"
     return clean_count(re.search(regex, pdf_text).group(1))
 
 
 def parse_people_fully_vaccinated(pdf_text: str):
-    regex = r"(\d+)[ ]?People Vaccinated \(Second Dose\)"
+    regex = r"(\d+)\*? ?People Vaccinated \(Second Dose\)"
     return clean_count(re.search(regex, pdf_text).group(1))
 
 

@@ -1,5 +1,15 @@
 location,date,vaccine,source_url,total_vaccinations,people_vaccinated,people_fully_vaccinated
-England,2021-01-03,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1193335,1172675,20660
+England,2020-12-29,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,897553,895274,2279
+England,2020-12-30,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1012351,1005805,6546
+England,2020-12-31,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1107688,1096346,11342
+England,2021-01-01,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1133667,1121220,12447
+England,2021-01-02,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1168474,1151337,17137
+England,2021-01-03,Pfizer/BioNTech,https://coronavirus.data.gov.uk/details/healthcare,1188673,1167727,20946
+England,2021-01-04,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,1225659,1195455,30204
+England,2021-01-05,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,1331528,1253955,77573
+England,2021-01-06,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,1502589,1343662,158927
+England,2021-01-07,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,1786092,1547545,238547
+England,2021-01-08,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,2096848,1798560,298288
 England,2021-01-10,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,2333764,1959151,374613
 England,2021-01-11,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,2474205,2080280,393925
 England,2021-01-12,"Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,2661850,2254556,407294
@@ -128,3 +138,4 @@ England,2021-05-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://corona
 England,2021-05-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,47552476,30537954,17014522
 England,2021-05-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,47815683,30643474,17172209
 England,2021-05-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,48112071,30729420,17382651
+England,2021-05-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://coronavirus.data.gov.uk/details/healthcare,48535975,30884041,17651934

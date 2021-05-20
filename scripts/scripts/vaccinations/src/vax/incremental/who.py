@@ -31,6 +31,8 @@ COUNTRIES = {
     "Myanmar": "Myanmar",
     "Nicaragua": "Nicaragua",
     "Niger": "Niger",
+    "Papua New Guinea": "Papua New Guinea",
+    "Sao Tome and Principe": "Sao Tome and Principe",
     "Sint Maarten": "Sint Maarten (Dutch part)",
     "Somalia": "Somalia",
     "South Sudan": "South Sudan",

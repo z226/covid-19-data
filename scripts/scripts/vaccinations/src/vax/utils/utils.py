@@ -50,7 +50,7 @@ def get_headers() -> dict:
     }
 
 
-def get_soup(source: str, headers: dict = None) -> BeautifulSoup:
+def get_soup(source: str, headers: dict = None, verify: bool = True) -> BeautifulSoup:
     """Get soup from website.
 
     Args:
@@ -62,7 +62,7 @@ def get_soup(source: str, headers: dict = None) -> BeautifulSoup:
     """
     if headers is None:
         headers = get_headers()
-    return BeautifulSoup(requests.get(source, headers=headers).content, "html.parser")
+    return BeautifulSoup(requests.get(source, headers=headers, verify=verify).content, "html.parser")
 
 
 def date_formatter(ds: pd.Series, format_input: str, format_output: str) -> pd.Series:

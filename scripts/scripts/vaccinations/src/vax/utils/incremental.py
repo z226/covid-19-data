@@ -117,3 +117,16 @@ def _build_df(location, total_vaccinations, date, vaccine, source_url, people_va
     if people_fully_vaccinated is not None:
         new["people_fully_vaccinated"] = people_fully_vaccinated
     return new
+
+
+def merge_with_current_data(df: pd.DataFrame, filepath: str) -> pd.DataFrame:
+    col_ints = ["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+    # Load current data
+    if os.path.isfile(filepath):
+        df_current = pd.read_csv(filepath)
+        # Merge
+        df_current = df_current[~df_current.date.isin(df.date)]
+        df = pd.concat([df, df_current]).sort_values(by="date")
+        # Int values
+    df[col_ints] = df[col_ints].astype("Int64").fillna(pd.NA)
+    return df

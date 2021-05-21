@@ -19,7 +19,7 @@ df = pd.DataFrame({
     'Cumulative total': count,
     'Source URL': url,
     'Source label': 'Government of Benin',
-    'Units': 'unclear',
+    'Units': 'tests performed',
 })
 
 output_file = 'automated_sheets/Benin.csv'

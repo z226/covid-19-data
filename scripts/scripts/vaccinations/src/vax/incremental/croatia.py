@@ -1,3 +1,4 @@
+from datetime import timedelta
 import requests
 
 import pandas as pd
@@ -12,7 +13,7 @@ def read(source: str) -> pd.Series:
     total_vaccinations = data[0]["CijepljenjeBrUtrosenihDoza"]
     people_vaccinated = data[0]["CijepljeniJednomDozom"]
     people_fully_vaccinated = data[0]["CijepljeniDvijeDoze"]
-    date = data[0]["Datum"][:10]
+    date = str((pd.to_datetime(data[0]["Datum"]) - timedelta(days=1)).date())
 
     return pd.Series(data={
         "total_vaccinations": total_vaccinations,

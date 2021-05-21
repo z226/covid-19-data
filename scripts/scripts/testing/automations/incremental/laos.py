@@ -22,7 +22,7 @@ df = pd.DataFrame({
     'Cumulative total': count,
     'Source URL': url,
     'Source label': 'Government of Laos',
-    'Units': 'unclear'
+    'Units': 'people tested'
 })
 
 output_file = 'automated_sheets/Laos.csv'

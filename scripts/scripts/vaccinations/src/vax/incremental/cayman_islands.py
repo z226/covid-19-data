@@ -41,7 +41,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     proportion_dose1 = clean_count(matches.group(2))
     proportion_dose2 = clean_count(matches.group(3))
     assert proportion_dose1 >= proportion_dose2
-    people_fully_vaccinated = round(people_vaccinated * proportion_dose2/100)  
+    people_fully_vaccinated = round(total_vaccinations * proportion_dose2/100)  
 
     return pd.Series({
         "total_vaccinations": total_vaccinations,

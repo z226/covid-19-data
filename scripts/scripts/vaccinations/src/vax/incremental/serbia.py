@@ -1,12 +1,11 @@
-import os
 import re
-from datetime import datetime
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.utils import get_soup
 from vax.utils.incremental import clean_count, enrich_data, increment
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -38,7 +37,7 @@ def parse_date(soup: BeautifulSoup) -> str:
             x.append(elem)
     if len(x) > 1:
         raise ValueError("Format of source has changed")
-    date_str = datetime.strptime(x[0].text, "ажурирано %d.%m.%Y").strftime("%Y-%m-%d")
+    date_str = clean_date(x[0].text, "ажурирано %d.%m.%Y")
     return date_str
 
 

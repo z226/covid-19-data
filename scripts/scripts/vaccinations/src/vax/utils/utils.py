@@ -2,7 +2,7 @@ import os
 import requests
 import tempfile
 
-import dateparser
+
 from bs4 import BeautifulSoup
 import pandas as pd
 
@@ -63,16 +63,6 @@ def get_soup(source: str, headers: dict = None, verify: bool = True) -> Beautifu
     if headers is None:
         headers = get_headers()
     return BeautifulSoup(requests.get(source, headers=headers, verify=verify).content, "html.parser")
-
-
-def clean_date(dt, fmt=None, language="en"):
-    return (
-        dateparser.parse(dt, date_formats=[fmt], languages=[language]).strftime("%Y-%m-%d")
-    )
-
-
-def date_formatter(ds: pd.Series, format_input: str, format_output: str) -> pd.Series:
-    return pd.to_datetime(ds, format=format_input).dt.strftime(format_output)
 
 
 def url_request_broken(url):

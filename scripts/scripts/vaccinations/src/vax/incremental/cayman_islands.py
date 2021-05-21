@@ -1,14 +1,11 @@
-import os
-import datetime
 import re
 import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment, clean_count
-
+from vax.utils.dates import localdate
 
 def read(source: str) -> pd.Series:
     soup = BeautifulSoup(requests.get(source).content, "html.parser")
@@ -54,7 +51,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
 
 def set_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("America/Cayman")).date() - datetime.timedelta(days=1))
+    date = localdate("America/Cayman")
     return enrich_data(ds, "date", date)
 
 

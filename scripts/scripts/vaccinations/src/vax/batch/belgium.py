@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 
 from vax.utils.pipeline import enrich_total_vaccinations

@@ -1,14 +1,12 @@
-import os
 import re
-from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import tabula
 
-from vax.utils.incremental import enrich_data, increment, clean_date
-
+from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import clean_date
 
 def read(source: str) -> pd.Series:
     soup = BeautifulSoup(requests.get(source).content, "html.parser")
@@ -39,7 +37,7 @@ def parse_date(df: dict) -> str:
     col = [col for col in _ if col is not None]
     if len(col) != 1:
         raise ValueError("Something changed in the columns!")
-    date = datetime.strptime(col[0].group(1), "%d.%m.%Y").strftime("%Y-%m-%d")
+    date = clean_date(col[0].group(1), "%d.%m.%Y")
     return date
 
 

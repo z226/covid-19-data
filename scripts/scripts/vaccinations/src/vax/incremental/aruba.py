@@ -1,11 +1,8 @@
-import os
-from datetime import datetime, timedelta
-import pytz
-
 import requests
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -30,7 +27,7 @@ def add_totals(ds: pd.Series) -> pd.Series:
 
 
 def enrich_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.now(pytz.timezone("America/Aruba")).date() - timedelta(days=1))
+    date = localdate("America/Aruba")
     return enrich_data(ds, "date", date)
 
 

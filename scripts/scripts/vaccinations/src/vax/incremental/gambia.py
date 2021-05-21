@@ -1,5 +1,4 @@
 import tempfile
-from datetime import datetime
 import re
 
 import requests
@@ -7,7 +6,8 @@ import pandas as pd
 import PyPDF2
 
 from vax.utils.incremental import merge_with_current_data, clean_count
-from vax.utils.utils import get_soup, clean_date
+from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 class Gambia:

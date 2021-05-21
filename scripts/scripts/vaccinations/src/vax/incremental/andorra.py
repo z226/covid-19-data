@@ -5,6 +5,7 @@ import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 class Andorra:
@@ -33,7 +34,7 @@ class Andorra:
 
     def parse_date(self, soup):
         h4 = soup.find("h4", text=re.compile("Actualització \d{1,2}.\d{1,2}.\d{4}"))
-        return datetime.strptime(h4.text, "Actualització %d.%m.%Y").strftime("%Y-%m-%d")
+        return clean_date(h4.text, "Actualització %d.%m.%Y")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, 'location', self.location)

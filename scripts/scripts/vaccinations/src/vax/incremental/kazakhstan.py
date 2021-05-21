@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 
 import pandas as pd
@@ -6,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from vax.utils.incremental import clean_count, increment, enrich_data
-
+from vax.utils.dates import clean_date
 
 def read(source: str) -> pd.Series:
     op = Options()
@@ -31,8 +30,7 @@ def parse_vaccinations(driver: webdriver.Chrome) -> tuple:
 def parse_date(driver: webdriver.Chrome) -> str:
     elem = driver.find_element_by_class_name("tabl_vactination")
     date_str_raw = pd.read_html(elem.get_attribute('innerHTML'))[0].iloc[-1, -1]
-    return datetime.strptime(date_str_raw, '*данные на %d.%m.%Y').strftime("%Y-%m-%d")
-
+    return clean_date(date_str_raw, '*данные на %d.%m.%Y')
 
 def enrich_location(ds: pd.Series):
     return enrich_data(ds, "location", "Kazakhstan")

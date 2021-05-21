@@ -1,7 +1,3 @@
-import os
-import datetime
-import pytz
-
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -10,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -43,7 +40,7 @@ def connect_parse_data(source: str) -> pd.Series:
 
 
 def set_date(ds: pd.Series) -> pd.Series:
-    date = str((datetime.datetime.now(pytz.timezone("Brazil/East")) - datetime.timedelta(days=1)).date())
+    date = localdate("Brazil/East")
     return enrich_data(ds, "date", date)
 
 

@@ -1,9 +1,8 @@
-from datetime import date
 import requests
 from functools import reduce
 import pandas as pd
 
-from vax.utils.utils import date_formatter
+from vax.utils.dates import clean_date_series
 
 
 class Greece:
@@ -43,7 +42,7 @@ class Greece:
         return df.assign(people_fully_vaccinated=df.people_fully_vaccinated.replace(0, pd.NA))
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(date=date_formatter(df.date, "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"))
+        return df.assign(date=clean_date_series(df.date, "%Y-%m-%dT%H:%M:%S"))
 
     def pipe_metadata(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(

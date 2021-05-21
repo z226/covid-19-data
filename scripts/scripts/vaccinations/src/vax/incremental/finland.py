@@ -1,10 +1,7 @@
-import os
-import datetime
-
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -30,7 +27,7 @@ def parse_data(df: pd.DataFrame) -> pd.Series:
 
 
 def get_date() -> str:
-    return str((datetime.datetime.now(pytz.timezone("Europe/Helsinki")) - datetime.timedelta(days=1)).date())
+    return localdate("Europe/Helsinki")
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:

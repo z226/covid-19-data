@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.utils import clean_date
+from vax.utils.dates import clean_date
 
 
 def read(source: str, source_old: str) -> pd.Series:
@@ -33,7 +33,7 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
             raise ValueError("Both dashboards may not be synced and hence may refer to different timestamps. Consider"
                              "Introducing the timestamp manually.")
         date = driver.find_element_by_id("pupdateddate").text
-        date = clean_date(date.replace("Updated ", ""), "%d %b, %Y")
+        date = clean_date(date, "Updated %d %b, %Y")
 
     data = {
         "total_vaccinations": clean_count(total_vaccinations),

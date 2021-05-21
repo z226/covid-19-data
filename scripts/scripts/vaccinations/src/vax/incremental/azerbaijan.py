@@ -1,7 +1,5 @@
-import os
 import tempfile
 import re
-from datetime import datetime
 
 import requests
 import pandas as pd
@@ -11,6 +9,7 @@ from pdfreader import SimplePDFViewer
 
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 def read(source: str):
@@ -47,8 +46,7 @@ def parse_date(filename):
         text = page.extractText()
     # Get date
     date_str = re.search(r"\n(?P<count>\d{1,2}.\d{1,2}.\d{4})\n", text).group(1)
-    return datetime.strptime(date_str, "%d.%m.%Y").strftime("%Y-%m-%d")
-
+    return clean_date(date_str, "%d.%m.%Y")
 
 def parse_vaccinations(filename):
     # Read pdf (for metrics)

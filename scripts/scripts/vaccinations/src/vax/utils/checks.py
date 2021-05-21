@@ -144,16 +144,16 @@ class CountryChecker:
 
     def _check_metrics_inequalities(self, df: pd.DataFrame):
         if ("total_vaccinations" in df.columns) and ("people_vaccinated" in df.columns):
-            df = df[["people_vaccinated", "total_vaccinations"]].dropna()
-            if (df["total_vaccinations"] < df["people_vaccinated"]).any():
+            df_ = df[["people_vaccinated", "total_vaccinations"]].dropna().copy()
+            if (df_["total_vaccinations"] < df_["people_vaccinated"]).any():
                 raise ValueError(f"{self.location} -- total_vaccinations can't be < people_vaccinated!")
         if ("people_vaccinated" in df.columns) and ("people_fully_vaccinated" in df.columns):
-            df = df[["people_vaccinated", "people_fully_vaccinated"]].dropna()
-            if (df["people_vaccinated"] < df["people_fully_vaccinated"]).any():
+            df_ = df[["people_vaccinated", "people_fully_vaccinated"]].dropna().copy()
+            if (df_["people_vaccinated"] < df_["people_fully_vaccinated"]).any():
                 raise ValueError(f"{self.location} -- people_vaccinated can't be < people_fully_vaccinated!")
         if ("total_vaccinations" in df.columns) and ("people_fully_vaccinated" in df.columns):
-            df = df[["people_fully_vaccinated", "total_vaccinations"]].dropna()
-            if (df["total_vaccinations"] < df["people_fully_vaccinated"]).any():
+            df_ = df[["people_fully_vaccinated", "total_vaccinations"]].dropna().copy()
+            if (df_["total_vaccinations"] < df_["people_fully_vaccinated"]).any():
                 raise ValueError(f"{self.location} -- people_fully_vaccinated can't be < people_vaccinated!")
 
     def _check_metrics_anomalies(self, df):

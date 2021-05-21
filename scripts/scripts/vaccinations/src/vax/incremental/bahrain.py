@@ -1,12 +1,11 @@
-import os
 import re
 import requests
-import locale
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date
+from vax.utils.incremental import enrich_data, increment
+from vax.utils.utils import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -67,7 +66,6 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://healthalert.gov.bh/en/"
     data = read(source).pipe(pipeline, source)
     increment(

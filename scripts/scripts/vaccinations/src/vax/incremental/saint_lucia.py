@@ -1,12 +1,11 @@
-import os
 import re
 import requests
-import locale
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.utils import clean_date, get_soup
 
 
 def read(source: str) -> pd.Series:
@@ -15,18 +14,7 @@ def read(source: str) -> pd.Series:
 
 def connect_parse_data(source: str) -> pd.Series:
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:86.0) Gecko/20100101 Firefox/86.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-    }
-    soup = BeautifulSoup(requests.get(source, headers=headers).content, "html.parser")
-
+    soup = get_soup(source)
     people_vaccinated = soup.find_all(class_="repart-stlucia")[0].text
     people_vaccinated = clean_count(people_vaccinated)
 
@@ -70,7 +58,6 @@ def pipeline(ds: pd.Series) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://www.covid19response.lc/"
     data = read(source).pipe(pipeline)
     increment(

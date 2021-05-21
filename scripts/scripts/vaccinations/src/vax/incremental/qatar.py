@@ -1,12 +1,11 @@
-import os
 import time
-import locale
 
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.utils import clean_date
 
 
 def read(source: str, source_old: str) -> pd.Series:
@@ -67,7 +66,6 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://covid19.moph.gov.qa/EN/Pages/Vaccination-Program-Data.aspx"
     source_old = "https://covid19.moph.gov.qa/EN/Pages/default.aspx"
     data = read(source, source_old).pipe(pipeline, source)

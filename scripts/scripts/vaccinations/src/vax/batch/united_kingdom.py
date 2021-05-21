@@ -91,6 +91,7 @@ def pipeline(df: pd.DataFrame, source_url: str) -> pd.DataFrame:
         .pipe(enrich_source_url, source_url)
         .pipe(enrich_vaccine)
         .pipe(exclude_data_points)
+        .sort_values(by=["location", "date"])
     )
 
 

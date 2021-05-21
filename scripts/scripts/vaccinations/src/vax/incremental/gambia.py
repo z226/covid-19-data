@@ -1,6 +1,7 @@
 import tempfile
 from datetime import datetime
 import re
+import locale
 
 import requests
 import pandas as pd
@@ -109,6 +110,7 @@ class Gambia:
 
 
 def main(paths):
+    locale.setlocale(locale.LC_TIME, "en_GB")
     Gambia(
         source_url="https://www.moh.gov.gm/covid-19-report",
         location="Gambia",

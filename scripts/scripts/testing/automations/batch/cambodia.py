@@ -16,7 +16,7 @@ new = pd.DataFrame({'Country': 'Cambodia',
                    'Cumulative total': count,
                    'Source URL': url,
                    'Source label': 'CDCMOH',
-                   'Units': 'unclear'})
+                   'Units': 'tests performed'})
 
 existing = pd.read_csv('automated_sheets/Cambodia.csv')
 df = pd.concat([new,existing]).sort_values('Date',ascending=False)

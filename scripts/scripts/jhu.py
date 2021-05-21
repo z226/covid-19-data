@@ -58,10 +58,8 @@ def get_metric(metric, region):
     # Relabel cruise ships as 'International'
     df.loc[df["Country/Region"].isin(["Diamond Princess", "MS Zaandam"]), "Country/Region"] = "International"
 
-    # subnational = df[-df["Province/State"].isna()]
-    # subnational = subnational.groupby(["Country/Region", "Province/State"], as_index=False).sum()
-    # subnational.loc[:, "Country/Region"] = subnational["Country/Region"] + " – " + subnational["Province/State"]
-    # subnational = subnational.drop(columns=["Province/State"])
+    # Relabel Hong Kong to its own time series
+    df.loc[df["Province/State"] == "Hong Kong", "Country/Region"] = "Hong Kong"
 
     national = df.drop(columns="Province/State").groupby("Country/Region", as_index=False).sum()
 

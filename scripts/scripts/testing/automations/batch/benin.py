@@ -5,7 +5,7 @@ from datetime import date
 import urllib
 
 url = 'https://www.gouv.bj/coronavirus/'
-req = urllib.requests.urlopen(url)
+req = urllib.request.urlopen(url)
 soup = BeautifulSoup(req.read(), 'html.parser')
 
 stats = soup.find_all('h2',attrs={'class','h1 adapt white regular'})
@@ -17,7 +17,7 @@ new = pd.DataFrame({'Country': 'Benin',
                    'Cumulative total': count,
                    'Source URL': url,
                    'Source label': 'Government of Benin',
-                   'Units': 'unclear'")
+                   'Units': 'tests performed'})
 
 existing = pd.read_csv('automated_sheets/Benin.csv')
 df = pd.concat([new,existing]).sort_values('Date',ascending=False)

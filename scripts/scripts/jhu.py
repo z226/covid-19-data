@@ -147,11 +147,11 @@ def check_data_correctness(df_merged):
     return errors == 0
 
 def discard_rows(df):
-    # Set artefact in new_cases for Turkey on 2020-12-10 to NA
+    # Set artefact in new_cases for Turkey on 2020-12-10 to the previous 7-day average
     df.loc[
         (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
         "new_cases"
-    ] = np.nan
+    ] = 32066
     return df
 
 def load_standardized(df):

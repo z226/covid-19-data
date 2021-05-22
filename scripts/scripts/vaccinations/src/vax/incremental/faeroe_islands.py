@@ -1,10 +1,7 @@
-import os
-import datetime
-
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -24,7 +21,7 @@ def add_totals(ds: pd.Series) -> pd.Series:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("Atlantic/Faeroe")).date() - datetime.timedelta(days=1))
+    date = localdate("Atlantic/Faeroe")
     return enrich_data(ds, 'date', date)
 
 

@@ -1,11 +1,8 @@
-import os
-import datetime
-
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -28,7 +25,7 @@ def connect_parse_data(source: str) -> pd.Series:
 
 
 def enrich_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("Europe/Skopje")).date() - datetime.timedelta(days=1))
+    date = localdate("Europe/Skopje")
     return enrich_data(ds, "date", date)
 
 

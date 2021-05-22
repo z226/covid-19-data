@@ -1,14 +1,11 @@
-import os
-import re
 import time
 
-from bs4 import BeautifulSoup
-import dateparser
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -17,7 +14,7 @@ def read(source: str) -> pd.Series:
 
     with webdriver.Chrome(options=op) as driver:
         driver.get(source)
-        time.sleep(1)
+        time.sleep(3)
 
         for h5 in driver.find_elements_by_tag_name("h5"):
 
@@ -37,9 +34,7 @@ def read(source: str) -> pd.Series:
                 )
 
             elif "Acumulados al" in h5.text:
-                date = h5.text.replace("Acumulados al ", "")
-                date = str(dateparser.parse(date, languages=["es"]).date())
-
+                date = clean_date(h5.text, "Acumulados al %d de %B de %Y", "es")
 
     data = {
         "date": date,

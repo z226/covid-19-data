@@ -1,12 +1,11 @@
-import os
 import requests
 import re
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
-
+from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import clean_date
 
 def read(source: str) -> pd.Series:
     soup = BeautifulSoup(requests.get(source, verify=False).content, "html.parser")  # noqa: S501

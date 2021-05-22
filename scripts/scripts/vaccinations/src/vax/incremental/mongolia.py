@@ -1,9 +1,8 @@
-import os
-
 import requests
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date
+from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import clean_date
 
 
 vaccine_mapping = {

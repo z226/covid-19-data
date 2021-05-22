@@ -1,13 +1,11 @@
-import os
-import datetime
 import re
 
-import pytz
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -39,7 +37,7 @@ def parse_people_vaccinated(soup: BeautifulSoup) -> int:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("Asia/Istanbul")).date())
+    date = localdate("Asia/Istanbul")
     return enrich_data(ds, 'date', date)
 
 

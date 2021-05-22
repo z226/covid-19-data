@@ -7,11 +7,11 @@ import pandas as pd
 
 from vax.utils.utils import get_soup
 from vax.utils.incremental import clean_count
-
+from vax.utils.dates import clean_date
 
 def parse_date(elem) -> str:
     date = elem.find_parent(class_="card").find(class_="news--item-date").text.strip()
-    return datetime.strptime(date, "%Y年%m月%d日 %H:%M").strftime("%Y-%m-%d")
+    return clean_date(date, "%Y年%m月%d日 %H:%M")
 
 
 def parse_source_url(elem) -> str:

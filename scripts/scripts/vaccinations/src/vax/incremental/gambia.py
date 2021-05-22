@@ -1,7 +1,5 @@
 import tempfile
-from datetime import datetime
 import re
-import locale
 
 import requests
 import pandas as pd
@@ -9,6 +7,7 @@ import PyPDF2
 
 from vax.utils.incremental import merge_with_current_data, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 class Gambia:
@@ -42,7 +41,7 @@ class Gambia:
         match = re.search(regex, text)
         people_vaccinated = clean_count(match.group(1))
         date_raw = " ".join(match.group(2, 3, 4))
-        date_str = datetime.strptime(date_raw, "%d %B %Y").strftime("%Y-%m-%d")
+        date_str = clean_date(date_raw, "%d %B %Y")
         return {
             "total_vaccinations": people_vaccinated,
             "people_vaccinated": people_vaccinated,
@@ -110,7 +109,6 @@ class Gambia:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     Gambia(
         source_url="https://www.moh.gov.gm/covid-19-report",
         location="Gambia",

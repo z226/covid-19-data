@@ -1,6 +1,4 @@
-import os
 from datetime import datetime
-import locale
 import json
 
 import pandas as pd
@@ -8,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -59,7 +58,8 @@ def parse_infogram_vaccinations(infogram_data: dict) -> int:
 
 def parse_infogram_date(infogram_data: dict) -> str:
     x = _get_infogram_value(infogram_data, "525b6366-cc8a-4646-b67a-5c9bfca66e22", join_text=True)
-    return datetime.strptime(x, "RESUMEN DE VACUNACIÓN DIARIA %d-%b-%y").strftime("%Y-%m-%d")
+    dt = clean_date(x, "RESUMEN DE VACUNACIÓN DIARIA %d-%b-%y", "es")
+    return dt
 
 
 def enrich_location(ds: pd.Series) -> pd.Series:
@@ -79,7 +79,6 @@ def pipeline(ds: pd.Series) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "es_ES")
     source = "https://covid19.gob.sv/"
     data = read(source).pipe(pipeline)
     increment(

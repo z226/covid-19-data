@@ -1,12 +1,10 @@
-import os
-import datetime
-import pytz
 import json
 
 import requests
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def get_api_value(source: str, query: str, headers: dict):
@@ -50,8 +48,7 @@ def read(source: str) -> pd.Series:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    local_time = datetime.datetime.now(pytz.timezone("Asia/Beirut")) - datetime.timedelta(days=1)
-    date = str(local_time.date())
+    date = localdate("Asia/Beirut")
     return enrich_data(ds, 'date', date)
 
 

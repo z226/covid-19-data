@@ -1,12 +1,9 @@
-import os
-import locale
-from datetime import datetime
-
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -49,7 +46,7 @@ def parse_doses(driver: webdriver.Chrome) -> tuple:
 
 def parse_date(driver: webdriver.Chrome) -> str:
     text = driver.find_element_by_class_name("content").text
-    return datetime.strptime(text, "Opdateret: %d. %B %Y").strftime("%Y-%m-%d")
+    return clean_date(text, "Opdateret: %d. %B %Y", "da")
 
 
 def _sanity_checks(driver: webdriver.Chrome):
@@ -89,7 +86,6 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "da_DK")
     source = "https://corona.nun.gl/emner/statistik/antal_vaccinerede"
     data = read(source).pipe(pipeline, source)
     increment(

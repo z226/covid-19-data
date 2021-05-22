@@ -1,11 +1,8 @@
-from datetime import datetime, timedelta
-import pytz
-
 import pandas as pd
 
 from vax.utils.incremental import clean_count, enrich_data, increment
 from vax.utils.utils import get_soup
-
+from vax.utils.dates import localdate
 
 class Bolivia:
 
@@ -39,9 +36,7 @@ class Bolivia:
         return clean_count(dose_1), clean_count(dose_2)
     
     def get_date(self):
-        return (
-            datetime.now(pytz.timezone("America/La_Paz")).date() - timedelta(days=1)
-        ).strftime("%Y-%m-%d")
+        return localdate("America/La_Paz")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)

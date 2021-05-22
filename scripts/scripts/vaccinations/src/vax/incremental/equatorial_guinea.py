@@ -1,12 +1,11 @@
 import re
-import locale
 import unicodedata
-from datetime import datetime
 
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 class EquatorialGuinea:
@@ -36,10 +35,9 @@ class EquatorialGuinea:
 
     def parse_date(self, soup):
         regex = r"Datos: a  (\d{1,2}) ([a-zA-Z]+) de (202\d)"
-        locale.setlocale(locale.LC_TIME, "es_ES")
         text = unicodedata.normalize('NFKC', soup.text)
         match = re.search(regex, text)
-        return datetime.strptime(match.group(), "Datos: a  %d %B de %Y").strftime("%Y-%m-%d")
+        return clean_date(match.group(), "Datos: a  %d %B de %Y", "es")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, 'location', self.location)

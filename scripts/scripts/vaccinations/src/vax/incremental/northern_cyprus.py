@@ -1,11 +1,11 @@
-import os
 import re
 import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date
+from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:

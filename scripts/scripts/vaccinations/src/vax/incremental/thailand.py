@@ -1,4 +1,3 @@
-import os
 import re
 import requests
 from datetime import datetime
@@ -8,7 +7,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from pdfreader import SimplePDFViewer
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
 
 
 def read(source: str) -> pd.Series:

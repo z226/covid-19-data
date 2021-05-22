@@ -1,10 +1,7 @@
-import os
-import datetime
-import pytz
-
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -36,10 +33,7 @@ def add_totals(ds: pd.Series) -> pd.Series:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    local_time = datetime.datetime.now(pytz.timezone("America/Argentina/Buenos_Aires"))
-    if local_time.hour < 8:
-        local_time = local_time - datetime.timedelta(days=1)
-    date = str(local_time.date())
+    date = localdate("America/Argentina/Buenos_Aires", 8)
     return enrich_data(ds, 'date', date)
 
 

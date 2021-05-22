@@ -1,12 +1,10 @@
-import os
-import datetime
 import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -42,7 +40,7 @@ def add_totals(ds: pd.Series) -> pd.Series:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("Europe/Chisinau")).date() - datetime.timedelta(days=1))
+    date = localdate("Europe/Chisinau")
     return enrich_data(ds, "date", date)
 
 

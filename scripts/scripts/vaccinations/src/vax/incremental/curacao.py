@@ -1,11 +1,8 @@
-import os
-from datetime import datetime
-import pytz
-
 import requests
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -23,7 +20,7 @@ def parse_data(source: str) -> dict:
 
 
 def enrich_date(ds: pd.Series) -> pd.Series:
-    date_str = date_str = datetime.now().astimezone(pytz.timezone('America/Curacao')).strftime("%Y-%m-%d")
+    date_str = localdate('America/Curacao')
     return enrich_data(ds, "date", date_str)
 
 

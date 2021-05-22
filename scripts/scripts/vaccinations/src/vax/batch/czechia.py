@@ -3,9 +3,6 @@
 Since we need to translate vaccine names, we'll check that no new
 manufacturers were added, so that we can maintain control over this.
 """
-
-
-import os
 import pandas as pd
 
 

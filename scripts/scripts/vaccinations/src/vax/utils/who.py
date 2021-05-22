@@ -15,4 +15,5 @@ VACCINES_WHO_MAPPING = {
     "Gamaleya - Sputnik V": "Sputnik V",
     "Anhui ZL - Recombinant": "RBD-Dimer",
     "Abdala": "Abdala",
+    "RIBSP - QazCovid": "QazVac"
 }

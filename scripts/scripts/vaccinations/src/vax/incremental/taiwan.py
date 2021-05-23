@@ -37,7 +37,9 @@ def parse_table(url_pdf: str) -> int:
 
 
 def parse_total_vaccinations(df: pd.DataFrame) -> int:
-    return clean_count(df.iloc[-1, 4])
+    num = df.iloc[-1, 4]
+    num = re.match(r"([0-9,]+)", num).group(1)
+    return clean_count(num)
 
 
 def parse_date(df: pd.DataFrame) -> str:

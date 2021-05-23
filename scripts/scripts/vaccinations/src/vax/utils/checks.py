@@ -3,9 +3,6 @@ from itertools import chain
 
 import pandas as pd
 
-from vax.cmd.utils import get_logger
-
-logger = get_logger()
 
 VACCINES_ACCEPTED = [
     "Abdala",

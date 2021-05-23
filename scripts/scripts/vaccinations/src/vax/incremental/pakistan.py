@@ -35,7 +35,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "CanSino, Sinovac, Sinopharm/Beijing, Sputnik V")
+    return enrich_data(ds, "vaccine", "CanSino, Oxford/AstraZeneca, Sinovac, Sinopharm/Beijing, Sputnik V")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:

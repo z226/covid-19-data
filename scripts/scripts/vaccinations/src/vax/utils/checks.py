@@ -178,7 +178,7 @@ class CountryChecker:
         if not anomalies.empty:
             wrong_ids = anomalies.date.dt.strftime("%Y%m%d") + metric
             if not wrong_ids.isin(self.skip_anomalcheck_ids).all():
-                logger.warn(f"{self.location} -- Potential anomalies found ⚠️:\n{anomalies}")
+                raise ValueError(f"{self.location} -- Potential anomalies found ⚠️:\n{anomalies}")
 
     def run(self):
         # Ensure required columns are present

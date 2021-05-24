@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from matplotlib import use
 
 import pandas as pd
 
@@ -10,11 +11,10 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 def get_who_data():
     # Load WHO
     url = "https://covid19.who.int/who-data/vaccination-data.csv"
-    df_who = pd.read_csv(url)
-    # Countries WHO relies on us
-    df_who = df_who.loc[df_who.DATA_SOURCE == "OWID", ["ISO3", "COUNTRY"]]#.sort_values(by="")
-    df_who = df_who.assign(reporting_to_WHO=True)
+    df_who = pd.read_csv(url, usecols=["ISO3", "COUNTRY", "DATA_SOURCE"])
     df_who = df_who.rename(columns={"COUNTRY": "location_WHO"})
+    # Countries WHO relies on us
+    df_who = df_who.assign(reporting_to_WHO=df_who.DATA_SOURCE=="OWID")    
     return df_who
 
 

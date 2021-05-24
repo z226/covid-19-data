@@ -150,6 +150,12 @@ def discard_rows(df):
         (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
         "new_cases"
     ] = 32066
+    # Set artefact in new_cases for France on 2021-05-20 to the actual daily change
+    # Source: https://twitter.com/nicolasberrod/status/1395450360324661262
+    df.loc[
+        (df["location"] == "France") & (df["date"].astype(str) == "2021-05-20"),
+        "new_cases"
+    ] = 15415
     return df
 
 def load_standardized(df):

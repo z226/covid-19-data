@@ -7,6 +7,16 @@ import pandas as pd
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
+def get_who_data():
+    # Load WHO
+    url = "https://covid19.who.int/who-data/vaccination-data.csv"
+    df_who = pd.read_csv(url)
+    # Countries WHO relies on us
+    df_who = df_who.loc[df_who.DATA_SOURCE == "OWID", ["ISO3", "COUNTRY"]]#.sort_values(by="")
+    df_who = df_who.assign(reporting_to_WHO=True)
+    return df_who
+
+
 def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
                             path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
                             sortby_updatefreq: bool = False,
@@ -60,6 +70,7 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df_vax = pd.read_csv(path_vaccinations)
     df_loc = pd.read_csv(path_locations)
     df_state = pd.read_csv(path_automation_state)
+    df_who = get_who_data()
     # Get counts
     df_vax = df_vax.dropna(subset=["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"], how="all")
     df_vax = pd.DataFrame({
@@ -69,6 +80,8 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     # Merge data
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
+    # Merge with WHO
+    df = df.merge(df_who, left_on="iso_code", right_on="ISO3", how="left")
     # Additional fields
     num_observation_days = (
         datetime.now() - pd.to_datetime(df.first_observation_date)
@@ -95,17 +108,25 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         "counts",
         "update_frequency",
         "num_observation_days",
+        "source_website",
         "automated",
-        "source_website"
+        "reporting_to_WHO",
     ]]
 
     def _web_type(x):
-        if ("facebook" in x.lower()) or ("twitter" in x.lower()):
+        if ("facebook." in x.lower()) or ("twitter." in x.lower()):
             return "Social Network"
-        elif "github" in x.lower():
+        elif "github." in x.lower():
             return "GitHub"
-        elif ("gov" in x.lower()) or ("gob" in x.lower()):
+        elif ((".gov." in x.lower()) or (".gob." in x.lower()) or (".moh." in x.lower()) or (".gub." in x.lower()) or
+              (".go." in x.lower())) or (".gouv." in x.lower()):
             return "Govern"
+        elif ".who.int" in x.lower():
+            return "WHO"
+        elif ".pacificdata.org" in x.lower():
+            return "SPC"
+        elif "ecdc.europa." in x.lower():
+            return "ECDC"
         else:
             return "Others"
     df = df.assign(**{"web_type": df.source_website.apply(_web_type)})

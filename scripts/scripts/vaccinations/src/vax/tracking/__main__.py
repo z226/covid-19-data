@@ -27,6 +27,10 @@ def _parse_args():
         )
     )
     parser.add_argument(
+        "--who", action="store_true",
+        help="Display country names by WHO."
+    )
+    parser.add_argument(
         "--to-csv", action="store_true",
         help="Export outputs to CSV."
     )
@@ -65,7 +69,7 @@ def main():
             export_to_csv(df, filename="countries-least-updated.tmp.csv")
     if args.mode == "countries-least-updatedfreq":
         print("-- Least frequently-updated countries... --")
-        df = country_updates_summary(sortby_updatefreq=True)
+        df = country_updates_summary(sortby_updatefreq=True, who=args.who)
         print(df)
         print("----------------------------\n----------------------------\n----------------------------\n")
         if args.to_csv:

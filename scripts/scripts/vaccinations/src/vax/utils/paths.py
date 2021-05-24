@@ -26,6 +26,10 @@ class Paths:
         return os.path.join(self.project_dir, "scripts")
 
     @property
+    def tmp_tsp(self):
+        return os.path.join(self.tmp, "timestamp")
+
+    @property
     def tmp_tmp(self):
         return os.path.join(self.project_dir, "scripts", "scripts")
 

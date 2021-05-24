@@ -15,9 +15,9 @@ import pandas as pd
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../input/"))
-TIMESTAMP_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../timestamp/"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../grapher/"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../public/data/"))
+TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "timestamp/"))
 
 
 def get_jhu():

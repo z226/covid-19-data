@@ -11,6 +11,10 @@ class Paths:
         return os.path.join(self.project_dir, "public", "data")
 
     @property
+    def pub_tsp(self):
+        return os.path.join(self.pub_data, "timestamp")
+
+    @property
     def pub_vax(self):
         return os.path.join(self.pub_data, "vaccinations")
 
@@ -24,10 +28,6 @@ class Paths:
     @property
     def tmp(self):
         return os.path.join(self.project_dir, "scripts")
-
-    @property
-    def tmp_tsp(self):
-        return os.path.join(self.tmp, "timestamp")
 
     @property
     def tmp_tmp(self):

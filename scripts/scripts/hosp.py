@@ -18,7 +18,7 @@ from utils.utils import export_timestamp
 
 SOURCE_URL = "https://opendata.ecdc.europa.eu/covid19/hospitalicuadmissionrates/csv/data.csv"
 INPUT_PATH = os.path.join(CURRENT_DIR, "../input/")
-TIMESTAMP_PATH = os.path.join(CURRENT_DIR, "../timestamp/")
+TIMESTAMP_PATH = os.path.join(CURRENT_DIR, "../../public/data/timestamp/")
 GRAPHER_PATH = os.path.join(CURRENT_DIR, "../grapher/")
 DATASET_NAME = "COVID-2019 - Hospital & ICU"
 ZERO_DAY = "2020-01-21"

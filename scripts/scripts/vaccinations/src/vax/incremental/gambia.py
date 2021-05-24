@@ -15,7 +15,7 @@ class Gambia:
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
-        self._num_links_max = 6
+        self._num_links_max = 3
 
     def read(self, last_update) -> pd.Series:
         links = self.get_pdf_links(self.source_url)
@@ -35,17 +35,22 @@ class Gambia:
 
     def parse_data_pdf(self, link) -> dict:
         text = self._get_pdf_text(link)
+
         regex = (
-            r"([\d,]+) people have been vaccinated against COVID-19 as of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d)"
+            r"([\d,]+) are already vaccinated against COVID-19 as of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d)"
         )
         match = re.search(regex, text)
         people_vaccinated = clean_count(match.group(1))
         date_raw = " ".join(match.group(2, 3, 4))
-        date_str = clean_date(date_raw, "%d %B %Y")
+        date_str = str(pd.to_datetime(date_raw).date())
+
+        regex = r"([\d,]+) people have received their 2nd dose"
+        people_fully_vaccinated = re.search(regex, text).group(1)
+        people_fully_vaccinated = clean_count(people_fully_vaccinated)
         return {
-            "total_vaccinations": people_vaccinated,
+            "total_vaccinations": people_vaccinated + people_fully_vaccinated,
             "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": 0,
+            "people_fully_vaccinated": people_fully_vaccinated,
             "date": date_str,
             "source_url": link,
         }

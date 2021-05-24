@@ -44,6 +44,10 @@ COUNTRIES = {
     "Timor-Leste": "Timor",
     "Turkmenistan": "Turkmenistan",
     "Yemen": "Yemen",
+    "Belarus": "Belarus",
+    "Oman": "Oman",
+    "Montserrat": "Montserrat",
+    "Ghana": "Ghana",
 }
 
 

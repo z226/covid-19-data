@@ -32,8 +32,8 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
         if total_vaccinations != total_vaccinations_old:
             raise ValueError("Both dashboards may not be synced and hence may refer to different timestamps. Consider"
                              "Introducing the timestamp manually.")
-        date = driver.find_element_by_id("pupdateddate").text
-        date = clean_date(date, "Updated %d %b, %Y")
+        date = driver.find_element_by_id("pupdateddate").text.replace("Updated ", "")
+        date = str(pd.to_datetime(date, dayfirst=True).date())
 
     data = {
         "total_vaccinations": clean_count(total_vaccinations),

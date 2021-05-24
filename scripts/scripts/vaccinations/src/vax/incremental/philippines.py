@@ -39,7 +39,7 @@ def read(url: str) -> pd.Series:
 
 
 def parse_date(query_response: str):
-    return clean_date(query_response, 'as of %m/%d/%Y %I:%M %p')
+    return str(pd.to_datetime(query_response.replace("as of ", ""), dayfirst=False).date())
 
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Philippines")

@@ -28,7 +28,7 @@ def parse_date(soup: BeautifulSoup) -> str:
         if "Vaccination Data" in h3.text:
             break
     date = re.search(r"as of (\d+ \w+ \d+)", h3.text).group(1)
-    date = clean_date(date, "%d %b %Y")
+    date = str(pd.to_datetime(date).date())
     return date
 
 

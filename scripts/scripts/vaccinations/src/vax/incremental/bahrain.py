@@ -31,7 +31,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
     date = soup.find(class_="reportdate").text
     date = re.search(r"\d+ \w+ 202\d", date).group(0)
-    date = clean_date(date, "%d %b %Y")
+    date = str(pd.to_datetime(date).date())
 
     data = {
         "total_vaccinations": total_vaccinations,

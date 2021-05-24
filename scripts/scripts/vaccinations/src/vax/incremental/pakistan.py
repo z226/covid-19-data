@@ -18,7 +18,7 @@ def read(source: str) -> pd.Series:
 
     date = soup.find("span", id="last-update").text
     date = re.search(r"\d+.*202\d", date).group(0)
-    date = clean_date(date, "%d %B, %Y")
+    date = str(pd.to_datetime(date).date())
 
     data = {
         "total_vaccinations": total_vaccinations,

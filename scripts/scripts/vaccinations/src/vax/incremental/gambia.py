@@ -106,7 +106,8 @@ class Gambia:
         output_file = paths.tmp_vax_out(self.location)
         last_update = pd.read_csv(output_file).date.max()
         df = self.read(last_update)
-        if df is not None:
+        print(df)
+        if not df.empty:
             df = df.pipe(self.pipeline)
             df = merge_with_current_data(df, output_file)
             df = df.pipe(self.pipe_drop_duplicates)

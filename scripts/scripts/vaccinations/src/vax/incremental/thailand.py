@@ -57,7 +57,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     total_vaccinations = re.search(total_vaccinations_regex, text).group(1)
     total_vaccinations = clean_count(total_vaccinations)
 
-    people_vaccinated_regex = r"ผู้ได้รับวัคซีนเข็มที่ 1 .{1,3}นวน[^\d]+([\d,]+) ร.{1,3}ย"
+    people_vaccinated_regex = r"ผู้ได้รับวัคซีนเข็มที่ 1 .{1,3}นวน[^\d]+([\d,]+) ?ร.{1,3}ย"
     people_vaccinated = re.search(people_vaccinated_regex, text).group(1)
     people_vaccinated = clean_count(people_vaccinated)
 

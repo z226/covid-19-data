@@ -1,14 +1,11 @@
-import os
-import datetime
 import re
 import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment, clean_count
-
+from vax.utils.dates import localdate
 
 def read(source: str) -> pd.Series:
     soup = BeautifulSoup(requests.get(source).content, "html.parser")
@@ -36,7 +33,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 
     regex_2 = (
-        r"Of these, ([\d,]+) \(([\d,]+)% of the estimated population\) have had at least one dose of a COVID-19 "
+        r"Of these, ([\d,]+) \(([\d,]+)% of (?:[a-zA-Z0-9,]+)\) have had at least one dose of a COVID-19 "
         r"vaccine and ([\d,]+)% have completed the two dose course."
     )
     matches = re.search(regex_2, soup.text)
@@ -44,7 +41,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     proportion_dose1 = clean_count(matches.group(2))
     proportion_dose2 = clean_count(matches.group(3))
     assert proportion_dose1 >= proportion_dose2
-    people_fully_vaccinated = round(people_vaccinated * proportion_dose2 / proportion_dose1)
+    people_fully_vaccinated = round(total_vaccinations * proportion_dose2/100)  
 
     return pd.Series({
         "total_vaccinations": total_vaccinations,
@@ -54,7 +51,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
 
 def set_date(ds: pd.Series) -> pd.Series:
-    date = str(datetime.datetime.now(pytz.timezone("America/Cayman")).date() - datetime.timedelta(days=1))
+    date = localdate("America/Cayman")
     return enrich_data(ds, "date", date)
 
 

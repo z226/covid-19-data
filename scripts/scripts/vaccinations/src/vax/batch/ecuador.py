@@ -1,6 +1,6 @@
-import os
-
 import pandas as pd
+
+from vax.utils.dates import clean_date_series
 
 
 class Ecuador:
@@ -33,7 +33,7 @@ class Ecuador:
         return df
 
     def format_date(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(date=pd.to_datetime(df.date, format="%d/%m/%Y").dt.strftime("%Y-%m-%d"))
+        return df.assign(date=clean_date_series(df.date, "%d/%m/%Y"))
 
     def enrich_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(

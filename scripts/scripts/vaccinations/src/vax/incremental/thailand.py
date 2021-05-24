@@ -1,4 +1,3 @@
-import os
 import re
 import requests
 from datetime import datetime
@@ -8,7 +7,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from pdfreader import SimplePDFViewer
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
 
 
 def read(source: str) -> pd.Series:
@@ -58,7 +57,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     total_vaccinations = re.search(total_vaccinations_regex, text).group(1)
     total_vaccinations = clean_count(total_vaccinations)
 
-    people_vaccinated_regex = r"ผู้ได้รับวัคซีนเข็มที่ 1 .{1,3}นวน[^\d]+([\d,]+) ร.{1,3}ย"
+    people_vaccinated_regex = r"ผู้ได้รับวัคซีนเข็มที่ 1 .{1,3}นวน[^\d]+([\d,]+) ?ร.{1,3}ย"
     people_vaccinated = re.search(people_vaccinated_regex, text).group(1)
     people_vaccinated = clean_count(people_vaccinated)
 

@@ -1,12 +1,11 @@
-import os
 import re
-import locale
 import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -29,7 +28,7 @@ def parse_date(soup: BeautifulSoup) -> str:
         if "Vaccination Data" in h3.text:
             break
     date = re.search(r"as of (\d+ \w+ \d+)", h3.text).group(1)
-    date = clean_date(date, "%d %b %Y")
+    date = str(pd.to_datetime(date).date())
     return date
 
 
@@ -65,7 +64,6 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://www.moh.gov.sg/covid-19"
     data = read(source).pipe(pipeline, source)
     increment(

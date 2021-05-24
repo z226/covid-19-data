@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment

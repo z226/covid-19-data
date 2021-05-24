@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from vax.utils.pipeline import enrich_total_vaccinations
@@ -79,6 +77,8 @@ def enrich_vaccine(df: pd.DataFrame) -> pd.DataFrame:
 def exclude_data_points(df: pd.DataFrame) -> pd.DataFrame:
     # The data contains an error that creates a negative change
     df = df[(df.location != "Northern Ireland") | (df.date != "2021-02-20")]
+    df = df[(df.location != "England") | (df.date != "2021-01-09")]
+    df = df[(df.location != "Scotland") | (df.date != "2021-01-09")]
     return df
 
 
@@ -91,6 +91,7 @@ def pipeline(df: pd.DataFrame, source_url: str) -> pd.DataFrame:
         .pipe(enrich_source_url, source_url)
         .pipe(enrich_vaccine)
         .pipe(exclude_data_points)
+        .sort_values(by=["location", "date"])
     )
 
 

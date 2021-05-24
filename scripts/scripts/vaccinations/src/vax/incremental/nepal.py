@@ -1,4 +1,3 @@
-import os
 import tempfile
 import re
 from datetime import datetime

@@ -58,10 +58,8 @@ def get_metric(metric, region):
     # Relabel cruise ships as 'International'
     df.loc[df["Country/Region"].isin(["Diamond Princess", "MS Zaandam"]), "Country/Region"] = "International"
 
-    # subnational = df[-df["Province/State"].isna()]
-    # subnational = subnational.groupby(["Country/Region", "Province/State"], as_index=False).sum()
-    # subnational.loc[:, "Country/Region"] = subnational["Country/Region"] + " – " + subnational["Province/State"]
-    # subnational = subnational.drop(columns=["Province/State"])
+    # Relabel Hong Kong to its own time series
+    df.loc[df["Province/State"] == "Hong Kong", "Country/Region"] = "Hong Kong"
 
     national = df.drop(columns="Province/State").groupby("Country/Region", as_index=False).sum()
 
@@ -147,11 +145,11 @@ def check_data_correctness(df_merged):
     return errors == 0
 
 def discard_rows(df):
-    # Set artefact in new_cases for Turkey on 2020-12-10 to NA
+    # Set artefact in new_cases for Turkey on 2020-12-10 to the previous 7-day average
     df.loc[
         (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
         "new_cases"
-    ] = np.nan
+    ] = 32066
     return df
 
 def load_standardized(df):

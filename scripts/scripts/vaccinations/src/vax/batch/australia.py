@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 
 
@@ -11,18 +10,24 @@ def filter_rows(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
-    return df[["REPORT_DATE", "VACC_DOSE_CNT", "VACC_PEOPLE_CNT"]].rename(
+    return df[[
+        "REPORT_DATE",
+        "VACC_DOSE_CNT",
+        # "VACC_PEOPLE_CNT"
+    ]].rename(
         columns={
             "REPORT_DATE": "date",
             "VACC_DOSE_CNT": "total_vaccinations",
-            "VACC_PEOPLE_CNT": "people_vaccinated",
+            # "VACC_PEOPLE_CNT": "people_vaccinated",
         }
     )
 
 
 def enrich_vaccinations(df: pd.DataFrame) -> pd.DataFrame:
-    df.loc[df.date < "2021-03-14", "people_vaccinated"] = df.total_vaccinations
-    df["people_fully_vaccinated"] = df.total_vaccinations - df.people_vaccinated
+    df = df.assign(
+        people_vaccinated=pd.NA,
+        people_fully_vaccinated=pd.NA,
+    )
     return df
 
 

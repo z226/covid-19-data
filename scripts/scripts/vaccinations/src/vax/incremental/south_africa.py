@@ -1,13 +1,11 @@
-import os
-import datetime
 import re
 
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import pytz
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
@@ -21,7 +19,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
 
 def get_date(soup: BeautifulSoup) -> str:
-    return str((datetime.datetime.now(pytz.timezone("Africa/Johannesburg")) - datetime.timedelta(days=1)).date())
+    return localdate("Africa/Johannesburg")
 
 
 def parse_total_vaccinations(soup: BeautifulSoup) -> str:
@@ -38,7 +36,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Johnson&Johnson")
+    return enrich_data(ds, "vaccine", "Johnson&Johnson, Pfizer/BioNTech")
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -61,8 +59,6 @@ def main(paths):
         paths=paths,
         location=str(data["location"]),
         total_vaccinations=int(data["total_vaccinations"]),
-        people_vaccinated=int(data["total_vaccinations"]),
-        people_fully_vaccinated=int(data["total_vaccinations"]),
         date=str(data["date"]),
         source_url=str(data["source_url"]),
         vaccine=str(data["vaccine"])

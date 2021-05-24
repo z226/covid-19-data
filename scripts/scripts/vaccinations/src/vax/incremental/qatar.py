@@ -1,12 +1,11 @@
-import os
 import time
-import locale
 
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import clean_date
 
 
 def read(source: str, source_old: str) -> pd.Series:
@@ -33,8 +32,8 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
         if total_vaccinations != total_vaccinations_old:
             raise ValueError("Both dashboards may not be synced and hence may refer to different timestamps. Consider"
                              "Introducing the timestamp manually.")
-        date = driver.find_element_by_id("pupdateddate").text
-        date = clean_date(date.replace("Updated ", ""), "%d %b, %Y")
+        date = driver.find_element_by_id("pupdateddate").text.replace("Updated ", "")
+        date = str(pd.to_datetime(date, dayfirst=True).date())
 
     data = {
         "total_vaccinations": clean_count(total_vaccinations),
@@ -50,7 +49,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Pfizer/BioNTech")
+    return enrich_data(ds, "vaccine", "Moderna, Pfizer/BioNTech")
 
 
 def enrich_source(ds: pd.Series, source: str) -> pd.Series:
@@ -67,7 +66,6 @@ def pipeline(ds: pd.Series, source: str) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://covid19.moph.gov.qa/EN/Pages/Vaccination-Program-Data.aspx"
     source_old = "https://covid19.moph.gov.qa/EN/Pages/default.aspx"
     data = read(source, source_old).pipe(pipeline, source)

@@ -1,12 +1,11 @@
-import os
 from datetime import datetime
-import pytz
 import requests
 
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.files import load_query
+from vax.utils.dates import clean_date
 
 
 def run_query(url: str, query: str) -> int:
@@ -40,8 +39,7 @@ def read(url: str) -> pd.Series:
 
 
 def parse_date(query_response: str):
-    return datetime.strptime(query_response, 'as of %m/%d/%Y %I:%M %p').strftime("%Y-%m-%d")
-
+    return str(pd.to_datetime(query_response.replace("as of ", ""), dayfirst=False).date())
 
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Philippines")

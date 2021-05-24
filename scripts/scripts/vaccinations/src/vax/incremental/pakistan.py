@@ -1,11 +1,10 @@
-import locale
 import re
 
-from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_date, clean_count
+from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
+from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
@@ -19,7 +18,7 @@ def read(source: str) -> pd.Series:
 
     date = soup.find("span", id="last-update").text
     date = re.search(r"\d+.*202\d", date).group(0)
-    date = clean_date(date, "%d %B, %Y")
+    date = str(pd.to_datetime(date).date())
 
     data = {
         "total_vaccinations": total_vaccinations,
@@ -36,7 +35,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "CanSino, Sinovac, Sinopharm/Beijing, Sputnik V")
+    return enrich_data(ds, "vaccine", "CanSino, Oxford/AstraZeneca, Sinovac, Sinopharm/Beijing, Sputnik V")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
@@ -48,7 +47,6 @@ def pipeline(ds: pd.Series) -> pd.Series:
 
 
 def main(paths):
-    locale.setlocale(locale.LC_TIME, "en_GB")
     source = "https://ncoc.gov.pk/covid-vaccination-en.php"
     data = read(source).pipe(pipeline)
     increment(

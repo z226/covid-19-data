@@ -1,5 +1,3 @@
-import os
-
 import requests
 import pandas as pd
 
@@ -29,6 +27,9 @@ def main(paths):
     df.loc[:, "source_url"] = "https://covid19.moh.gov.sa/"
 
     df = df[df.total_vaccinations > 0].sort_values("date")
+
+    # The data contains an error that creates a negative change
+    df = df[df.date != "2021-03-03"]
 
     df.to_csv(paths.tmp_vax_out("Saudi Arabia"), index=False)
 

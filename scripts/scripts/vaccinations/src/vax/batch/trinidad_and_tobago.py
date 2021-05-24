@@ -1,10 +1,8 @@
-import os
-
 import requests
 import pandas as pd
 
 from vax.utils.files import load_query, load_data
-from vax.utils.utils import date_formatter
+from vax.utils.dates import clean_date_series
 
 
 def read(source: str) -> pd.DataFrame:
@@ -34,7 +32,7 @@ def add_totals(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def format_date(df: pd.DataFrame) -> pd.DataFrame:
-    return df.assign(date=date_formatter(df.date, "%d/%m/%Y", "%Y-%m-%d"))
+    return df.assign(date=clean_date_series(df.date, "%d/%m/%Y"))
 
 
 def enrich_location(df: pd.DataFrame) -> pd.DataFrame:

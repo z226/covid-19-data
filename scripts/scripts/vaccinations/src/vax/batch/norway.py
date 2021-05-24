@@ -5,7 +5,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.utils import date_formatter
+from vax.utils.dates import clean_date_series
 
 
 def read_csv_multiple_separators(filepath: str, separators: list, usecols: list) -> pd.DataFrame:
@@ -77,7 +77,7 @@ def main(paths):
 
     df["total_vaccinations"] = df["people_vaccinated"] + df["people_fully_vaccinated"].fillna(0)
 
-    df["date"] = date_formatter(df.date, "%Y-%m-%d", "%Y-%m-%d")
+    df["date"] = clean_date_series(df.date, "%Y-%m-%d")
 
     df.loc[:, "location"] = "Norway"
     # df.loc[:, "vaccine"] = "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"

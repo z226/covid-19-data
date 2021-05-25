@@ -7,7 +7,7 @@ from datetime import date
 
 def main():
 
-    data = pd.read_csv("automated_sheets/Laos.csv")
+    df = pd.read_csv("automated_sheets/Laos.csv")
 
     url = 'https://www.covid19.gov.la/index.php'
     #Only works when making two requests. The first always returns an error.
@@ -21,7 +21,7 @@ def main():
 
     date_str = date.today().strftime("%Y-%m-%d")
 
-    if count > data["Cumulative total"].max() and date_str > data["Date"].max():
+    if count > df["Cumulative total"].max() and date_str > df["Date"].max():
         new = pd.DataFrame({
             'Country': 'Laos',
             'Date': [date_str],
@@ -31,7 +31,8 @@ def main():
             'Units': 'people tested',
         })
 
-    df = pd.concat([new, data], sort=False)
+        df = pd.concat([new, df], sort=False)
+    
     df.to_csv("automated_sheets/Laos.csv", index=False)
 
 if __name__ == '__main__':

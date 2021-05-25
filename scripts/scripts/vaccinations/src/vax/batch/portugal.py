@@ -34,7 +34,7 @@ def format_date(df: pd.DataFrame) -> pd.DataFrame:
 
 def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values("date").ffill().fillna(0)
-    return (
+    df = (
         df
         .assign(
             total_vaccinations=df.doses + df.doses_madeira + df.doses_açores,
@@ -43,10 +43,14 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
         )
         [["date", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
     )
+    df.loc[df.date >= "2021-04-26", "people_fully_vaccinated"] = pd.NA
+    return df
 
 
 def enrich_vaccine_name(df: pd.DataFrame) -> pd.DataFrame:
     def _enrich_vaccine_name(date: str) -> str:
+        if date >= "2021-04-26":
+            return "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         if date >= "2021-02-09":
             return "Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
         return "Pfizer/BioNTech"

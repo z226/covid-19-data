@@ -5,6 +5,7 @@ from collections import ChainMap
 from math import isnan
 import glob
 import json
+import locale
 
 import pandas as pd
 
@@ -399,6 +400,7 @@ class DatasetGenerator:
         )
 
     def pipe_locations_to_html(self, df: pd.DataFrame) -> pd.DataFrame:
+        locale.setlocale(locale.LC_TIME, "en_US")
         # build table
         country_faqs = {
             "Israel",

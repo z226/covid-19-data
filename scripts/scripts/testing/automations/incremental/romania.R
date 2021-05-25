@@ -13,6 +13,8 @@ date <- str_extract(url, "\\d+-\\d+_BULETIN") %>%
     dmy()
 if (is.na(date)) date <- today()
 
+url <- str_replace(url, "http\\://https", "https")
+
 download.file(url = url, destfile = "tmp/tmp.pdf", quiet = TRUE)
 
 count <- pdf_text("tmp/tmp.pdf") %>%

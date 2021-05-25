@@ -1,7 +1,7 @@
 import os
-import shutil
 import datetime
 import re
+import numbers
 
 import pandas as pd
 import requests
@@ -37,7 +37,7 @@ def increment(
         people_vaccinated=None,
         people_fully_vaccinated=None):
     assert type(location) == str
-    assert isinstance(total_vaccinations, (int, float))
+    assert isinstance(total_vaccinations, numbers.Number)
     assert type(people_vaccinated) == int or pd.isnull(people_vaccinated)
     assert type(people_fully_vaccinated) == int or pd.isnull(people_fully_vaccinated)
     assert type(date) == str

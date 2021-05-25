@@ -43,7 +43,6 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
         )
         [["date", "total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
     )
-    df.loc[df.date >= "2021-04-26", "people_fully_vaccinated"] = pd.NA
     return df
 
 

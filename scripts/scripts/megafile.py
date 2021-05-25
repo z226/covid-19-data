@@ -17,7 +17,7 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../input/"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../grapher/"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../public/data/"))
-TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "timestamp/"))
+TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal", "timestamp"))
 
 
 def get_jhu():

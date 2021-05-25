@@ -550,6 +550,6 @@ def main_generate_dataset(paths):
     generator.run()
 
     # Export timestamp
-    timestamp_filename = os.path.join(paths.tmp_tsp, "owid-covid-data-last-updated-timestamp-vaccination.txt")
+    timestamp_filename = os.path.join(paths.pub_tsp, "owid-covid-data-last-updated-timestamp-vaccination.txt")
     with open(timestamp_filename, "w") as timestamp_file:
         timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())

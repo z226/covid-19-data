@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from matplotlib import use
 
 import pandas as pd
 
@@ -10,16 +11,16 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 def get_who_data():
     # Load WHO
     url = "https://covid19.who.int/who-data/vaccination-data.csv"
-    df_who = pd.read_csv(url)
+    df_who = pd.read_csv(url, usecols=["ISO3", "COUNTRY", "DATA_SOURCE"])
+    df_who = df_who.rename(columns={"COUNTRY": "location_WHO"})
     # Countries WHO relies on us
-    df_who = df_who.loc[df_who.DATA_SOURCE == "OWID", ["ISO3", "COUNTRY"]]#.sort_values(by="")
-    df_who = df_who.assign(reporting_to_WHO=True)
+    df_who = df_who.assign(reporting_to_WHO=df_who.DATA_SOURCE=="OWID")    
     return df_who
 
 
 def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
                             path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
-                            sortby_updatefreq: bool = False,
+                            sortby_updatefreq: bool = False, who: bool = False
                             ):
     """Check last updated countries.
 
@@ -46,6 +47,7 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         as_dict (bool, optional): Set to True for the return value to be shaped as a dictionary. Otherwise returns a
                                     DataFrame.
         sortby_counts (bool, optional): Set to True to sort resuls from least to most updated countries.
+        who (bool, optional): Display WHO columns
 
     Returns:
         Union[pd.DataFrame, dict]: List or DataFrame, where each row (or element) contains five fields:
@@ -66,6 +68,16 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         )
     if not path_automation_state:
         path_automation_state = os.path.abspath(os.path.join(CURRENT_DIR, "../../../automation_state.csv"))
+    columns_output = [
+        "location",
+        "last_observation_date",
+        "first_observation_date",
+        "counts",
+        "update_frequency",
+        "num_observation_days",
+        "source_website",
+        "automated",
+    ]
     # Read data
     df_vax = pd.read_csv(path_vaccinations)
     df_loc = pd.read_csv(path_locations)
@@ -81,7 +93,10 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df = df_loc.merge(df_state, on="location")
     df = df.merge(df_vax, on="location")
     # Merge with WHO
-    df = df.merge(df_who, left_on="iso_code", right_on="ISO3", how="left")
+    if who:
+        print(df_who.columns)
+        df = df.merge(df_who, left_on="iso_code", right_on="ISO3", how="left")
+        columns_output += ["reporting_to_WHO", "location_WHO"]
     # Additional fields
     num_observation_days = (
         datetime.now() - pd.to_datetime(df.first_observation_date)
@@ -101,17 +116,7 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         sort_column = "last_observation_date"
     df = df.sort_values(
         by=sort_column
-    )[[
-        "location",
-        "last_observation_date",
-        "first_observation_date",
-        "counts",
-        "update_frequency",
-        "num_observation_days",
-        "source_website",
-        "automated",
-        "reporting_to_WHO",
-    ]]
+    )[columns_output]
 
     def _web_type(x):
         if ("facebook." in x.lower()) or ("twitter." in x.lower()):

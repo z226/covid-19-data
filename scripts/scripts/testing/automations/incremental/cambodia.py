@@ -4,25 +4,31 @@ import pandas as pd
 import requests
 from datetime import date
 
-url = 'http://cdcmoh.gov.kh/'
-req = requests.get(url)
-text = req.text
+def main():
 
-count = int(text.split('ááá¸ááá¶áááááá¸ááááááááá½áâ ')[1].split(' ')[0])
+    data = pd.read_csv("automated_sheets/Cambodia.csv")
 
-date_str = date.today().strftime("%Y-%m-%d")
-df = pd.DataFrame({
-    'Country': 'Cambodia',
-    'Date': [date_str],
-    'Cumulative total': count,
-    'Source URL': url,
-    'Source label': 'CDCMOH',
-    'Units': 'unclear',
-})
+    url = 'http://cdcmoh.gov.kh/'
+    req = requests.get(url)
+    text = req.text
 
-output_file = 'automated_sheets/Cambodia.csv'
-if os.path.isfile(output_file):
-    existing = pd.read_csv(output_file)
-    df = pd.concat([df, existing]).sort_values('Date', ascending=False)
+    count = int(text.split('ááá¸ááá¶áááááá¸ááááááááá½áâ ')[1].split(' ')[0])
 
-df.to_csv(output_file, index=False)
+    date_str = date.today().strftime("%Y-%m-%d")
+
+    if count > data["Cumulative total"].max() and date_str > data["Date"].max():
+
+        new = pd.DataFrame({
+            'Country': 'Cambodia',
+            'Date': [date_str],
+            'Cumulative total': count,
+            'Source URL': url,
+            'Source label': 'CDCMOH',
+            'Units': 'tests performed',
+        })
+
+    df = pd.concat([new, data], sort=False)
+    df.to_csv("automated_sheets/Cambodia.csv", index=False)
+
+if __name__ == '__main__':
+    main()

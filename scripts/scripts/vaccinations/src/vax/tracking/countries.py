@@ -94,7 +94,7 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     df = df.merge(df_vax, on="location")
     # Merge with WHO
     if who:
-        print(df_who.columns)
+        # print(df_who.columns)
         df = df.merge(df_who, left_on="iso_code", right_on="ISO3", how="left")
         columns_output += ["reporting_to_WHO", "location_WHO"]
     # Additional fields
@@ -119,13 +119,25 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
     )[columns_output]
 
     def _web_type(x):
+        govs = [
+            ".gov/", "gov.", ".gob.", ".moh.", ".gub.", ".go.", ".gouv.", "govern", ".govt", 
+            ".coronavirus2020.kz/", "thl.fi", 
+            ".gv.", "corona.nun.gl", "exploregov.ky", "covid19response.lc/", "corona.fo/", "103.247.238.92/webportal/",
+            "data.public.lu/", "vaccinocovid.iss.sm/", "koronavirus.hr", "koronavirusinfo.az", "covid.is",
+            "government.", "covid19ireland-geohive.hub.arcgis", "sacoronavirus.co.za", "covidodgovor.me",
+            "experience.arcgis.com/experience/59226cacd2b441c7a939dca13f832112/", "guineasalud.org/estadisticas/",
+            "bakuna.cw/", "laatjevaccineren.sr/", "coronavirus.bg/bg/statistika", "admin.ch", 
+            "folkhalsomyndigheten.se/", "covid19.ssi.dk/", "fhi.no/", "impfdashboard.de/", "covid-19.nczisk.sk",
+            "opendata.digilugu.ee", ".mzcr.cz/", "ghanahealthservice.org/", "ccss.sa.cr/", "epistat.wiv-isp.be",
+            "covidmaroc.ma", "experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca",
+            "gtmvigilanciacovid.shinyapps", "belta.by"
+        ]
         if ("facebook." in x.lower()) or ("twitter." in x.lower()):
             return "Social Network"
         elif "github." in x.lower():
             return "GitHub"
-        elif ((".gov." in x.lower()) or (".gob." in x.lower()) or (".moh." in x.lower()) or (".gub." in x.lower()) or
-              (".go." in x.lower())) or (".gouv." in x.lower()):
-            return "Govern"
+        elif any(gov in x.lower() for gov in govs):
+            return "Govern/Official"
         elif ".who.int" in x.lower():
             return "WHO"
         elif ".pacificdata.org" in x.lower():

@@ -27,8 +27,9 @@ def main():
             'Units': 'tests performed',
         })
 
-    df = pd.concat([new, data], sort=False)
-    df.to_csv("automated_sheets/Cambodia.csv", index=False)
+        data = pd.concat([new, data], sort=False)
+
+    data.to_csv("automated_sheets/Cambodia.csv", index=False)
 
 if __name__ == '__main__':
     main()

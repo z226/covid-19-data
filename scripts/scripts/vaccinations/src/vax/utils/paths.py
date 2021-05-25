@@ -12,7 +12,7 @@ class Paths:
 
     @property
     def pub_tsp(self):
-        return os.path.join(self.pub_data, "timestamp")
+        return os.path.join(self.pub_data, "internal", "timestamp")
 
     @property
     def pub_vax(self):

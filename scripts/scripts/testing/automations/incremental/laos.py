@@ -5,29 +5,34 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import date
 
-url = 'https://www.covid19.gov.la/index.php'
-#Only works when making two requests. The first always returns an error.
-try:
-    data = BeautifulSoup(requests.get(url).text, features="lxml")
-except:
-    data = BeautifulSoup(requests.get(url).text, features="lxml")
+def main():
 
-stats = data.find_all('p')
-count = int(stats[11].text.split(' ')[0].replace(',', ''))
+    data = pd.read_csv("automated_sheets/Laos.csv")
 
-date_str = date.today().strftime("%Y-%m-%d")
-df = pd.DataFrame({
-    'Country': 'Laos',
-    'Date': [date_str],
-    'Cumulative total': count,
-    'Source URL': url,
-    'Source label': 'Government of Laos',
-    'Units': 'people tested'
-})
+    url = 'https://www.covid19.gov.la/index.php'
+    #Only works when making two requests. The first always returns an error.
+    try:
+        data = BeautifulSoup(requests.get(url).text, features="lxml")
+    except:
+        data = BeautifulSoup(requests.get(url).text, features="lxml")
 
-output_file = 'automated_sheets/Laos.csv'
-if os.path.isfile(output_file):
-    existing = pd.read_csv(output_file)
-    df = pd.concat([df, existing]).sort_values('Date', ascending=False)
+    stats = data.find_all('p')
+    count = int(stats[11].text.split(' ')[0].replace(',', ''))
 
-df.to_csv(output_file, index=False)
+    date_str = date.today().strftime("%Y-%m-%d")
+
+    if count > data["Cumulative total"].max() and date_str > data["Date"].max():
+        new = pd.DataFrame({
+            'Country': 'Laos',
+            'Date': [date_str],
+            'Cumulative total': count,
+            'Source URL': url,
+            'Source label': 'Government of Laos',
+            'Units': 'people tested',
+        })
+
+    df = pd.concat([new, data], sort=False)
+    df.to_csv("automated_sheets/Laos.csv", index=False)
+
+if __name__ == '__main__':
+    main()

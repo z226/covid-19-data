@@ -92,7 +92,7 @@ class Greece:
         )
 
 
-def main(paths, greece_api_token):
+def main(paths):
     Greece(
         source_url="https://www.data.gov.gr/api/v1/summary/mdg_emvolio?date_from=2020-12-28",
         source_url_ref="https://www.data.gov.gr/datasets/mdg_emvolio/",

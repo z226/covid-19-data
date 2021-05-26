@@ -24,7 +24,6 @@ def main():
             parallel=cfg.parallel,
             n_jobs=cfg.njobs,
             modules_name=cfg.countries,
-            greece_api_token=creds.greece_api_token,
             skip_countries=cfg.skip_countries,
         )
     if "process" in config.mode:

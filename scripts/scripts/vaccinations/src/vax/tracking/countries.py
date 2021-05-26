@@ -132,8 +132,10 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
             "covidmaroc.ma", "experience.arcgis.com/experience/cab84dcfe0464c2a8050a78f817924ca",
             "gtmvigilanciacovid.shinyapps", "belta.by"
         ]
-        if ("facebook." in x.lower()) or ("twitter." in x.lower()):
-            return "Social Network"
+        if ("facebook." in x.lower()):
+            return "Facebook"
+        elif ("twitter." in x.lower()):
+            return "Twitter"
         elif "github." in x.lower():
             return "GitHub"
         elif any(gov in x.lower() for gov in govs):

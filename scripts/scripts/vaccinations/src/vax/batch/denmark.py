@@ -64,12 +64,18 @@ def pipeline(df: pd.DataFrame, colname: str) -> pd.DataFrame:
     )
 
 
+def exclude_rows(df: pd.DataFrame) -> pd.DataFrame:
+    df = df[df.date >= "2020-12-01"]
+    return df
+
+
 def post_process(df: pd.DataFrame) -> pd.DataFrame:
     return (
         df
         .pipe(enrich_vaccinations)
         .pipe(enrich_vaccine)
         .pipe(enrich_metadata)
+        .pipe(exclude_rows)
     )
 
 

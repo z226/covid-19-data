@@ -1,5 +1,3 @@
-import argparse
-
 from vax.cmd._config import get_config
 from vax.cmd import main_get_data, main_process_data, main_generate_dataset
 from vax.cmd.export import main_export

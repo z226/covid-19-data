@@ -4,7 +4,9 @@ from datetime import date
 from pyaml_env import parse_config
 from itertools import chain
 
-from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
+from vax.cmd.get_data import (
+    modules_name, modules_name_batch, modules_name_incremental, country_to_module
+)
 from vax.cmd._parser import _parse_args, CHOICES
 from vax.cmd.utils import normalize_country_name
 

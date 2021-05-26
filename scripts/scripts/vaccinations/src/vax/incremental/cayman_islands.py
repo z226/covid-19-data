@@ -21,15 +21,12 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 
     regex_2 = (
-        r"Of these, ([\d,]+) \(([\d,]+)% of (?:[a-zA-Z0-9,]+)\) have had at least one dose of a COVID-19 "
-        r"vaccine and ([\d,]+)% have completed the two.dose course"
+        r"Of these, ([\d,]+) \(([\d,]+)% of (?:[a-zA-Z0-9,]+)\) have had at least one dose"
     )
     matches = re.search(regex_2, soup.text)
     people_vaccinated = clean_count(matches.group(1))
-    proportion_dose1 = clean_count(matches.group(2))
-    proportion_dose2 = clean_count(matches.group(3))
-    assert proportion_dose1 >= proportion_dose2
-    people_fully_vaccinated = round(total_vaccinations * proportion_dose2/100)  
+    assert total_vaccinations >= people_vaccinated
+    people_fully_vaccinated = total_vaccinations - people_vaccinated
 
     return pd.Series({
         "total_vaccinations": total_vaccinations,

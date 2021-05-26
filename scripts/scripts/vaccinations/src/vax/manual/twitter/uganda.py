@@ -8,9 +8,10 @@ from vax.utils.utils import clean_count
 class Uganda(TwitterCollectorBase):
     def __init__(self, api):
         super().__init__(
+            api=api,
             username="MinofHealthUG",
             location="Uganda",
-            api=api,
+            add_metrics_nan=True,
         )
     
     def _propose_df(self):

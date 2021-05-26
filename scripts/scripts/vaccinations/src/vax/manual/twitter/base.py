@@ -27,7 +27,10 @@ class TwitterCollectorBase:
         return df
 
     def _add_metrics(self, df):
-        if self.add_metrics_nan:
+        if isinstance(self.add_metrics_nan, list):
+            for col in self.add_metrics_nan:
+                df = df.assign(**{col: pd.NA})
+        elif self.add_metrics_nan:
             for col in COLUMN_METRICS_ALL:
                 if col not in df.columns:
                     df = df.assign(**{col: pd.NA})

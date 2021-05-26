@@ -1,30 +1,15 @@
 location,total_vaccinations,people_vaccinated,people_fully_vaccinated,date,source_url,vaccine
-Scotland,24786.0,24785.0,1.0,2020-12-14,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,32088.0,32087.0,1.0,2020-12-15,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,39222.0,39221.0,1.0,2020-12-16,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,46246.0,46245.0,1.0,2020-12-17,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,54698.0,54697.0,1.0,2020-12-18,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,58036.0,58035.0,1.0,2020-12-19,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,60552.0,60551.0,1.0,2020-12-20,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,70077.0,70076.0,1.0,2020-12-21,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,81813.0,81812.0,1.0,2020-12-22,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,91890.0,91889.0,1.0,2020-12-23,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,94698.0,94697.0,1.0,2020-12-24,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,94714.0,94713.0,1.0,2020-12-25,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,94715.0,94714.0,1.0,2020-12-26,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,95183.0,95182.0,1.0,2020-12-27,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,96910.0,96909.0,1.0,2020-12-28,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,104432.0,104425.0,7.0,2020-12-29,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,112075.0,112045.0,30.0,2020-12-30,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,116319.0,116281.0,38.0,2020-12-31,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,116353.0,116315.0,38.0,2021-01-01,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,116364.0,116317.0,47.0,2021-01-02,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,116710.0,116663.0,47.0,2021-01-03,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
-Scotland,118315.0,118261.0,54.0,2021-01-04,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
-Scotland,127806.0,126850.0,956.0,2021-01-05,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
-Scotland,138604.0,136640.0,1964.0,2021-01-06,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
-Scotland,149762.0,147472.0,2290.0,2021-01-07,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
-Scotland,161537.0,158864.0,2673.0,2021-01-08,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,104441.0,104435.0,6.0,2020-12-29,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,112085.0,112056.0,29.0,2020-12-30,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,116329.0,116292.0,37.0,2020-12-31,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,116363.0,116326.0,37.0,2021-01-01,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,116374.0,116328.0,46.0,2021-01-02,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,116720.0,116674.0,46.0,2021-01-03,https://coronavirus.data.gov.uk/details/healthcare,Pfizer/BioNTech
+Scotland,118326.0,118273.0,53.0,2021-01-04,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,127819.0,126861.0,958.0,2021-01-05,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,138618.0,136652.0,1966.0,2021-01-06,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,149776.0,147484.0,2292.0,2021-01-07,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,161552.0,158876.0,2676.0,2021-01-08,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
 Scotland,166135.0,163377.0,2758.0,2021-01-10,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
 Scotland,178799.0,175942.0,2857.0,2021-01-11,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
 Scotland,194955.0,191965.0,2990.0,2021-01-12,https://coronavirus.data.gov.uk/details/healthcare,"Oxford/AstraZeneca, Pfizer/BioNTech"
@@ -159,3 +144,4 @@ Scotland,4851291.0,3082251.0,1769040.0,2021-05-20,https://coronavirus.data.gov.u
 Scotland,4896297.0,3096341.0,1799956.0,2021-05-21,https://coronavirus.data.gov.uk/details/healthcare,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
 Scotland,4937749.0,3108819.0,1828930.0,2021-05-22,https://coronavirus.data.gov.uk/details/healthcare,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
 Scotland,4974124.0,3121945.0,1852179.0,2021-05-23,https://coronavirus.data.gov.uk/details/healthcare,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"
+Scotland,5019580.0,3138366.0,1881214.0,2021-05-24,https://coronavirus.data.gov.uk/details/healthcare,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech"

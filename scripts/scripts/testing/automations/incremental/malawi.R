@@ -6,10 +6,6 @@ count <- read_html(url) %>%
     magrittr::extract(7) %>%
     as.integer()
 
-date <- read_html(url) %>%
-    html_nodes('elementor-heading-title .elementor-size-default') %>% 
-    html_text()
-
 add_snapshot(
     count = count,
     sheet_name = "Malawi",

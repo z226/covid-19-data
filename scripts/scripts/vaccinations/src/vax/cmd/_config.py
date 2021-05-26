@@ -120,6 +120,8 @@ class ConfigParams(object):
             "owid_cloud_table_post": self._return_value_credentials("owid_cloud_table_post"),
             "google_credentials": self._return_value_credentials("google_credentials"),
             "google_spreadsheet_vax_id": self._return_value_credentials("google_spreadsheet_vax_id"),
+            "twitter_consumer_key": self._return_value_credentials("twitter_consumer_key"),
+            "twitter_consumer_secret": self._return_value_credentials("twitter_consumer_secret"),
         })
 
     def _return_value_credentials(self, feature_name):

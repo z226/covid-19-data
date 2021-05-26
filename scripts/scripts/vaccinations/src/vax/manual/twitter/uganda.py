@@ -13,7 +13,7 @@ class Uganda(TwitterCollectorBase):
             api=api,
         )
     
-    def propose_df(self):
+    def _propose_df(self):
         regex_1 = r"Results of COVID-19 tests .*"
         regex_2 = r"against COVID-19: ([\d,]+)"
         data = []
@@ -34,5 +34,4 @@ class Uganda(TwitterCollectorBase):
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                 })
-        df = pd.DataFrame(data).sort_values("date").reset_index(drop=True)
-        return df
+        return pd.DataFrame(data)

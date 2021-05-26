@@ -28,6 +28,7 @@ class Guernsey:
             text=str(soup.text),
             regex=self._regex_date,
             date_format="%d %B %Y",
+            lang="en",
         )
         return ds.loc[["date", "total_vaccinations"]]
 

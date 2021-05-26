@@ -6,12 +6,13 @@ from vax.utils.dates import clean_date
 
 
 class Ethiopia(TwitterCollectorBase):
-    def __init__(self, api):
+    def __init__(self, api, paths=None):
         super().__init__(
             api=api,
             username="FMoHealth",
             location="Ethiopia",
             add_metrics_nan=["total_vaccinations"],
+            paths=paths,
         )
     
     def _propose_df(self):
@@ -26,3 +27,7 @@ class Ethiopia(TwitterCollectorBase):
                     "media_url": tweet.extended_entities["media"][1]["media_url_https"],
                 })
         return pd.DataFrame(data)
+
+
+def main(api, paths):
+    Ethiopia(api, paths).to_csv()

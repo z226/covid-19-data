@@ -6,12 +6,13 @@ from vax.utils.utils import clean_count
 
 
 class Uganda(TwitterCollectorBase):
-    def __init__(self, api):
+    def __init__(self, api, paths=None):
         super().__init__(
             api=api,
             username="MinofHealthUG",
             location="Uganda",
             add_metrics_nan=True,
+            paths=paths,
         )
     
     def _propose_df(self):
@@ -36,3 +37,7 @@ class Uganda(TwitterCollectorBase):
                     "source_url": self.build_post_url(tweet.id),
                 })
         return pd.DataFrame(data)
+
+
+def main(api, paths):
+    Uganda(api, paths).to_csv()

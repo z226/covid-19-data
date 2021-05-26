@@ -7,12 +7,13 @@ from vax.utils.dates import clean_date
 
 
 class Zimbabwe(TwitterCollectorBase):
-    def __init__(self, api):
+    def __init__(self, api, paths=None):
         super().__init__(
             api=api,
             username="MoHCCZim",
             location="Zimbabwe",
             add_metrics_nan=True,
+            paths=paths,
         )
     
     def _propose_df(self):
@@ -31,3 +32,7 @@ class Zimbabwe(TwitterCollectorBase):
                     "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,
                 })
         return pd.DataFrame(data)
+
+
+def main(api, paths):
+    Zimbabwe(api, paths).to_csv()

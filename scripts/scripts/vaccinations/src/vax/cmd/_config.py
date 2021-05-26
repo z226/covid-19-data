@@ -107,6 +107,17 @@ class ConfigParams(object):
             )),
         })
 
+    def ProposeDataConfig(self):
+        """Use `_token`/`id`/`secret` for variables that are secret"""
+        return ConfigParamsStep({
+            "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
+            "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
+            "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
+            "skip_countries": list(map(
+                normalize_country_name, self._return_value_pipeline("get-data", "skip_countries", [])
+            )),
+        })
+
     def ProcessDataConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({

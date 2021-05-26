@@ -7,11 +7,12 @@ COLUMN_METRICS_ALL = ["total_vaccinations", "people_vaccinated", "people_fully_v
 
 class TwitterCollectorBase:
     
-    def __init__(self, api, username: str, location: str, add_metrics_nan: bool = False):
+    def __init__(self, api, username: str, location: str, add_metrics_nan: bool = False, paths=None):
         self.username = username
         self.location = location
         self.tweets = api.get_tweets(self.username)
         self.add_metrics_nan = add_metrics_nan
+        self.paths = paths
 
     def _propose_df(self):
         raise NotImplementedError
@@ -48,6 +49,11 @@ class TwitterCollectorBase:
     def build_post_url(self, tweet_id: str):
         return f"https://twitter.com/{self.username}/status/{tweet_id}"
 
-    def to_csv(self, output_folder: str):
+    def to_csv(self, output_path=None):
         df = self.propose_df()
-        df.to_csv(os.path.join(output_folder, self.lcoation), index=False)
+        if output_path is None:
+            if self.paths is not None:
+                output_path = self.paths.tmp_vax_out_proposal(self.location)
+            else:
+                raise AttributeError("Either specify attribute `paths` or method argument `output_path`")
+        df.to_csv(output_path, index=False)

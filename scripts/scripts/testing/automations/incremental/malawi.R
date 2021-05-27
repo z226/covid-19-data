@@ -13,4 +13,5 @@ add_snapshot(
     units = "samples tested",
     source_url = url,
     source_label = "Public Health Institute of Malawi",
+    testing_type = "unclear"
 )

@@ -158,9 +158,43 @@ def discard_rows(df):
     ] = 15415
     return df
 
+def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
+    # This is temporary patch implemented on May 27, 2021. Due to the cyberattack against Ireland's
+    # IT systems in early May, case and death counts haven't been publicly updated since May 15,
+    # leading to a series of 0-case and 0-death days in JHU data. However the WHO seems to be
+    # receiving the data directly from the government — we therefore patch the series with WHO data
+
+    may_15 = pd.to_datetime("2021-05-15").date()
+    may_15_cases = (
+        df.loc[(df.location == "Ireland") & (df.date == may_15), "new_cases"].item()
+    )
+
+    if may_15_cases == 0:
+        
+        who_data = (
+            pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+            .drop(columns=["Country_code", "WHO_region"])
+            .rename(columns={
+                "Date_reported": "date",
+                "Country": "location",
+                "New_cases": "new_cases",
+                "Cumulative_cases": "total_cases",
+                "New_deaths": "new_deaths",
+                "Cumulative_deaths": "total_deaths",
+            })
+        )
+        who_data["date"] = pd.to_datetime(who_data.date).dt.date
+
+        patch_data = who_data[(who_data.location == "Ireland") & (who_data.date >= may_15)]
+        jhu_data = df[(df.location != "Ireland") | (df.date < may_15)]
+        df = pd.concat([jhu_data, patch_data]).reset_index(drop=True)
+    
+    return df
+
 def load_standardized(df):
     df = df[["date", "location", "new_cases", "new_deaths", "total_cases", "total_deaths"]]
     df = discard_rows(df)
+    df = patch_ireland(df)
     df = inject_owid_aggregates(df)
     df = inject_weekly_growth(df)
     df = inject_biweekly_growth(df)

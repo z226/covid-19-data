@@ -1,7 +1,7 @@
 url <- read_html("https://covid19.ssi.dk/overvagningsdata/download-fil-med-overvaagningdata") %>%
     html_nodes("accordions a") %>%
     html_attr("href") %>%
-    str_subset("data-epidemiologiske-rapport") %>%
+    str_subset("overvaagningsdata-covid19") %>%
     head(1)
 
 download.file(url = url, destfile = "tmp/tmp.zip", quiet = TRUE)

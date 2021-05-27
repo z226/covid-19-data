@@ -16,7 +16,7 @@ def read(source: str) -> pd.Series:
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
     regex_1 = (
-        r"There have been ([\d,]+) Covid-19 vaccinations given in total in the Cayman Islands."
+        r"There have been ([\d,]+) C(ovid|OVID)-19 vaccinations given in total in the Cayman Islands."
     )
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 

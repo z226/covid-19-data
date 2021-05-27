@@ -29,7 +29,11 @@ def read_vaccination_datasets(source: str):
             os.path.join(temp_dir, "data/COVID19FullyVaccPersons.csv"),
             usecols=["geoRegion", "date", "sumTotal", "type"]
         )
-        return pd.concat([doses, people], ignore_index=True)
+        manufacturer = pd.read_csv(
+            os.path.join(temp_dir, "data/COVID19AdministeredDoses_vaccine.csv"),
+            usecols=["date", "geoRegion", "vaccine", "sumTotal"]
+        )
+        return pd.concat([doses, people], ignore_index=True), manufacturer
 
 
 def filter_country(df: pd.DataFrame, country_code: str) -> pd.DataFrame:
@@ -86,16 +90,37 @@ def pipeline(df: pd.DataFrame, country_code: str) -> pd.DataFrame:
     )
 
 
+def manufacturer_pipeline(df: pd.DataFrame) -> pd.DataFrame:
+    vaccine_mapping = {
+        "pfizer_biontech": "Pfizer/BioNTech",
+        "moderna": "Moderna",
+    }
+    assert set(df["vaccine"].unique()) == set(vaccine_mapping.keys())
+    return (
+        df
+        .rename(columns={"sumTotal": "total_vaccinations"})
+        .drop(columns="geoRegion")
+        .assign(location="Switzerland")
+        .replace(vaccine_mapping)
+    )
+
+
 def main(paths):
     source = "https://www.covid19.admin.ch/en/epidemiologic/vacc-doses"
-    data = read_vaccination_datasets(source)
+    vaccine_data, manufacturer_data = read_vaccination_datasets(source)
 
-    data.pipe(pipeline, country_code="CH").to_csv(
+    vaccine_data.pipe(pipeline, country_code="CH").to_csv(
         paths.tmp_vax_out("Switzerland"),
         index=False
     )
-    data.pipe(pipeline, country_code="FL").to_csv(
+
+    vaccine_data.pipe(pipeline, country_code="FL").to_csv(
         paths.tmp_vax_out("Liechtenstein"),
+        index=False
+    )
+
+    manufacturer_data.pipe(manufacturer_pipeline).to_csv(
+        paths.tmp_vax_out_man("Switzerland"),
         index=False
     )
 

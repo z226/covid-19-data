@@ -11,6 +11,7 @@ pipeline:
       - North Macedonia
   process-data:
     skip_complete:
+      - Pitcairn
     skip_monotonic_check:
       Northern Ireland:
         - date: 2021-04-29

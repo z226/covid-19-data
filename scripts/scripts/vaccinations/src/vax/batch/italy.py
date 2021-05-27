@@ -65,9 +65,11 @@ def main(paths):
     by_age_group["total_vaccinations"] = by_age_group.groupby("age_group")["total_vaccinations"].cumsum()
     by_age_group[["age_group_min", "age_group_max"]] = by_age_group.age_group.apply(
         lambda x: pd.Series(str(x).split("-")))
+    by_age_group["age_group_min"] = by_age_group["age_group_min"].str.replace("+", "", regex=False)
     by_age_group.drop(columns=["age_group"])
     by_age_group["location"] = "Italy"
     by_age_group = by_age_group[["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]]
+    
     by_age_group.to_csv(paths.tmp_vax_out_by_age_group("Italy"), index=False)
 
 

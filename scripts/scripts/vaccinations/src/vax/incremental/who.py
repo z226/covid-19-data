@@ -22,6 +22,7 @@ COUNTRIES = {
     "Egypt": "Egypt",
     "Guinea-Bissau": "Guinea-Bissau",
     "Iran (Islamic Republic of)": "Iran",
+    "Ireland": "Ireland",
     "Jamaica": "Jamaica",
     "Lesotho": "Lesotho",
     "Liberia": "Liberia",

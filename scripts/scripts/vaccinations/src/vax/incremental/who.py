@@ -12,6 +12,7 @@ COUNTRIES = {
     "Angola": "Angola",
     "Benin": "Benin",
     "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
+    "British Virgin Islands": "British Virgin Islands",
     "Cabo Verde": "Cape Verde",
     "Cameroon": "Cameroon",
     "Central African Republic": "Central African Republic",

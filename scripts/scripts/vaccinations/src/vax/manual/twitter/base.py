@@ -7,12 +7,13 @@ COLUMN_METRICS_ALL = ["total_vaccinations", "people_vaccinated", "people_fully_v
 
 class TwitterCollectorBase:
     
-    def __init__(self, api, username: str, location: str, add_metrics_nan: bool = False, paths=None):
+    def __init__(self, api, username: str, location: str, add_metrics_nan: bool = False, paths=None, num_tweets=100):
         self.username = username
         self.location = location
-        self.tweets = api.get_tweets(self.username)
+        self.tweets = api.get_tweets(self.username, num_tweets)
         self.add_metrics_nan = add_metrics_nan
         self.paths = paths
+        self.tweets_relevant = []
 
     def _propose_df(self):
         raise NotImplementedError
@@ -39,11 +40,14 @@ class TwitterCollectorBase:
 
     def _order_columns(self, df):
         column_metrics = []
+        column_optional = []
         for col in COLUMN_METRICS_ALL:
             if col in df.columns:
                 column_metrics.append(col)
-        
-        df = df[["date"] + column_metrics + ["media_url", "source_url", "text"]]
+        if "media_url" in df:
+            column_optional.append("media_url")
+
+        df = df[["date"] + column_metrics + ["source_url"]+ column_optional + ["text"]]
         return df
 
     def build_post_url(self, tweet_id: str):

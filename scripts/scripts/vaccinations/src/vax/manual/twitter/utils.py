@@ -18,6 +18,7 @@ class TwitterAPI:
             include_rts=False,
             # Necessary to keep full_text 
             # otherwise only the first 140 words are extracted
-            tweet_mode='extended'
+            tweet_mode='extended',
+            exclude_replies=True,
         )
         return tweets

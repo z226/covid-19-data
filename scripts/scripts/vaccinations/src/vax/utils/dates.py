@@ -123,3 +123,9 @@ def _setlocale(name):
             yield locale.setlocale(locale.LC_TIME, name)
         finally:
             locale.setlocale(locale.LC_TIME, saved)
+
+
+def from_tz_to_tz(dt, from_tz: str = "UTC", to_tz: str = None):
+    dt = dt.replace(tzinfo=pytz.timezone(from_tz))
+    dt = dt.astimezone(pytz.timezone(to_tz))
+    return dt

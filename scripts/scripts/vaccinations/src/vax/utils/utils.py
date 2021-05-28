@@ -1,7 +1,7 @@
 import os
 import requests
 import tempfile
-
+from urllib.error import HTTPError
 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -63,8 +63,15 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
     """
     if headers is None:
         headers = get_headers()
+    try:
+        response = requests.get(source, headers=headers, verify=verify)
+    except Exception as err:
+        raise err
+    if not response.ok:
+        raise HTTPError("Web {} not found! {response.content}")
+    content = response.content
     return BeautifulSoup(
-        requests.get(source, headers=headers, verify=verify).content,
+        content,
         "html.parser",
         from_encoding=from_encoding
     )

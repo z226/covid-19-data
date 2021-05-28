@@ -31,6 +31,11 @@ WARNING = colored("[Warning]", "yellow")
 
 DATASET_NAME = "COVID-19 - Johns Hopkins University"
 
+DATA_CORRECTIONS = [
+    {"location": "Turkey", "date": "2020-12-10", "metric": "new_cases", "smoothed_value": 32066},
+    {"location": "France", "date": "2021-05-20", "metric": "new_cases", "smoothed_value": 15415},
+]
+
 def print_err(*args, **kwargs):
     return print(*args, file=sys.stderr, **kwargs)
 
@@ -145,31 +150,23 @@ def check_data_correctness(df_merged):
     return errors == 0
 
 def discard_rows(df):
-    # Set artefact in new_cases for Turkey on 2020-12-10 to the previous 7-day average
-    df.loc[
-        (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
-        "new_cases"
-    ] = 32066
-    # Set artefact in new_cases for France on 2021-05-20 to the actual daily change
-    # Source: https://twitter.com/nicolasberrod/status/1395450360324661262
-    df.loc[
-        (df["location"] == "France") & (df["date"].astype(str) == "2021-05-20"),
-        "new_cases"
-    ] = 15415
+    for dc in DATA_CORRECTIONS:
+        dc["official_value"] = df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ].item()
+        df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ] = dc["smoothed_value"]
     return df
 
 def reinstate_rows(df):
-    # Set artefact in new_cases for Turkey on 2020-12-10 to the previous 7-day average
-    df.loc[
-        (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
-        "new_cases"
-    ] = 823225
-    # Set artefact in new_cases for France on 2021-05-20 to the actual daily change
-    # Source: https://twitter.com/nicolasberrod/status/1395450360324661262
-    df.loc[
-        (df["location"] == "France") & (df["date"].astype(str) == "2021-05-20"),
-        "new_cases"
-    ] = -348667
+    for dc in DATA_CORRECTIONS:
+        df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ] = dc["official_value"]
     return df
 
 def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:

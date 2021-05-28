@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import tempfile
 import re
 
@@ -15,6 +16,8 @@ from vax.utils.dates import clean_date
 def read(source: str):
     soup = get_soup(source)
     url = parse_pdf_link(soup, source)
+    if not url.endswith(".pdf"):
+        raise ValueError(f"File reporting metrics is not a PDF: {url}!")
     ds = pd.Series(parse_data(url))
     return ds
 

@@ -25,8 +25,11 @@ class Guinea(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
+                dt = match.group(1)
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": match.group(1),
+                    "date": dt,
                     "text": tweet.full_text,
                     "source_url": 1,#pan.build_post_url(tweet.id),
                     "media_url": tweet.extended_entities["media"][0]["media_url_https"],

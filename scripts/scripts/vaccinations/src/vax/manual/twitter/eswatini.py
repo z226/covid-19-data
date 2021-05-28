@@ -23,8 +23,11 @@ class Eswatini(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
+                dt = clean_date(match.group(1), "%d %B %Y")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": clean_date(match.group(1), "%d %B %Y"),
+                    "date": dt,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.extended_entities["media"][0]["media_url_https"],

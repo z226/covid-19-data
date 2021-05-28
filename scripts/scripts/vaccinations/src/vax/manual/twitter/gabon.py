@@ -21,9 +21,11 @@ class Gabon(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
-                date_str = clean_date(match.group(1), "%d %B %Y", lang="fr")
+                dt = clean_date(match.group(1), "%d %B %Y", lang="fr")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": date_str,
+                    "date": dt,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,

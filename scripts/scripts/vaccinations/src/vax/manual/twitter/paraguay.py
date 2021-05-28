@@ -37,8 +37,11 @@ class Paraguay(TwitterCollectorBase):
                 else:
                     people_vaccinated = pd.NA
                 people_fully_vaccinated = total_vaccinations - people_vaccinated
+                dt = clean_date(match.group(1), "%d.%m.%Y")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": clean_date(match.group(1), "%d.%m.%Y"),
+                    "date": dt,
                     "total_vaccinations": total_vaccinations,
                     "people_vaccinated": people_vaccinated,
                     "people_fully_vaccinated": people_fully_vaccinated,

@@ -33,8 +33,11 @@ class Nigeria(TwitterCollectorBase):
             if match_1:
                 people_vaccinated = clean_count(match_1.group(5))
                 people_fully_vaccinated = clean_count(match_1.group(6))
+                dt = clean_date(" ".join(match_1.group(2, 3, 4)), "%B %d %Y")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": clean_date(" ".join(match_1.group(2, 3, 4)), "%B %d %Y"),
+                    "date": dt,
                     "total_vaccinations": people_vaccinated + people_fully_vaccinated,
                     "people_vaccinated": people_vaccinated,
                     "people_fully_vaccinated": people_fully_vaccinated,
@@ -43,8 +46,11 @@ class Nigeria(TwitterCollectorBase):
                     "media_url": tweet.extended_entities["media"][0]["media_url_https"],
                 })
             elif match_2:
+                dt = clean_date(" ".join(match_2.group(2, 3, 4)), "%B %d %Y")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": clean_date(" ".join(match_2.group(2, 3, 4)), "%B %d %Y"),
+                    "date": dt,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.extended_entities["media"][0]["media_url_https"],

@@ -22,10 +22,13 @@ class Zimbabwe(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
-                date = clean_date(match.group(1), "%d %B %Y")
+                dt = clean_date(match.group(1), "%d %B %Y")
                 total_vaccinations = clean_count(match.group(2))
+                dt = tweet.created_at.strftime("%Y-%m-%d")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": date,
+                    "date": dt,
                     "total_vaccinations": total_vaccinations,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),

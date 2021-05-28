@@ -37,8 +37,11 @@ class Gibraltar(TwitterCollectorBase):
                 if dist < dist_th:
                     # print("Found:", hist[0])
                     # print(tweet.full_text)
+                    dt = tweet.created_at.strftime("%Y-%m-%d")
+                    if self.stop_search(dt):
+                        break
                     records.append({
-                        "date": tweet.created_at.strftime("%Y-%m-%d"),
+                        "date": dt,
                         "text": tweet.full_text,
                         "source_url": self.build_post_url(tweet.id),
                         "media_url": url,

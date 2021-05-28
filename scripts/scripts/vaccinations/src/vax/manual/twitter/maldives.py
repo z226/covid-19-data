@@ -21,9 +21,11 @@ class Maldives(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
-                date = clean_date(match.group(1), "%d.%m.%Y")
+                dt = clean_date(match.group(1), "%d.%m.%Y")
+                if self.stop_search(dt):
+                    break
                 data.append({
-                    "date": date,
+                    "date": dt,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,

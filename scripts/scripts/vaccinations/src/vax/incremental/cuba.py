@@ -98,7 +98,7 @@ class Cuba:
 
     def pipe_select_output_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[[
-            "loction",
+            "location",
             "date",
             "vaccine",
             "source_url",

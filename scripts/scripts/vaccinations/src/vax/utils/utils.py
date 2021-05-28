@@ -2,7 +2,7 @@ import os
 import requests
 import tempfile
 import re
-
+from urllib.error import HTTPError
 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -51,19 +51,31 @@ def get_headers() -> dict:
     }
 
 
-def get_soup(source: str, headers: dict = None, verify: bool = True) -> BeautifulSoup:
+def get_soup(source: str, headers: dict = None, verify: bool = True, from_encoding: str = None) -> BeautifulSoup:
     """Get soup from website.
 
     Args:
         source (str): Website url.
         headers (dict, optional): Headers to be used for request. Defaults to general one.
-
+        verify (bool, optional): Verify source URL. Defaults to True.
+        from_encoding (str, optional): Encoding to use. Defaults to None.
     Returns:
         BeautifulSoup: Website soup.
     """
     if headers is None:
         headers = get_headers()
-    return BeautifulSoup(requests.get(source, headers=headers, verify=verify).content, "html.parser")
+    try:
+        response = requests.get(source, headers=headers, verify=verify)
+    except Exception as err:
+        raise err
+    if not response.ok:
+        raise HTTPError("Web {} not found! {response.content}")
+    content = response.content
+    return BeautifulSoup(
+        content,
+        "html.parser",
+        from_encoding=from_encoding
+    )
 
 
 def url_request_broken(url):

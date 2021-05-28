@@ -50,19 +50,24 @@ def get_headers() -> dict:
     }
 
 
-def get_soup(source: str, headers: dict = None, verify: bool = True) -> BeautifulSoup:
+def get_soup(source: str, headers: dict = None, verify: bool = True, from_encoding: str = None) -> BeautifulSoup:
     """Get soup from website.
 
     Args:
         source (str): Website url.
         headers (dict, optional): Headers to be used for request. Defaults to general one.
-
+        verify (bool, optional): Verify source URL. Defaults to True.
+        from_encoding (str, optional): Encoding to use. Defaults to None.
     Returns:
         BeautifulSoup: Website soup.
     """
     if headers is None:
         headers = get_headers()
-    return BeautifulSoup(requests.get(source, headers=headers, verify=verify).content, "html.parser")
+    return BeautifulSoup(
+        requests.get(source, headers=headers, verify=verify).content,
+        "html.parser",
+        from_encoding=from_encoding
+    )
 
 
 def url_request_broken(url):

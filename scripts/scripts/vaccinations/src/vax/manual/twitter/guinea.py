@@ -3,7 +3,7 @@ import re
 import pandas as pd
 
 from vax.manual.twitter.base import TwitterCollectorBase
-
+from vax.utils.dates import clean_date
 
 class Guinea(TwitterCollectorBase):
     def __init__(self, api, paths=None, **kwargs):
@@ -25,13 +25,13 @@ class Guinea(TwitterCollectorBase):
         for tweet in self.tweets:
             match = re.search(regex, tweet.full_text)
             if match:
-                dt = match.group(1)
+                dt = clean_date(match.group(1), "%d-%m-%Y")
                 if self.stop_search(dt):
                     break
                 data.append({
                     "date": dt,
                     "text": tweet.full_text,
-                    "source_url": 1,#pan.build_post_url(tweet.id),
+                    "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.extended_entities["media"][0]["media_url_https"],
                 })
         df = pd.DataFrame(data)

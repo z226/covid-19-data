@@ -29,7 +29,7 @@ class Zimbabwe(TwitterCollectorBase):
                     break
                 data.append({
                     "date": dt,
-                    "total_vaccinations": total_vaccinations,
+                    "people_vaccinated": total_vaccinations,
                     "text": tweet.full_text,
                     "source_url": self.build_post_url(tweet.id),
                     "media_url": tweet.entities["media"][0]["media_url_https"] if "media" in tweet.entities else None,

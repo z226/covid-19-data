@@ -21,6 +21,7 @@ country_mapping = {
     "PF": "French Polynesia",
     "WF": "Wallis and Futuna",
     "NC": "New Caledonia",
+    "CK": "Cook Islands"
 }
 
 def read(url):

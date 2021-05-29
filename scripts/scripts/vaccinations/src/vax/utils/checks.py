@@ -101,10 +101,11 @@ class CountryChecker:
             raise ValueError(f"{self.location} -- Invalid dates! NaN values found.")
         if (self.df.date.min() < datetime(2020, 12, 1)) or (self.df.date.max() > datetime.now().date()):
             raise ValueError(f"{self.location} -- Invalid dates! Check {self.df.date.min()} and {self.df.date.max()}")
-        if self.df.date.nunique() != len(self.df):
-            raise ValueError(
-                f"{self.location} -- Mismatch between number of rows {len(self.df)} and number of different dates "
-                f"{self.df.date.nunique()}. Check {self.df.date.unique()}.")
+        ds = self.df.date.value_counts()
+        dates_wrong = ds[ds > 1].index
+        msk = self.df.date.isin(dates_wrong)
+        if not self.df[msk].empty:
+            raise ValueError(f"{self.location} -- Check `date` field, there are duplicates: {self.df[msk]}")
 
     def check_location(self):
         if self.df.location.isnull().any():

@@ -9,6 +9,7 @@ from vax.utils.utils import get_soup
 from vax.utils.incremental import clean_count
 from vax.utils.dates import clean_date
 
+
 def parse_date(elem) -> str:
     date = elem.find_parent(class_="card").find(class_="news--item-date").text.strip()
     return clean_date(date, "%Y年%m月%d日 %H:%M")
@@ -21,7 +22,7 @@ def parse_source_url(elem) -> str:
 def parse_vaccinations(elem) -> dict:
     # Get news text
     url = elem.find_parent(class_="card").find("a").get("href")
-    soup = get_soup(url)
+    soup = get_soup(url, verify=False)
     text = "\n".join([p.text for p in soup.find("article").find_all("p")])
 
     # Find metrics
@@ -79,7 +80,7 @@ def read(source: str, last_update: str, num_pages_limit: int = 10):
         # print(page_nr)
         # Get soup
         url = f"{source}/{page_nr}/"
-        soup = get_soup(url)
+        soup = get_soup(url, verify=False)
         # Get data (if any)
         records_sub = parse_data(soup)
         if records_sub:

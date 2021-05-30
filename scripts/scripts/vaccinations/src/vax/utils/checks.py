@@ -77,12 +77,12 @@ class CountryChecker:
         cols_extra = cols + ["people_vaccinated", "people_fully_vaccinated"]
         cols_missing = [col for col in cols if col not in self.df.columns]
         if cols_missing:
-            raise ValueError(f"df missing column(s): {cols_missing}.")
+            raise ValueError(f"{self.location} -- df missing column(s): {cols_missing}.")
         # Ensure validity of column names in df
         if not self.allow_extra_cols:
             cols_wrong = [col for col in self.df.columns if col not in cols_extra]
             if cols_wrong:
-                raise ValueError(f"df contains invalid column(s): {cols_wrong}.")
+                raise ValueError(f"{self.location} -- df contains invalid column(s): {cols_wrong}.")
 
     def check_source_url(self):
         if self.df.source_url.isnull().any():

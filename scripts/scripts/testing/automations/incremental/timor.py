@@ -14,6 +14,7 @@ def main():
 
     stats = soup.find_all('span',attrs={'class': 'wdt-column-sum-value'})
     count = int(stats[5].text.replace(',', ''))
+    # print(count)
 
     date_str = date.today().strftime("%Y-%m-%d")
     df = pd.DataFrame({

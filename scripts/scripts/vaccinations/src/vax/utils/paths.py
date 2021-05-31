@@ -56,6 +56,9 @@ class Paths:
     def tmp_vax_out(self, location):
         return os.path.join(self.tmp_vax_out_dir, f"{location}.csv")
 
+    def tmp_vax_out_proposal(self, location):
+        return os.path.join(self.tmp_vax_out_dir, "proposals", f"{location}.csv")
+
     def tmp_vax_out_man(self, location):
         return os.path.join(self.tmp_vax_out_dir, "by_manufacturer", f"{location}.csv")
 

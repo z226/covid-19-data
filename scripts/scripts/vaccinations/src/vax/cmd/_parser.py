@@ -5,7 +5,7 @@ from difflib import SequenceMatcher
 from vax.cmd.utils import normalize_country_name, get_logger
 
 
-CHOICES = ["get", "process", "generate", "export"]
+CHOICES = ["get", "process", "generate", "export", "propose"]
 logger = get_logger()
 
 
@@ -41,7 +41,8 @@ def _parse_args():
         help=(
             "Choose a step: i) `get` will run automated scripts, 2) `process` will get csvs generated in 1"
             " and collect all data from spreadsheet, 3) `generate` generate the output files, 4) `export`"
-            " to generate all final files, 5) `all` will  run all steps sequentially."
+            " to generate all final files, 5) `all` will  run all steps sequentially + step 6, 6) `propose` Get data"
+            " from Social Networks (Twitter, Facebook) and propose data."
         )
     )
     parser.add_argument(

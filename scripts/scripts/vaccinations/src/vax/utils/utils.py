@@ -1,6 +1,7 @@
 import os
 import requests
 import tempfile
+import re
 from urllib.error import HTTPError
 
 from bs4 import BeautifulSoup
@@ -82,3 +83,9 @@ def url_request_broken(url):
     x = filter(lambda x: x[0] != 'where', [p.split('=') for p in url_params.split('&')])
     params = dict(x)
     return f"{url_base}/query", params
+
+
+def clean_count(count):
+    count = re.sub(r"[^0-9]", "", count)
+    count = int(count)
+    return count

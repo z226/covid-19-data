@@ -107,7 +107,9 @@ The environment variable `${OWID_COVID_VAX_CREDENTIALS_FILE}` corresponds to the
     "greece_api_token": "[GREECE_API_TOKEN]",
     "owid_cloud_table_post": "[OWID_CLOUD_TABLE_POST]",
     "google_credentials": "[CREDENTIALS_JSON_PATH]",
-    "google_spreadsheet_vax_id": "[SHEET_ID]"
+    "google_spreadsheet_vax_id": "[SHEET_ID]",
+    "twitter_consumer_key": "[TWITTER_CONSUMER_KEY]",
+    "twitter_consumer_secret": "[TWITTER_CONSUMER_SECRET]"
 }
 ```
 

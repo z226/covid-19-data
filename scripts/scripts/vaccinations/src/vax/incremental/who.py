@@ -51,6 +51,12 @@ COUNTRIES = {
     "Oman": "Oman",
     "Montserrat": "Montserrat",
     "Ghana": "Ghana",
+    "Sierra Leone": "Sierra Leone",
+    "Turks and Caicos Islands": "Turks and Caicos Islands",
+    "Anguilla": "Anguilla",
+    "Honduras": "Honduras",
+    "Syrian Arab Republic": "Syria",
+    "Togo": "Togo",
 }
 
 

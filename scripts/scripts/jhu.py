@@ -204,9 +204,9 @@ def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_standardized(df):
     df = df[["date", "location", "new_cases", "new_deaths", "total_cases", "total_deaths"]]
+    df = discard_rows(df)
     df = patch_ireland(df)
     df = inject_owid_aggregates(df)
-    df = discard_rows(df)
     df = inject_weekly_growth(df)
     df = inject_biweekly_growth(df)
     df = inject_doubling_days(df)

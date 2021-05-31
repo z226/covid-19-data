@@ -1,25 +1,36 @@
+import os
+from datetime import date
+import requests
+
 import pandas as pd
 from bs4 import BeautifulSoup
-import requests
-from datetime import date
-import urllib
 
-url = 'https://monitoring-covid19gabon.ga'
-req = requests.get(url)
-soup = BeautifulSoup(req.text, 'html.parser')
+def main():
+    url = 'https://monitoring-covid19gabon.ga'
+    location = "Gabon"
+    output_file = f'automated_sheets/{location}.csv'
 
-stats = soup.find_all('h3')
-count = int(stats[2].text)
-print(count)
+    req = requests.get(url)
+    soup = BeautifulSoup(req.text, 'html.parser')
+    stats = soup.find_all('h3')
+    count = int(stats[2].text)
+    # print(count)
 
-date = str(date.today())
-new = pd.DataFrame({'Country': 'Gabon',
-                   'Date': [date],
-                   'Cumulative total': count,
-                   'Source URL': url,
-                   'Source label': 'Government of Gabon',
-                   'Units': 'unclear'})
+    date_str = date.today().strftime("%Y-%m-%d")
+    df = pd.DataFrame({
+        'Country': location,
+        'Date': [date_str],
+        'Cumulative total': count,
+        'Source URL': url,
+        'Source label': 'Government of Gabon',
+        'Units': 'unclear'
+    })
 
-existing = pd.read_csv('automated_sheets/Gabon.csv')
-df = pd.concat([new,existing]).sort_values('Date',ascending=False)
-df.to_csv('automated_sheets/Gabon.csv',index=False)
+    if os.path.isfile(output_file):
+        existing = pd.read_csv(output_file)
+        df = pd.concat([df, existing]).sort_values('Date', ascending=False)
+    df.to_csv(output_file, index=False)
+
+
+if __name__=="__main__":
+    main()

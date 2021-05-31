@@ -194,8 +194,9 @@ def _countries_to_modules(countries):
     if len(countries) >= 1:
         # Verify validity of countries
         countries_wrong = [c for c in countries if c not in country_to_module]
+        countries_valid = sorted(list(country_to_module.keys()))
         if countries_wrong:
-            print(f"Invalid countries: {countries_wrong}. Valid countries are: {list(country_to_module.keys())}")
+            print(f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}")
             raise ValueError("Invalid country")
         # Get module equivalent names
         modules = [country_to_module[country] for country in countries]

@@ -18,7 +18,7 @@ from shared import load_population, load_owid_continents, inject_total_daily_col
     inject_biweekly_growth, standard_export, ZERO_DAY
 
 from utils.slack_client import send_warning, send_success
-from utils.db_imports import import_dataset
+# from utils.db_imports import import_dataset
 
 INPUT_PATH = os.path.join(CURRENT_DIR, "../input/jhu/")
 OUTPUT_PATH = os.path.join(CURRENT_DIR, "../../public/data/jhu/")
@@ -32,8 +32,36 @@ WARNING = colored("[Warning]", "yellow")
 DATASET_NAME = "COVID-19 - Johns Hopkins University"
 
 DATA_CORRECTIONS = [
-    {"location": "Turkey", "date": "2020-12-10", "metric": "new_cases", "smoothed_value": 32066},
-    {"location": "France", "date": "2021-05-20", "metric": "new_cases", "smoothed_value": 15415},
+    {
+        "location": "Turkey",
+        "date": "2020-12-10",
+        "metric": "new_cases",
+        "smoothed_value": 32066,
+        "aggregates": (
+            "World",
+            "Asia",
+            "Asia excl. China",
+            "Upper middle income",
+            "World excl. China",
+            "World excl. China and South Korea",
+            "World excl. China, South Korea, Japan and Singapore",
+        ),
+    },
+    {
+        "location": "France",
+        "date": "2021-05-20",
+        "metric": "new_cases",
+        "smoothed_value": 15415,
+        "aggregates": (
+            "World",
+            "Europe",
+            "European Union",
+            "High income",
+            "World excl. China",
+            "World excl. China and South Korea",
+            "World excl. China, South Korea, Japan and Singapore",
+        ),
+    },
 ]
 
 def print_err(*args, **kwargs):
@@ -151,14 +179,28 @@ def check_data_correctness(df_merged):
 
 def discard_rows(df):
     for dc in DATA_CORRECTIONS:
+
         dc["official_value"] = df.loc[
             (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
             dc["metric"]
         ].item()
+
         df.loc[
             (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
             dc["metric"]
         ] = dc["smoothed_value"]
+
+        for agg in dc["aggregates"]:
+            correction = dc["official_value"] - dc["smoothed_value"]
+            original = df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ].item()
+            df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ] = original - correction
+
     return df
 
 def reinstate_rows(df):
@@ -167,6 +209,17 @@ def reinstate_rows(df):
             (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
             dc["metric"]
         ] = dc["official_value"]
+
+        for agg in dc["aggregates"]:
+            correction = dc["official_value"] - dc["smoothed_value"]
+            original = df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ].item()
+            df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ] = original + correction
     return df
 
 def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
@@ -204,9 +257,9 @@ def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_standardized(df):
     df = df[["date", "location", "new_cases", "new_deaths", "total_cases", "total_deaths"]]
-    df = discard_rows(df)
     df = patch_ireland(df)
     df = inject_owid_aggregates(df)
+    df = discard_rows(df)
     df = inject_weekly_growth(df)
     df = inject_biweekly_growth(df)
     df = inject_doubling_days(df)

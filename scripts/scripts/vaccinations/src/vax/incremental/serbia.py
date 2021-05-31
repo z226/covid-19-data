@@ -20,11 +20,11 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(soup: BeautifulSoup):
-    regex = r"Укупно вакцинација: ([\d.]+), од тога ревакцинација: ([\d.]+)"
+    regex = r"Обе дозе вакцине примило је ([\d.]+) особа. Укупно вакцинација: ([\d.]+) доза"
     matches = re.search(regex, soup.text)
 
-    total_vaccinations = clean_count(matches.group(1))
-    people_fully_vaccinated = clean_count(matches.group(2))
+    total_vaccinations = clean_count(matches.group(2))
+    people_fully_vaccinated = clean_count(matches.group(1))
     return total_vaccinations, people_fully_vaccinated
 
 

@@ -29,6 +29,7 @@ COUNTRIES = {
     "Liberia": "Liberia",
     "Libya": "Libya",
     "Madagascar": "Madagascar",
+    "Mauritania": "Mauritania",
     "Mauritius": "Mauritius",
     "Mozambique": "Mozambique",
     "Myanmar": "Myanmar",

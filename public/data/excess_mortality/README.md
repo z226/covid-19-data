@@ -6,7 +6,7 @@ For more general information on our COVID-19 data, see our main README file in [
 
 The all-cause mortality data is from the [Human Mortality Database](https://www.mortality.org/) (HMD) Short-term Mortality Fluctuations project and the [World Mortality Dataset](https://github.com/akarlinsky/world_mortality) (WMD). Both sources are updated weekly.
 
-WMD sources some of its data from HMD, but we use the data from HMD directly. We do not use the data from some countries in WMD because they fail to meet the following data quality criteria: 1) at least four years of historical data; and 2) data published either weekly or monthly. The full list of excluded countries and reasons for exclusion can be found [in this spreadsheet](https://docs.google.com/spreadsheets/d/1JPMtzsx-smO3_K4ReK_HMeuVLEzVZ71qHghSuAfG788/edit?usp=sharing).
+WMD sources some of its data from HMD, but we use the data from HMD directly. We do not use the data from some countries in WMD because they fail to meet the following data quality criteria: 1) at least three years of historical data; and 2) data published either weekly or monthly. The full list of excluded countries and reasons for exclusion can be found [in this spreadsheet](https://docs.google.com/spreadsheets/d/1JPMtzsx-smO3_K4ReK_HMeuVLEzVZ71qHghSuAfG788/edit?usp=sharing).
 
 We calculate the number of weekly deaths for the United Kingdom by summing the weekly deaths from England & Wales, Scotland, and Northern Ireland.
 
@@ -45,7 +45,7 @@ As of 20 February 2021, the data columns are:
 
 ## How P-scores are defined and calculated
 
-We used the raw weekly or monthly death data from HMD and WMD to calculate P-scores. The P-score is the percentage difference between the number of weekly or monthly deaths in 2020–2021 and the average number of deaths in the same period over the years 2015–2019 (for a small minority of countries only 2016–2019 are available). For Week 53 2020, which ended on 3 January 2021, we compare the number of deaths to the average deaths in Week 52 over the years 2015–2019, because only one previous year (2015) had a Week 53.
+We used the raw weekly or monthly death data from HMD and WMD to calculate P-scores. The P-score is the percentage difference between the number of weekly or monthly deaths in 2020–2021 and the average number of deaths in the same period over the years 2015–2019 (though for a small minority of countries only data from 2016 or 2017 to 2019 are available). For Week 53 2020, which ended on 3 January 2021, we compare the number of deaths to the average deaths in Week 52 over the years 2015–2019, because only one previous year (2015) had a Week 53.
 
 ## Important points about the data
 
@@ -53,7 +53,7 @@ For more details see our page on [Excess mortality during the Coronavirus pandem
 
 **The reported number of deaths might not count all deaths that occurred.** This is the case for two reasons:
 
-- First, not all countries have the infrastructure and capacity to register and report all deaths. In richer countries with high-quality mortality reporting systems nearly 100% of deaths are registered, but in many low- and middle-income countries undercounting of mortality is a serious issue. The [UN estimates](https://unstats.un.org/unsd/demographic-social/crvs/#coverage) that only two-thirds of countries register at least 90% of all deaths that occur, and some countries register less than 50% — or [even under 10%](https://www.bbc.com/news/world-africa-55674139) — of deaths.
+- First, not all countries have the infrastructure and capacity to register and report all deaths. In richer countries with high-quality mortality reporting systems, nearly 100% of deaths are registered; but in many low- and middle-income countries, undercounting of mortality is a serious issue. The [UN estimates](https://unstats.un.org/unsd/demographic-social/crvs/#coverage) that only two-thirds of countries register at least 90% of all deaths that occur, and some countries register less than 50% — or [even under 10%](https://www.bbc.com/news/world-africa-55674139) — of deaths.
 - Second, there are delays in death reporting that make mortality data provisional and incomplete in the weeks, months, and even years after a death occurs — even in richer countries with high-quality mortality reporting systems. The extent of the delay varies by country. For some, the most recent data points are clearly very incomplete and therefore inaccurate — we do not show these clearly incomplete data points. (For a detailed list of the data we exclude for each country [see this spreadsheet](https://docs.google.com/spreadsheets/d/1Z_mnVOvI9GVLiJRG1_3ond-Vs1GTseHVv1w-pF2o6Bs/edit?usp=sharing).)
 
 **The date associated with a death might refer to when the death _occurred_ or to when it was _registered_.** This varies by country. Death counts by date of registration can vary significantly irrespectively of any actual variation in deaths, such as from registration delays or the closure of registration offices on weekends and holidays. It can also happen that deaths are registered, but the date of death is unknown — those deaths are not included in the weekly or monthly data here.

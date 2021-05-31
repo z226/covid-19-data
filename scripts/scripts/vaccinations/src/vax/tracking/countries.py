@@ -3,6 +3,7 @@ from datetime import datetime
 from matplotlib import use
 
 import pandas as pd
+from vax.tracking.vaccines import vaccines_comparison_with_who
 
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -20,7 +21,7 @@ def get_who_data():
 
 def country_updates_summary(path_vaccinations: str = None, path_locations: str = None,
                             path_automation_state: str = None, as_dict: bool = False, sortby_counts: bool = False,
-                            sortby_updatefreq: bool = False, who: bool = False
+                            sortby_updatefreq: bool = False, who: bool = False, vaccines: bool = False
                             ):
     """Check last updated countries.
 
@@ -149,6 +150,10 @@ def country_updates_summary(path_vaccinations: str = None, path_locations: str =
         else:
             return "Others"
     df = df.assign(**{"web_type": df.source_website.apply(_web_type)})
+
+    if vaccines:
+        df_vax = vaccines_comparison_with_who()
+        df = df.merge(df_vax[["location", "missing_in_who", "missing_in_owid"]], on="location", how="left")
     # Return data
     if as_dict:
         return df.to_dict(orient="records")

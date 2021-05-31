@@ -58,11 +58,24 @@ class Gambia:
                 r"vaccinated against COVID-19 to ([\d,]+) as of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d)"
             )
             match = re.search(regex, text)
-            total_vaccinations = clean_count(match.group(3))
-            people_vaccinated = clean_count(match.group(1))
-            people_fully_vaccinated = clean_count(match.group(2))
-            date_raw = " ".join(match.group(4, 5, 6))
-            date_str = clean_date(date_raw, "%d %B %Y")
+            if match:
+                people_fully_vaccinated = clean_count(match.group(2))
+                people_vaccinated = clean_count(match.group(3))
+                total_vaccinations = people_vaccinated + people_fully_vaccinated
+                date_raw = " ".join(match.group(4, 5, 6))
+                date_str = clean_date(date_raw, "%d %B %Y", lang="en")
+            else:
+                regex = (
+                    r"As of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d), ([\d,]+) and ([\d,]+) "
+                    r"people received the 1st and 2nd doses of AstraZeneca Vaccine respectively, "
+                    r"bringing the total number ever vaccinated to ([\d,]+)"
+                )
+                match = re.search(regex, text)
+                people_fully_vaccinated = clean_count(match.group(5))
+                people_vaccinated = clean_count(match.group(6))
+                total_vaccinations = people_vaccinated + people_fully_vaccinated
+                date_raw = " ".join(match.group(1, 2, 3))
+                date_str = clean_date(date_raw, fmt="%d %B %Y", lang="en")
         return {
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
@@ -122,7 +135,6 @@ class Gambia:
         output_file = paths.tmp_vax_out(self.location)
         last_update = pd.read_csv(output_file).date.max()
         df = self.read(last_update)
-        print(df)
         if not df.empty:
             df = df.pipe(self.pipeline)
             df = merge_with_current_data(df, output_file)

@@ -47,7 +47,7 @@ def increment(
     assert type(source_url) == str
 
     filepath_automated = paths.tmp_vax_out(location)
-    filepath_public = f"{GH_LINK}/{location}.csv"
+    filepath_public = f"{GH_LINK}/{location}.csv".replace(" ", "%20")
     # Move from public to output folder
     if not os.path.isfile(filepath_automated) and requests.get(filepath_public).ok:
         pd.read_csv(filepath_public).to_csv(filepath_automated, index=False)

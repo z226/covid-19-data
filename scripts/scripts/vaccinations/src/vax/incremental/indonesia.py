@@ -18,27 +18,22 @@ def parse_data(dose1_soup: BeautifulSoup, dose2_soup: BeautifulSoup) -> pd.Serie
     dose1 = parse_tableau(dose1_soup)
     dose2 = parse_tableau(dose2_soup)
     data = pd.Series({
-        "date": generate_date(dose1 + dose2),
         "people_vaccinated": dose1,
         "people_fully_vaccinated": dose2,
         "total_vaccinations": dose1 + dose2
     })
     return data
 
-def generate_date(total_vaccinations: int) -> str:
-    previous_data = pd.read_csv("output/Indonesia.csv").iloc[-1]
-    if (total_vaccinations > previous_data.total_vaccinations):
-        return datetime.now().strftime("%Y-%m-%d")
-    else:
-        return previous_data.date
-
 def parse_tableau(soup: BeautifulSoup) -> int:
     tableauData = json.loads(soup.find("textarea",{"id": "tsConfigContainer"}).text)
     dataUrl = f'https://public.tableau.com{tableauData["vizql_root"]}/bootstrapSession/sessions/{tableauData["sessionid"]}'
     r = requests.post(dataUrl, data = {"sheet_id": tableauData["sheetId"]})
-    dataReg = re.search('\d+;({.*})\d+;({.*})', r.text, re.MULTILINE)
+    dataReg = re.search(r"\d+;({.*})\d+;({.*})", r.text, re.MULTILINE)
     data = json.loads(dataReg.group(2))
     return data["secondaryInfo"]["presModelMap"]["dataDictionary"]["presModelHolder"]["genDataDictionaryPresModel"]["dataSegments"]["0"]["dataColumns"][0]["dataValues"][0]
+
+def enrich_date(ds: pd.Series) -> pd.Series:
+    return enrich_data(ds, "date", datetime.now().strftime("%Y-%m-%d"))
 
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Indonesia")
@@ -52,6 +47,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
         ds
+        .pipe(enrich_date)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source)

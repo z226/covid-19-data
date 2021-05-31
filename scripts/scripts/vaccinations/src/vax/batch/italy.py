@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 
@@ -15,11 +16,12 @@ def main(paths):
         "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/"
         "somministrazioni-vaccini-latest.csv"
     )
-    df = pd.read_csv(url, usecols=["data_somministrazione", "fornitore", "prima_dose", "seconda_dose"])
+    df = pd.read_csv(url, usecols=["data_somministrazione", "fornitore", "fascia_anagrafica", "prima_dose", "seconda_dose"])
     assert set(df["fornitore"].unique()) == set(vaccine_mapping.keys())
     df = df.replace(vaccine_mapping)
     df["total_vaccinations"] = df["prima_dose"] + df["seconda_dose"]
-    df = df.rename(columns={"data_somministrazione": "date", "fornitore": "vaccine"})
+    df = df.rename(columns={"data_somministrazione": "date", "fornitore": "vaccine", "fascia_anagrafica": "age_group"})
+    df_age_group = df.copy()
 
     # Data by manufacturer
     by_manufacturer = (
@@ -52,6 +54,23 @@ def main(paths):
     df.loc[:, "vaccine"] = ", ".join(sorted(vaccine_mapping.values()))
 
     df.to_csv(paths.tmp_vax_out("Italy"), index=False)
+
+    # Vaccination Age Group data
+    by_age_group = (
+        df_age_group.groupby(["date", "age_group"], as_index=False)["total_vaccinations"]
+            .sum()
+            .sort_values("date")
+    )
+
+    by_age_group["total_vaccinations"] = by_age_group.groupby("age_group")["total_vaccinations"].cumsum()
+    by_age_group[["age_group_min", "age_group_max"]] = by_age_group.age_group.apply(
+        lambda x: pd.Series(str(x).split("-")))
+    by_age_group["age_group_min"] = by_age_group["age_group_min"].str.replace("+", "", regex=False)
+    by_age_group.drop(columns=["age_group"])
+    by_age_group["location"] = "Italy"
+    by_age_group = by_age_group[["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]]
+    
+    by_age_group.to_csv(paths.tmp_vax_out_by_age_group("Italy"), index=False)
 
 
 if __name__ == "__main__":

@@ -128,5 +128,7 @@ def merge_with_current_data(df: pd.DataFrame, filepath: str) -> pd.DataFrame:
         df_current = df_current[~df_current.date.isin(df.date)]
         df = pd.concat([df, df_current]).sort_values(by="date")
         # Int values
-    df[col_ints] = df[col_ints].astype("Int64").fillna(pd.NA)
+    col_ints = list(df.columns.intersection(col_ints))
+    if col_ints:
+        df[col_ints] = df[col_ints].astype("Int64").fillna(pd.NA)
     return df

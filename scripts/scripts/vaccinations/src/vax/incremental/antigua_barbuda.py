@@ -41,9 +41,13 @@ class AntiguaBarbuda:
 
     def _parse_date(self, dose1_elem, dose2_elem):
         date1_raw = dose1_elem.find("h2").text
-        date1 = extract_clean_date(date1_raw, self.regex["date"], "%B %d, %Y", minus_days=1)
+        date1 = extract_clean_date(
+            date1_raw, self.regex["date"], "%B %d, %Y", minus_days=1, lang="en"
+        )
         date2_raw = dose2_elem.find("h2").text
-        date2 = extract_clean_date(date2_raw, self.regex["date"], "%B %d, %Y", minus_days=1)
+        date2 = extract_clean_date(
+            date2_raw, self.regex["date"], "%B %d, %Y", minus_days=1, lang="en"
+        )
         if date1 == date2:
             return date1
         raise ValueError("Dates in first and second doses are not aligned")

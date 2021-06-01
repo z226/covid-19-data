@@ -4,6 +4,8 @@ import locale
 import threading
 from sys import platform
 import pytz
+import unicodedata
+import re
 
 import pandas as pd
 
@@ -46,6 +48,40 @@ def clean_date(text, fmt, lang=None, loc="", minus_days=0):
         ).strftime(DATE_FORMAT)
 
 
+def extract_clean_date(text: str, regex: str, date_format: str, lang: str = None, loc: str = "", minus_days: int = 0,
+                       unicode_norm: bool = True):
+    """Export clean date from raw text using RegEx.
+
+    Example:
+
+    ```python
+    >>> from vax.utils.utils import extract_clean_date
+    >>> text = "Something irrelevant. This page was last updated on 25 May 2021 at 09:05hrs."
+    >>> date_str = extract_clean_date(
+        text=text,
+        regex=r"This page was last updated on (\d{1,2} May 202\d) at \d{1,2}:\d{1,2}hrs",
+        date_format="%d %B %Y",
+        minus_days=1,
+    )
+    ```
+    
+    Args:
+        text (str): Raw original text.
+        regex (str): RegEx to export date fragment. Should have the data grouped (group number 1)
+        date_format (str): Format of the date (was extracted using regex).
+        lang (str, optional): Language two-letter code, e.g. 'da' (dansk). If given, `loc` will be ignored and redefined
+                                based on `lang`. Defaults to None.
+        loc (str, optional): Locale, e.g es_ES. Get list of available locales with `locale.locale_alias` or
+                                `locale.windows_locale` in windows. Defaults to "" (system default).
+        minus_days (int, optional): Number of days to subtract. Defaults to 0.
+        unicode_norm (bool, optional): [description]. Defaults to True.
+    """
+    if unicode_norm:
+        text = unicodedata.normalize('NFKC', text)
+    date_raw = re.search(regex, text).group(1)
+    date_str = clean_date(date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days)
+    return date_str
+
 def localdatenow(tz=None):
     if tz is None:
         tz = "utc"
@@ -87,3 +123,9 @@ def _setlocale(name):
             yield locale.setlocale(locale.LC_TIME, name)
         finally:
             locale.setlocale(locale.LC_TIME, saved)
+
+
+def from_tz_to_tz(dt, from_tz: str = "UTC", to_tz: str = None):
+    dt = dt.replace(tzinfo=pytz.timezone(from_tz))
+    dt = dt.astimezone(pytz.timezone(to_tz))
+    return dt

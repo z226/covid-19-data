@@ -261,12 +261,15 @@ class DatasetGenerator:
 
     def pipe_vax_checks(self, df: pd.DataFrame) -> pd.DataFrame:
         logger.info("Sanity checks")
+        # Config
+        skip_countries = ["Pitcairn"]
         # Sanity checks
-        if not (df.total_vaccinations.dropna() >= 0).all():
+        df_to_check = df[-df.location.isin(skip_countries)]
+        if not (df_to_check.total_vaccinations.dropna() >= 0).all():
             raise ValueError(" Negative values found! Check values in `total_vaccinations`.")
-        if not (df.new_vaccinations_smoothed.dropna() >= 0).all():
+        if not (df_to_check.new_vaccinations_smoothed.dropna() >= 0).all():
             raise ValueError(" Negative values found! Check values in `new_vaccinations_smoothed`.")
-        if not (df.new_vaccinations_smoothed_per_million.dropna() <= 120000).all():
+        if not (df_to_check.new_vaccinations_smoothed_per_million.dropna() <= 120000).all():
             raise ValueError(" Huge values found! Check values in `new_vaccinations_smoothed_per_million`.")
         return df
 

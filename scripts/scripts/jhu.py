@@ -31,6 +31,39 @@ WARNING = colored("[Warning]", "yellow")
 
 DATASET_NAME = "COVID-19 - Johns Hopkins University"
 
+DATA_CORRECTIONS = [
+    {
+        "location": "Turkey",
+        "date": "2020-12-10",
+        "metric": "new_cases",
+        "smoothed_value": 32066,
+        "aggregates": (
+            "World",
+            "Asia",
+            "Asia excl. China",
+            "Upper middle income",
+            "World excl. China",
+            "World excl. China and South Korea",
+            "World excl. China, South Korea, Japan and Singapore",
+        ),
+    },
+    {
+        "location": "France",
+        "date": "2021-05-20",
+        "metric": "new_cases",
+        "smoothed_value": 15415,
+        "aggregates": (
+            "World",
+            "Europe",
+            "European Union",
+            "High income",
+            "World excl. China",
+            "World excl. China and South Korea",
+            "World excl. China, South Korea, Japan and Singapore",
+        ),
+    },
+]
+
 def print_err(*args, **kwargs):
     return print(*args, file=sys.stderr, **kwargs)
 
@@ -145,26 +178,92 @@ def check_data_correctness(df_merged):
     return errors == 0
 
 def discard_rows(df):
-    # Set artefact in new_cases for Turkey on 2020-12-10 to the previous 7-day average
-    df.loc[
-        (df["location"] == "Turkey") & (df["date"].astype(str) == "2020-12-10"),
-        "new_cases"
-    ] = 32066
-    # Set artefact in new_cases for France on 2021-05-20 to the actual daily change
-    # Source: https://twitter.com/nicolasberrod/status/1395450360324661262
-    df.loc[
-        (df["location"] == "France") & (df["date"].astype(str) == "2021-05-20"),
-        "new_cases"
-    ] = 15415
+    for dc in DATA_CORRECTIONS:
+
+        dc["official_value"] = df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ].item()
+
+        df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ] = dc["smoothed_value"]
+
+        for agg in dc["aggregates"]:
+            correction = dc["official_value"] - dc["smoothed_value"]
+            original = df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ].item()
+            df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ] = original - correction
+
+    return df
+
+def reinstate_rows(df):
+    for dc in DATA_CORRECTIONS:
+        df.loc[
+            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
+            dc["metric"]
+        ] = dc["official_value"]
+
+        for agg in dc["aggregates"]:
+            correction = dc["official_value"] - dc["smoothed_value"]
+            original = df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ].item()
+            df.loc[
+                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
+                dc["metric"]
+            ] = original + correction
+    return df
+
+def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
+    # This is temporary patch implemented on May 27, 2021. Due to the cyberattack against Ireland's
+    # IT systems in early May, case and death counts haven't been publicly updated since May 15,
+    # leading to a series of 0-case and 0-death days in JHU data. However the WHO seems to be
+    # receiving the data directly from the government — we therefore patch the series with WHO data
+
+    may_15 = pd.to_datetime("2021-05-15").date()
+    may_15_cases = (
+        df.loc[(df.location == "Ireland") & (df.date == may_15), "new_cases"].item()
+    )
+
+    if may_15_cases == 0:
+        
+        who_data = (
+            pd.read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+            .drop(columns=["Country_code", "WHO_region"])
+            .rename(columns={
+                "Date_reported": "date",
+                "Country": "location",
+                "New_cases": "new_cases",
+                "Cumulative_cases": "total_cases",
+                "New_deaths": "new_deaths",
+                "Cumulative_deaths": "total_deaths",
+            })
+        )
+        who_data["date"] = pd.to_datetime(who_data.date).dt.date
+
+        patch_data = who_data[(who_data.location == "Ireland") & (who_data.date >= may_15)]
+        jhu_data = df[(df.location != "Ireland") | (df.date < may_15)]
+        df = pd.concat([jhu_data, patch_data]).reset_index(drop=True)
+    
     return df
 
 def load_standardized(df):
     df = df[["date", "location", "new_cases", "new_deaths", "total_cases", "total_deaths"]]
-    df = discard_rows(df)
+    df = patch_ireland(df)
     df = inject_owid_aggregates(df)
+    df = discard_rows(df)
     df = inject_weekly_growth(df)
     df = inject_biweekly_growth(df)
     df = inject_doubling_days(df)
+    df = reinstate_rows(df)
     df = inject_per_million(df, [
         "new_cases",
         "new_deaths",

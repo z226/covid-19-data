@@ -25,11 +25,11 @@ def connect_parse_data(source: str) -> pd.Series:
         )
         for block in data_blocks:
             block_title = block.find_element_by_class_name("sn-kpi-measure-title").get_attribute("title")
-            if block_title == "Pessoas Vacinadas (Dose 1)":
+            if "Total de Doses Aplicadas (Dose1)" in block_title:
                 people_vaccinated = block.find_element_by_class_name("sn-kpi-value").text
-            elif block_title == "Pessoas Vacinadas (Dose 2)":
+            elif "Total de Doses Aplicadas(Dose 2)" in block_title:
                 people_fully_vaccinated = block.find_element_by_class_name("sn-kpi-value").text
-            elif block_title == "Doses Aplicadas":
+            elif "Total de Doses Aplicadas" in block_title:
                 total_vaccinations = block.find_element_by_class_name("sn-kpi-value").text
 
     return pd.Series({

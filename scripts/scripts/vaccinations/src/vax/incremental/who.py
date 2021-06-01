@@ -10,8 +10,11 @@ from vax.utils.who import VACCINES_WHO_MAPPING
 COUNTRIES = {
     "Afghanistan": "Afghanistan",
     "Angola": "Angola",
+    "Anguilla": "Anguilla",
+    "Belarus": "Belarus",
     "Benin": "Benin",
     "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
+    "British Virgin Islands": "British Virgin Islands",
     "Cabo Verde": "Cape Verde",
     "Cameroon": "Cameroon",
     "Central African Republic": "Central African Republic",
@@ -20,34 +23,40 @@ COUNTRIES = {
     "Democratic Republic of the Congo": "Democratic Republic of Congo",
     "Djibouti": "Djibouti",
     "Egypt": "Egypt",
+    "Ghana": "Ghana",
     "Guinea-Bissau": "Guinea-Bissau",
+    "Honduras": "Honduras",
     "Iran (Islamic Republic of)": "Iran",
+    "Ireland": "Ireland",
     "Jamaica": "Jamaica",
     "Lesotho": "Lesotho",
     "Liberia": "Liberia",
     "Libya": "Libya",
     "Madagascar": "Madagascar",
+    "Mauritania": "Mauritania",
     "Mauritius": "Mauritius",
+    "Montserrat": "Montserrat",
     "Mozambique": "Mozambique",
     "Myanmar": "Myanmar",
     "Nicaragua": "Nicaragua",
     "Niger": "Niger",
+    "Oman": "Oman",
     "Papua New Guinea": "Papua New Guinea",
     "Rwanda": "Rwanda",
     "Sao Tome and Principe": "Sao Tome and Principe",
     "Senegal": "Senegal",
+    "Sierra Leone": "Sierra Leone",
     "Sint Maarten": "Sint Maarten (Dutch part)",
     "Somalia": "Somalia",
     "South Sudan": "South Sudan",
     "Sudan": "Sudan",
+    "Syrian Arab Republic": "Syria",
     "Tajikistan": "Tajikistan",
     "Timor-Leste": "Timor",
+    "Togo": "Togo",
     "Turkmenistan": "Turkmenistan",
+    "Turks and Caicos Islands": "Turks and Caicos Islands",
     "Yemen": "Yemen",
-    "Belarus": "Belarus",
-    "Oman": "Oman",
-    "Montserrat": "Montserrat",
-    "Ghana": "Ghana",
 }
 
 
@@ -127,7 +136,7 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def increment_countries(df: pd.DataFrame, paths):
-    for row in df.iterrows():
+    for row in df.sort_values("COUNTRY").iterrows():
         row = row[1]
         print(row["COUNTRY"])        
         cond = row[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated", "TOTAL_VACCINATIONS"]].isnull().all()

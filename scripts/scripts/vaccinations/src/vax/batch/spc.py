@@ -21,6 +21,7 @@ country_mapping = {
     "PF": "French Polynesia",
     "WF": "Wallis and Futuna",
     "NC": "New Caledonia",
+    "CK": "Cook Islands"
 }
 
 def read(url):
@@ -89,6 +90,7 @@ def _build_df(dix, country):
     df = (
         pd.DataFrame(dix)
         .dropna(how="all")
+        .replace("", None)
         .astype("Int64")
         .drop_duplicates(keep="first")
         .reset_index()

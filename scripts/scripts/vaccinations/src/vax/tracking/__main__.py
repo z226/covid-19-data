@@ -34,6 +34,10 @@ def _parse_args():
         "--to-csv", action="store_true",
         help="Export outputs to CSV."
     )
+    parser.add_argument(
+        "--vax", action="store_true",
+        help="Add vaccines missing (compared to WHO's data)."
+    )
     args = parser.parse_args()
     return args
 
@@ -69,7 +73,7 @@ def main():
             export_to_csv(df, filename="countries-least-updated.tmp.csv")
     if args.mode == "countries-least-updatedfreq":
         print("-- Least frequently-updated countries... --")
-        df = country_updates_summary(sortby_updatefreq=True, who=args.who)
+        df = country_updates_summary(sortby_updatefreq=True, who=args.who, vaccines=args.vax)
         print(df)
         print("----------------------------\n----------------------------\n----------------------------\n")
         if args.to_csv:

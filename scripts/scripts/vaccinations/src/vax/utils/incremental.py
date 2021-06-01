@@ -1,7 +1,7 @@
 import os
-import shutil
 import datetime
 import re
+import numbers
 
 import pandas as pd
 import requests
@@ -37,7 +37,7 @@ def increment(
         people_vaccinated=None,
         people_fully_vaccinated=None):
     assert type(location) == str
-    assert isinstance(total_vaccinations, (int, float))
+    assert isinstance(total_vaccinations, numbers.Number)
     assert type(people_vaccinated) == int or pd.isnull(people_vaccinated)
     assert type(people_fully_vaccinated) == int or pd.isnull(people_fully_vaccinated)
     assert type(date) == str
@@ -47,7 +47,7 @@ def increment(
     assert type(source_url) == str
 
     filepath_automated = paths.tmp_vax_out(location)
-    filepath_public = f"{GH_LINK}/{location}.csv"
+    filepath_public = f"{GH_LINK}/{location}.csv".replace(" ", "%20")
     # Move from public to output folder
     if not os.path.isfile(filepath_automated) and requests.get(filepath_public).ok:
         pd.read_csv(filepath_public).to_csv(filepath_automated, index=False)

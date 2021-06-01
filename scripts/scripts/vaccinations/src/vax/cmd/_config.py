@@ -4,7 +4,9 @@ from datetime import date
 from pyaml_env import parse_config
 from itertools import chain
 
-from vax.cmd.get_data import modules_name, modules_name_batch, modules_name_incremental, country_to_module
+from vax.cmd.get_data import (
+    modules_name, modules_name_batch, modules_name_incremental, country_to_module
+)
 from vax.cmd._parser import _parse_args, CHOICES
 from vax.cmd.utils import normalize_country_name
 
@@ -105,6 +107,17 @@ class ConfigParams(object):
             )),
         })
 
+    def ProposeDataConfig(self):
+        """Use `_token`/`id`/`secret` for variables that are secret"""
+        return ConfigParamsStep({
+            "parallel": self._return_value_pipeline("get-data", "parallel", self._parallel),
+            "njobs": self._return_value_pipeline("get-data", "njobs", self._njobs),
+            "countries": _countries_to_modules(self._return_value_pipeline("get-data", "countries", self._countries)),
+            "skip_countries": list(map(
+                normalize_country_name, self._return_value_pipeline("get-data", "skip_countries", [])
+            )),
+        })
+
     def ProcessDataConfig(self):
         """Use `_token`/`id`/`secret` for variables that are secret"""
         return ConfigParamsStep({
@@ -120,6 +133,8 @@ class ConfigParams(object):
             "owid_cloud_table_post": self._return_value_credentials("owid_cloud_table_post"),
             "google_credentials": self._return_value_credentials("google_credentials"),
             "google_spreadsheet_vax_id": self._return_value_credentials("google_spreadsheet_vax_id"),
+            "twitter_consumer_key": self._return_value_credentials("twitter_consumer_key"),
+            "twitter_consumer_secret": self._return_value_credentials("twitter_consumer_secret"),
         })
 
     def _return_value_credentials(self, feature_name):
@@ -194,8 +209,9 @@ def _countries_to_modules(countries):
     if len(countries) >= 1:
         # Verify validity of countries
         countries_wrong = [c for c in countries if c not in country_to_module]
+        countries_valid = sorted(list(country_to_module.keys()))
         if countries_wrong:
-            print(f"Invalid countries: {countries_wrong}. Valid countries are: {list(country_to_module.keys())}")
+            print(f"Invalid countries: {countries_wrong}. Valid countries are: {countries_valid}")
             raise ValueError("Invalid country")
         # Get module equivalent names
         modules = [country_to_module[country] for country in countries]

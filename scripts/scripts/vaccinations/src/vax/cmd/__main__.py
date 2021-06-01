@@ -1,8 +1,7 @@
-import argparse
-
 from vax.cmd._config import get_config
 from vax.cmd import main_get_data, main_process_data, main_generate_dataset
 from vax.cmd.export import main_export
+from vax.cmd.twitter import main_propose_data_twitter
 from vax.cmd.check_with_r import test_check_with_r
 from vax.utils.paths import Paths
 
@@ -24,7 +23,6 @@ def main():
             parallel=cfg.parallel,
             n_jobs=cfg.njobs,
             modules_name=cfg.countries,
-            greece_api_token=creds.greece_api_token,
             skip_countries=cfg.skip_countries,
         )
     if "process" in config.mode:
@@ -48,6 +46,15 @@ def main():
         main_export(
             paths=paths,
             url=creds.owid_cloud_table_post
+        )
+    if "propose" in config.mode:
+        cfg = config.ProposeDataConfig()
+        main_propose_data_twitter(
+            paths=paths,
+            consumer_key=creds.twitter_consumer_key,
+            consumer_secret=creds.twitter_consumer_secret,
+            parallel=cfg.parallel,
+            n_jobs=cfg.njobs,
         )
 
 

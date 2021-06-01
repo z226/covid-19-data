@@ -19,6 +19,9 @@ class Gambia:
 
     def read(self, last_update) -> pd.Series:
         links = self.get_pdf_links(self.source_url)
+        # print("--------------------")
+        # print(links[:self._num_links_max])
+        # print("--------------------")
         data = []
         for link in links[:self._num_links_max]:
             _data = self.parse_data_pdf(link)
@@ -40,15 +43,41 @@ class Gambia:
             r"([\d,]+) are already vaccinated against COVID-19 as of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d)"
         )
         match = re.search(regex, text)
-        people_vaccinated = clean_count(match.group(1))
-        date_raw = " ".join(match.group(2, 3, 4))
-        date_str = str(pd.to_datetime(date_raw).date())
+        if match:
+            people_vaccinated = clean_count(match.group(1))
+            date_raw = " ".join(match.group(2, 3, 4))
+            date_str = str(pd.to_datetime(date_raw).date())
 
-        regex = r"([\d,]+) people have received their 2nd dose"
-        people_fully_vaccinated = re.search(regex, text).group(1)
-        people_fully_vaccinated = clean_count(people_fully_vaccinated)
+            regex = r"([\d,]+) people have received their 2nd dose"
+            people_fully_vaccinated = re.search(regex, text).group(1)
+            people_fully_vaccinated = clean_count(people_fully_vaccinated)
+            total_vaccinations = people_vaccinated + people_fully_vaccinated
+        else:
+            regex = (
+                r"([\d,]+) and ([\d,]+) people received the 1st and 2nd doses respectively bringing the total number "
+                r"vaccinated against COVID-19 to ([\d,]+) as of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d)"
+            )
+            match = re.search(regex, text)
+            if match:
+                people_fully_vaccinated = clean_count(match.group(2))
+                people_vaccinated = clean_count(match.group(3))
+                total_vaccinations = people_vaccinated + people_fully_vaccinated
+                date_raw = " ".join(match.group(4, 5, 6))
+                date_str = clean_date(date_raw, "%d %B %Y", lang="en")
+            else:
+                regex = (
+                    r"As of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d), ([\d,]+) and ([\d,]+) "
+                    r"people received the 1st and 2nd doses of AstraZeneca Vaccine respectively, "
+                    r"bringing the total number ever vaccinated to ([\d,]+)"
+                )
+                match = re.search(regex, text)
+                people_fully_vaccinated = clean_count(match.group(5))
+                people_vaccinated = clean_count(match.group(6))
+                total_vaccinations = people_vaccinated + people_fully_vaccinated
+                date_raw = " ".join(match.group(1, 2, 3))
+                date_str = clean_date(date_raw, fmt="%d %B %Y", lang="en")
         return {
-            "total_vaccinations": people_vaccinated + people_fully_vaccinated,
+            "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
             "date": date_str,
@@ -106,7 +135,6 @@ class Gambia:
         output_file = paths.tmp_vax_out(self.location)
         last_update = pd.read_csv(output_file).date.max()
         df = self.read(last_update)
-        print(df)
         if not df.empty:
             df = df.pipe(self.pipeline)
             df = merge_with_current_data(df, output_file)

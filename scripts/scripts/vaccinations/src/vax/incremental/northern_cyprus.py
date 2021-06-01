@@ -1,15 +1,15 @@
 import re
-import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.dates import clean_date
+from vax.utils.utils import get_soup
 
 
 def read(source: str) -> pd.Series:
-    soup = BeautifulSoup(requests.get(source).content, "html.parser")
+    soup = get_soup(source)
     return parse_data(soup)
 
 

@@ -77,12 +77,12 @@ class CountryChecker:
         cols_extra = cols + ["people_vaccinated", "people_fully_vaccinated"]
         cols_missing = [col for col in cols if col not in self.df.columns]
         if cols_missing:
-            raise ValueError(f"df missing column(s): {cols_missing}.")
+            raise ValueError(f"{self.location} -- df missing column(s): {cols_missing}.")
         # Ensure validity of column names in df
         if not self.allow_extra_cols:
             cols_wrong = [col for col in self.df.columns if col not in cols_extra]
             if cols_wrong:
-                raise ValueError(f"df contains invalid column(s): {cols_wrong}.")
+                raise ValueError(f"{self.location} -- df contains invalid column(s): {cols_wrong}.")
 
     def check_source_url(self):
         if self.df.source_url.isnull().any():
@@ -101,10 +101,11 @@ class CountryChecker:
             raise ValueError(f"{self.location} -- Invalid dates! NaN values found.")
         if (self.df.date.min() < datetime(2020, 12, 1)) or (self.df.date.max() > datetime.now().date()):
             raise ValueError(f"{self.location} -- Invalid dates! Check {self.df.date.min()} and {self.df.date.max()}")
-        if self.df.date.nunique() != len(self.df):
-            raise ValueError(
-                f"{self.location} -- Mismatch between number of rows {len(self.df)} and number of different dates "
-                f"{self.df.date.nunique()}. Check {self.df.date.unique()}.")
+        ds = self.df.date.value_counts()
+        dates_wrong = ds[ds > 1].index
+        msk = self.df.date.isin(dates_wrong)
+        if not self.df[msk].empty:
+            raise ValueError(f"{self.location} -- Check `date` field, there are duplicates: {self.df[msk]}")
 
     def check_location(self):
         if self.df.location.isnull().any():

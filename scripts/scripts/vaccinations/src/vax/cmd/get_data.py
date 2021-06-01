@@ -22,7 +22,7 @@ modules_name_incremental = list(country_to_module_incremental.values())
 modules_name = modules_name_batch + modules_name_incremental
 
 
-def _get_data_country(module_name: str, paths: str, greece_api_token: str, skip_countries: list):
+def _get_data_country(module_name: str, paths: str, skip_countries: list):
     country = module_name.split(".")[-1]
     if country.lower() in skip_countries:
         logger.info(f"{module_name}: skipped! ⚠️")
@@ -34,10 +34,7 @@ def _get_data_country(module_name: str, paths: str, greece_api_token: str, skip_
     logger.info(f"{module_name}: started")
     module = importlib.import_module(module_name)
     try:
-        if "greece" in module_name:
-            module.main(paths, greece_api_token)
-        else:
-            module.main(paths)
+        module.main(paths)
     except Exception as err:
         success = False
         logger.error(f"{module_name}: ❌ {err}", exc_info=True)
@@ -52,7 +49,7 @@ def _get_data_country(module_name: str, paths: str, greece_api_token: str, skip_
 
 
 def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name: list = modules_name,
-                  greece_api_token: str = None, skip_countries: list = []):
+                  skip_countries: list = []):
     """Get data from sources and export to output folder.
 
     Is equivalent to script `run_python_scripts.py`
@@ -64,7 +61,6 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
             delayed(_get_data_country)(
                 module_name,
                 paths,
-                greece_api_token,
                 skip_countries,
             ) for module_name in modules_name
         )
@@ -74,7 +70,6 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
             modules_execution_results.append(_get_data_country(
                 module_name,
                 paths,
-                greece_api_token,
                 skip_countries,
             ))
 
@@ -84,7 +79,7 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
     modules_execution_results = []
     for module_name in modules_failed:
         modules_execution_results.append(
-            _get_data_country(module_name, paths, greece_api_token, skip_countries)
+            _get_data_country(module_name, paths, skip_countries)
         )
     modules_failed_retrial = [m["module_name"] for m in modules_execution_results if m["success"] is False]
     if len(modules_failed_retrial) > 0:

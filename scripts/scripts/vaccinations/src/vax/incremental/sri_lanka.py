@@ -41,7 +41,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     sinopharm_dose1 = clean_count(sinopharm_data.group(1))
     sinopharm_dose2 = clean_count(sinopharm_data.group(2))
     
-    sputnik_data = re.search(r"Sputnik V +(\d+) (\d+)", text)
+    sputnik_data = re.search(r"Sputnik V +(\d+) (-|\d+)", text)
     sputnik_dose1 = clean_count(sputnik_data.group(1))
     sputnik_dose2 = clean_count(sputnik_data.group(2))
 

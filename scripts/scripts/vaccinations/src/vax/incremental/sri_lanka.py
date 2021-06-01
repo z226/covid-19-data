@@ -43,7 +43,8 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     
     sputnik_data = re.search(r"Sputnik V +(\d+) (-|\d+)", text)
     sputnik_dose1 = clean_count(sputnik_data.group(1))
-    sputnik_dose2 = clean_count(sputnik_data.group(2))
+    sputnik_dose2 = sputnik_data.group(2)
+    sputnik_dose2 = 0 if sputnik_dose2 == "-" else clean_count(sputnik_dose2)
 
     total_vaccinations = covishield_dose1 + covishield_dose2 + sinopharm_dose1 + sinopharm_dose2 + sputnik_dose1 + sputnik_dose2
     people_vaccinated = covishield_dose1 + sinopharm_dose1 + sputnik_dose1

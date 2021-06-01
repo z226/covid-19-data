@@ -12,7 +12,7 @@ class Guernsey:
     def __init__(self, source_url: str, location: str):
         self.source_url = source_url
         self.location = location
-        self._regex_date = r"This page was last updated on (\d{1,2} May 202\d) at \d{1,2}:\d{1,2}hrs"
+        self._regex_date = r"This page was last updated on (\d{1,2} [A-Za-z]+ 202\d)"
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url)

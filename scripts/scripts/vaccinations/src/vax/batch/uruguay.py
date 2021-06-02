@@ -1,12 +1,17 @@
 import pandas as pd
 
 
+vaccines_mapping = {
+    "total_coronavac": "Sinovac",
+    "total_pfizer": "Pfizer/BioNTech",
+    "total_astrazeneca": "Oxford/AstraZeneca",
+}
+
 def main(paths):
     df = pd.read_csv(
         "https://raw.githubusercontent.com/3dgiordano/covid-19-uy-vacc-data/main/data/Uruguay.csv",
-
     )
-    
+    # Export main data
     df.to_csv(paths.tmp_vax_out("Uruguay"), index=False, columns=[
         "location",
         "date",
@@ -16,37 +21,21 @@ def main(paths):
         "people_vaccinated",
         "people_fully_vaccinated",
     ])
-
-    by_man_sinovac = pd.DataFrame(
-        {
-            "date": df['date'].values,
-            "location": df['location'].values,
-            "vaccine": "Sinovac",
-            "total_vaccinations": df['total_coronavac'].values,
-        }
+    # Generate manufacturer data
+    df_manufacturer = (
+        df
+        .drop(columns=["total_vaccinations"])
+        .melt(
+            id_vars=["date"],
+            value_vars=["total_coronavac", "total_pfizer", "total_astrazeneca"],
+            var_name="manufacturer",
+            value_name="total_vaccinations"
+        )
+        .rename(columns=vaccines_mapping)
+        .sort_values(["date", "manufacturer"])
     )
 
-    by_man_pfizer = pd.DataFrame(
-        {
-            "date": df['date'].values,
-            "location": df['location'].values,
-            "vaccine": "Pfizer/BioNTech",
-            "total_vaccinations": df['total_pfizer'].values,
-        }
-    )
-
-    by_man_astrazeneca = pd.DataFrame(
-        {
-            "date": df['date'].values,
-            "location": df['location'].values,
-            "vaccine": "Oxford/AstraZeneca",
-            "total_vaccinations": df['total_astrazeneca'].values,
-        }
-    )
-
-    by_manufacturer = pd.concat([by_man_sinovac, by_man_pfizer, by_man_astrazeneca]).sort_values("date")
-
-    by_manufacturer.to_csv(paths.tmp_vax_out_man("Uruguay"), index=False)
+    df_manufacturer.to_csv(paths.tmp_vax_out_man("Uruguay"), index=False)
 
 
 if __name__ == "__main__":

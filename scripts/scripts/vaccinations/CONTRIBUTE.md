@@ -5,9 +5,12 @@ for manually imported country data**. To see which countries are automated and w
 
 ### Content
 - [About our vaccination data](#about-our-vaccination-data)
+  - [Manufacturer data](#Manufacturer-data)
+  - [Age group data](#Age-group-data)
 - [Report new data values](#report-new-data-values)
 - [Add new country automations](#Add-new-country-automations)
-- [Accepting pull requests](#accepting-pull-requests)
+  - [Steps](#Steps)
+- [Criteria to accept pull requests](#criteria-to-accept-pull-requests)
 
 ## About our vaccination data
 For details about the development environment, check the details in [README](README.md#2-development-environment).
@@ -23,43 +26,60 @@ Where the metrics `total_vaccinations`, `people_vaccinated` and `people_fully_va
  
 Note that for some countries, some metrics can't be reported as these are not be available. This is not ideal but it is OK.
 
-Prior to publishing 
 ### Manufacturer data
-Along with the main data, we include vaccine data break by manufacturer for some countries where the data is available.
+Along with the main data, we include vaccine data break by manufacturer for some countries where this data is available.
 
-<details closed>
-<summary markdown='span'>Show example</summary>
+Each row in the data gives the cumulative number of doses administered for a given date and vaccine manufacturer.
 
-|date      |vaccine           |total_vaccinations|location |
+#### Fields
+- `date`: Date in format YYYY-MM-DD
+- `vaccine`: Vaccine manufacturer name. Our convention for vaccine names can be found
+  [here](https://github.com/owid/covid-19-data/blob/c4208f353449d750515b8e14015bde2c349371ee/scripts/scripts/vaccinations/src/vax/utils/checks.py#L7).
+  As new vaccines emerge, new conventions will be defined.
+- `location`: Region name.
+- `total_vaccinations`: Cumulative number of administered doses up to `date` for given `vaccine`.
+
+
+#### Example
+|date      |vaccine           |location|total_vaccinations |
 |----------|------------------|------------------|---------|
-|2021-06-01|Moderna           |151261            |Lithuania|
-|2021-06-01|Oxford/AstraZeneca|333733            |Lithuania|
-|2021-06-01|Johnson&Johnson   |34974             |Lithuania|
-|2021-06-01|Pfizer/BioNTech   |1133371           |Lithuania|
+|...|...           |...            |...|
+|2021-06-01|Moderna           |Lithuania            |151261|
+|2021-06-01|Oxford/AstraZeneca|Lithuania            |333733|
+|2021-06-01|Johnson&Johnson   |Lithuania             |34974|
+|2021-06-01|Pfizer/BioNTech   |Lithuania           |1133371|
+|...|...           |...            |...|
 
-</details>
 
-
-
-### Age data
+### Age group data
 
 Along with the main data, we include vaccine data break by age groups for some countries where the data is available.
 
-<details closed>
-<summary markdown='span'>Show example</summary>
+Each row in the data gives the cumulative number of doses administered for a given date and an age group. Note that
+currently there is no standard for which age groups are accepted, as each country may define different ones. As a
+general rule, we try to have groups as granular as possible (10 years chunks).
 
-|date      |age_group_min     |age_group_max|total_vaccinations|location|
+#### Fields
+- `date`: Date in format YYYY-MM-DD
+- `age_group_min`: Lower bound of the age group.
+- `age_group_max`: Upper bound of the age group (included).
+- `location`: Region name.
+- `total_vaccinations`: Cumulative number of administered doses up to `date` for given `vaccine`.
+
+
+#### Example
+|date      |age_group_min     |age_group_max|location|total_vaccinations|
 |----------|------------------|-------------|------------------|--------|
-|2020-12-27|20                |29           |686               |Italy   |
-|2020-12-27|30                |39           |1069              |Italy   |
-|2020-12-27|40                |49           |1476              |Italy   |
-|2020-12-27|50                |59           |2168              |Italy   |
-|2020-12-27|60                |69           |1461              |Italy   |
-|2020-12-27|70                |79           |129               |Italy   |
-|2020-12-27|80                |89           |118               |Italy   |
-|2020-12-27|90                |             |77                |Italy   |
-
-</details>
+|...|...           |...            |...|...|
+|2020-12-27|20                |29           |Italy               |686   |
+|2020-12-27|30                |39           |Italy              |1069   |
+|2020-12-27|40                |49           |Italy              |1476   |
+|2020-12-27|50                |59           |Italy              |2168   |
+|2020-12-27|60                |69           |Italy              |1461   |
+|2020-12-27|70                |79           |Italy               |129   |
+|2020-12-27|80                |89           |Italy               |118   |
+|2020-12-27|90                |             |Italy                |77   |
+|...|...           |...            |...|...|
 
 
 ## Report new data values
@@ -126,7 +146,7 @@ cowid-vax get -c [country-name]
 More details: [#230](https://github.com/owid/covid-19-data/issues/230),
 [#250](https://github.com/owid/covid-19-data/issues/250)
 
-## Accepting pull requests
+## Criteria to accept pull requests
 Due to how our pipeline operates at the moment, pull requests are only accepted under certain conditions. These include,
 but are not limited to, the following:
 

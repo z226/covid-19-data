@@ -22,7 +22,7 @@ class EquatorialGuinea:
             "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
             "total_vaccinations": people_vaccinated + people_fully_vaccinated,
-            "date": self.parse_date(soup)
+            "date": date_str
         })
         return pd.Series(data)
 

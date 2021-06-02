@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 vaccines_mapping = {
     "total_coronavac": "Sinovac",
     "total_pfizer": "Pfizer/BioNTech",
@@ -26,14 +25,15 @@ def main(paths):
         df
         .drop(columns=["total_vaccinations"])
         .melt(
-            id_vars=["date"],
+            id_vars=["date", "location"],
             value_vars=["total_coronavac", "total_pfizer", "total_astrazeneca"],
-            var_name="manufacturer",
+            var_name="vaccine",
             value_name="total_vaccinations"
         )
-        .rename(columns=vaccines_mapping)
-        .sort_values(["date", "manufacturer"])
+        .replace(vaccines_mapping)
+        .sort_values(["date", "vaccine"])
     )
+    assert set(vaccines_mapping.values()) == set(df_manufacturer.vaccine)
 
     df_manufacturer.to_csv(paths.tmp_vax_out_man("Uruguay"), index=False)
 

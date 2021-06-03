@@ -1,5 +1,5 @@
 # Vaccination update automation
-[![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3/)
+[![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3)
 [![Contribubte](https://img.shields.io/badge/-contribute-blue)](CONTRIBUTE.md)
 [![Data](https://img.shields.io/badge/public-data-green)](../../../public/data/)
 

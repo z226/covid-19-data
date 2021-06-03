@@ -1,6 +1,6 @@
 # COVID-19 Dataset by _Our World in Data_ 
-[![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](http://ourworldindata.org/)
-[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+[![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://ourworldindata.org/coronavirus)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)]()
 
 ## Find our data on COVID-19 and its documentation in [`public/data`](public/data).
 

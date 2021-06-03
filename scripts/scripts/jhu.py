@@ -62,6 +62,20 @@ DATA_CORRECTIONS = [
             "World excl. China, South Korea, Japan and Singapore",
         ),
     },
+    {
+        "location": "Peru",
+        "date": "2021-06-02",
+        "metric": "new_deaths",
+        "smoothed_value": 125,
+        "aggregates": (
+            "World",
+            "South America",
+            "Upper middle income",
+            "World excl. China",
+            "World excl. China and South Korea",
+            "World excl. China, South Korea, Japan and Singapore",
+        ),
+    },
 ]
 
 def print_err(*args, **kwargs):

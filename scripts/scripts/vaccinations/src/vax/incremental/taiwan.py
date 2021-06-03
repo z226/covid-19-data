@@ -15,7 +15,7 @@ def read(source: str) -> pd.Series:
     df = parse_table(url_pdf)
     return pd.Series({
         "total_vaccinations": parse_total_vaccinations(df),
-        "people_vaccinated": parse_total_vaccinations(df),
+        "people_vaccinated": parse_people_vaccinated(df),
         "date": parse_date(soup),
     })
 
@@ -23,8 +23,11 @@ def read(source: str) -> pd.Series:
 def parse_pdf_link(base_url: str, soup) -> str:
     a = soup.find(class_="download").find("a")
     url_pdf = f"{base_url}{a['href']}"
-    soup = get_soup(url_pdf)
-    a = soup.find(class_="viewer-button")
+    for i in range(10):
+        soup = get_soup(url_pdf)
+        a = soup.find(class_="viewer-button")
+        if a is not None:
+            break
     return f"{base_url}{a['href']}"
 
 
@@ -37,6 +40,12 @@ def parse_table(url_pdf: str) -> int:
 
 
 def parse_total_vaccinations(df: pd.DataFrame) -> int:
+    num = df.iloc[-1, 5]
+    num = re.match(r"([0-9,]+)", num).group(1)
+    return clean_count(num)
+
+
+def parse_people_vaccinated(df: pd.DataFrame) -> int:
     num = df.iloc[-1, 4]
     num = re.match(r"([0-9,]+)", num).group(1)
     return clean_count(num)
@@ -50,6 +59,10 @@ def parse_date(soup) -> str:
     return date_str
 
 
+def enrich_metrics(ds: pd.Series) -> pd.Series:
+    return enrich_data(ds, "people_fully_vaccinated", ds.total_vaccinations - ds.people_vaccinated)
+
+
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Taiwan")
 
@@ -61,6 +74,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
         ds
+        .pipe(enrich_metrics)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
     )
@@ -73,6 +87,8 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
+        people_vaccinated=data["people_vaccinated"],
+        people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=f"{source}/Category/Page/9jFXNbCe-sFK9EImRRi2Og",
         vaccine=data["vaccine"]

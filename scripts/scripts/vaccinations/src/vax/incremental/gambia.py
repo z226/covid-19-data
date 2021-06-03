@@ -67,7 +67,7 @@ class Gambia:
             else:
                 regex = (
                     r"As of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d), ([\d,]+) and ([\d,]+) "
-                    r"people received the 1st and 2nd doses of AstraZeneca Vaccine respectively, "
+                    r"people received the 1st and 2nd doses of AstraZeneca [Vv]accine respectively, "
                     r"bringing the total number ever vaccinated to ([\d,]+)"
                 )
                 match = re.search(regex, text)

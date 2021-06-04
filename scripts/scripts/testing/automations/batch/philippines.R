@@ -5,7 +5,7 @@ suppressMessages(drive_auth(email = CONFIG$google_credentials_email))
 master_folder <- "https://drive.google.com/drive/folders/1ZPPcVU4M7T-dtRyUceb0pMAd8ickYf8o"
 files <- drive_ls(master_folder)
 setDT(files)
-pdf_file <- files[str_detect(files$name, "READ ME FIRST"), id]
+pdf_file <- files[str_detect(files$name, "READ ME FIRST"), id] %>% max()
 drive_download(file = as_id(pdf_file), path = "tmp/tmp.pdf", overwrite = TRUE, verbose = FALSE)
 
 url <- pdf_text("tmp/tmp.pdf") %>%

@@ -32,7 +32,7 @@ class FaeroeIslands:
         return enrich_data(ds, 'date', date)
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, 'location', "Faeroe Islands")
+        return enrich_data(ds, 'location', self.location)
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "vaccine", "Moderna, Pfizer/BioNTech")

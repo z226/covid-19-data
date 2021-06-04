@@ -49,10 +49,6 @@ class Germany:
             .pipe(self.enrich_location)
         )
 
-    def add_johnson_to_people_vaccinated(self, df: pd.DataFrame) -> pd.DataFrame:
-        colname_johnson = "Johnson&Johnson"
-        return df.assign(people_vaccinated=df.people_vaccinated + df[colname_johnson])
-
     def enrich_source(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(source_url=self.source_url_ref)
 
@@ -95,7 +91,6 @@ class Germany:
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .pipe(self.add_johnson_to_people_vaccinated)
             .pipe(self.enrich_source)
             .pipe(self.enrich_vaccine)
             .pipe(self.select_output_columns)

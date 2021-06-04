@@ -3,6 +3,7 @@ import requests
 import tempfile
 import re
 from urllib.error import HTTPError
+import unicodedata
 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -89,3 +90,11 @@ def clean_count(count):
     count = re.sub(r"[^0-9]", "", count)
     count = int(count)
     return count
+
+
+def clean_string(colname):
+    """Clean column name."""
+    colname_new = unicodedata.normalize('NFKC', colname).strip()
+    if "Unnamed:" in colname_new:
+        colname_new = ""
+    return colname_new

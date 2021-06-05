@@ -2,9 +2,8 @@
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://ourworldindata.org/coronavirus)
 [![Open Source Love svg3](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
-### Find our data on COVID-19 and its documentation in [`public/data`](public/data).
+## Find our data on COVID-19 and its documentation in [`public/data`](public/data).
 
----
 
 ### Documentation
 

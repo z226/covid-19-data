@@ -14,8 +14,8 @@ def read(source: str) -> pd.Series:
     url_pdf = parse_pdf_link(source, soup)
     df = parse_table(url_pdf)
     return pd.Series({
-        "total_vaccinations": parse_total_vaccinations(df),
-        "people_vaccinated": parse_total_vaccinations(df),
+        "total_vaccinations": parse_people_vaccinated(df),
+        "people_vaccinated": parse_people_vaccinated(df),
         "date": parse_date(soup),
     })
 

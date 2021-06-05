@@ -65,11 +65,6 @@ class Chile:
             df.loc[mask, "people_vaccinated"] = df.loc[mask, "people_fully_vaccinated"]
         return df
 
-    def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(
-            location=self.location
-        )
-
     def pipeline_base(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
@@ -80,10 +75,10 @@ class Chile:
             .pipe(self.pipe_rename_vaccines)
             .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_process_onedose_metrics)
-            .pipe(self.pipe_location)
         )
 
     def pipe_aggregate(self, df: pd.DataFrame) -> pd.DataFrame:
+        
         return (
             df
             .sort_values("vaccine")
@@ -94,6 +89,7 @@ class Chile:
                 total_vaccinations=("total_vaccinations", "sum"),
                 vaccine=("vaccine", ", ".join),
             )
+            .assign(location=self.location)
         )
 
     def pipe_source(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -111,12 +107,13 @@ class Chile:
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df[["location", "vaccine", "date", "total_vaccinations"]]
+            df.
+            assign(location=self.location)
+            [["location", "vaccine", "date", "total_vaccinations"]]
         )
 
     def to_csv(self, paths):
         data = self.read().pipe(self.pipeline_base)
-
         # condition = (datetime.datetime.now() - pd.to_datetime(data.date.max())).days < 3
         # assert condition, "Data in external repository has not been updated for some days now"
 

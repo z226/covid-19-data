@@ -1,7 +1,7 @@
 # Vaccination update automation
 [![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3)
-[![Contribubte](https://img.shields.io/badge/-contribute-blue)](CONTRIBUTE.md)
-[![Data](https://img.shields.io/badge/public-data-green)](../../../public/data/)
+[![Contribubte](https://img.shields.io/badge/-contribute-0055ff)](CONTRIBUTE.md)
+[![Data](https://img.shields.io/badge/public-data-purple)](../../../public/data/)
 
 Vaccination data is updated on a daily basis. For some countries, the update is done by means of an automated process,
 while others require some manual work. To keep track of the currently automated processes, check [this

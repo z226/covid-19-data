@@ -177,7 +177,8 @@ class ECDC:
             debug_diff=x.ALL - x.debug,
             debug_diff_perc=(x.ALL - x.debug)/x.ALL,
         )
-        x = x[x.debug_diff_perc<=0.05]  # Keep only those days where missmatch between sum(ages) and total is <5%
+        threshold_missmatch_ratio = 0.05 # Keep only those days where missmatch between sum(ages) and total is <5%
+        x = x[x.debug_diff_perc<=threshold_missmatch_ratio]  
         valid_entries_ids = x[["date", "location"]]
         if not valid_entries_ids.value_counts().max() == 1:
             raise ValueError("Some entries appear to be duplicated")

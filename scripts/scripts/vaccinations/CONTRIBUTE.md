@@ -55,10 +55,11 @@ Each row in the data gives the cumulative number of doses administered for a giv
 
 Along with the main data, we include vaccine data break by age groups for some countries where the data is available.
 
-Each row in the data gives the cumulative number of doses administered for a given date and an age group. Note that
+Each row in the data gives the percentage of people within an age group that have received at least one dose. Note that
 currently there is no standard for which age groups are accepted, as each country may define different ones. As a
-general rule, we try to have groups as granular as possible (10 years chunks).
+general rule, we try to have groups in 10 years chunks.
 
+**Note that the reported metric is relative, and not absolute.**
 #### Fields
 Mandatory fields:
 - `date`: Date in format YYYY-MM-DD

@@ -8,6 +8,8 @@ The all-cause mortality data is from the [Human Mortality Database](https://www.
 
 WMD sources some of its data from HMD, but we use the data from HMD directly. We do not use the data from some countries in WMD because they fail to meet the following data quality criteria: 1) at least three years of historical data; and 2) data published either weekly or monthly. The full list of excluded countries and reasons for exclusion can be found [in this spreadsheet](https://docs.google.com/spreadsheets/d/1JPMtzsx-smO3_K4ReK_HMeuVLEzVZ71qHghSuAfG788/edit?usp=sharing).
 
+See here for a [full list of source information (i.e., HMD or WMD) country by country](https://ourworldindata.org/excess-mortality-covid#source-information-country-by-country).
+
 We calculate the number of weekly deaths for the United Kingdom by summing the weekly deaths from England & Wales, Scotland, and Northern Ireland.
 
 For a more detailed description of the HMD data, including week date definitions, the coverage (of individuals, locations, and time), whether dates are for death occurrence or registration, the original national source information, and important caveats, [see the HMD metadata file](https://www.mortality.org/Public/STMF_DOC/STMFmetadata.pdf).

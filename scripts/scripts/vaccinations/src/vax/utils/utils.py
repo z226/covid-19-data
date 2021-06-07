@@ -3,6 +3,7 @@ import requests
 import tempfile
 import re
 from urllib.error import HTTPError
+import unicodedata
 
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -51,7 +52,8 @@ def get_headers() -> dict:
     }
 
 
-def get_soup(source: str, headers: dict = None, verify: bool = True, from_encoding: str = None) -> BeautifulSoup:
+def get_soup(source: str, headers: dict = None, verify: bool = True, from_encoding: str = None,
+             timeout=20) -> BeautifulSoup:
     """Get soup from website.
 
     Args:
@@ -59,13 +61,15 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
         headers (dict, optional): Headers to be used for request. Defaults to general one.
         verify (bool, optional): Verify source URL. Defaults to True.
         from_encoding (str, optional): Encoding to use. Defaults to None.
+        timeout (int, optional): If no response is received after `timeout` seconds, exception is raied. 
+                                 Defaults to 20.
     Returns:
         BeautifulSoup: Website soup.
     """
     if headers is None:
         headers = get_headers()
     try:
-        response = requests.get(source, headers=headers, verify=verify)
+        response = requests.get(source, headers=headers, verify=verify, timeout=timeout)
     except Exception as err:
         raise err
     if not response.ok:
@@ -89,3 +93,11 @@ def clean_count(count):
     count = re.sub(r"[^0-9]", "", count)
     count = int(count)
     return count
+
+
+def clean_string(colname):
+    """Clean column name."""
+    colname_new = unicodedata.normalize('NFKC', colname).strip()
+    if "Unnamed:" in colname_new:
+        colname_new = ""
+    return colname_new

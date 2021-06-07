@@ -14,11 +14,12 @@ from vax.utils.incremental import clean_count, enrich_data, increment
 def read(source: str):
     url_pdf = parse_pdf_link(source)
     pdf_text = get_text_from_pdf(url_pdf)
+    people_vaccinated, people_fully_vaccinated = parse_vaccinated(pdf_text)
     return pd.Series({
-        "people_vaccinated": parse_people_vaccinated(pdf_text),
-        "people_fully_vaccinated": parse_people_fully_vaccinated(pdf_text),
+        "people_vaccinated": people_vaccinated,
+        "people_fully_vaccinated": people_fully_vaccinated,
         "date": parse_date(pdf_text),
-        "source_url": url_pdf
+        "source_url": url_pdf,
     })
 
 
@@ -47,21 +48,19 @@ def get_text_from_pdf(url_pdf: str) -> str:
 
 
 def parse_date(pdf_text: str):
-    regex = r"Updated as of (\d+)(.+)(20\d+)"
+    regex = r"(\d{1,2}) ([A-Za-z]+) (202\d)"
     day = clean_count(re.search(regex, pdf_text).group(1))
     month = _get_month(re.search(regex, pdf_text).group(2))
     year = clean_count(re.search(regex, pdf_text).group(3))
     return datetime(year, month, day).strftime("%Y-%m-%d")
 
 
-def parse_people_vaccinated(pdf_text: str):
-    regex = r"(\d+)\*? ?Total people vaccinated"
-    return clean_count(re.search(regex, pdf_text).group(1))
-
-
-def parse_people_fully_vaccinated(pdf_text: str):
-    regex = r"(\d+)\*? ?People Vaccinated \(Second Dose\)"
-    return clean_count(re.search(regex, pdf_text).group(1))
+def parse_vaccinated(pdf_text: str):
+    regex = r"1st Dose\s+\|\s+2nd Dose (\d+) (\d+)"
+    data = re.search(regex, pdf_text)
+    people_vaccinated = clean_count(data.group(1))
+    people_fully_vaccinated = clean_count(data.group(2))
+    return people_vaccinated, people_fully_vaccinated
 
 
 def _get_month(month_raw: str):

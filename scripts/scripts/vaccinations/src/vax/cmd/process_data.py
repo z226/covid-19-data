@@ -1,5 +1,3 @@
-import os
-
 import pandas as pd
 
 from vax.utils.gsheets import GSheet
@@ -37,10 +35,13 @@ def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id:
         return process_location(df, monotonic_check_skip, anomaly_check_skip)
 
     logger.info("Processing and exporting data...")
-    vax = [
-        _process_location(df) for df in vax if df.loc[0, "location"].lower() not in skip_complete
-    ]
-
+    _ = []
+    for df in vax:
+        if "location" not in df:
+            raise ValueError(f"Column `location` missing. df: {df.tail(5)}")
+        if df.loc[0, "location"].lower() not in skip_complete:
+            _.append(_process_location(df))
+    vax = _
     # Export
     for df in vax:
         country = df.loc[0, "location"]

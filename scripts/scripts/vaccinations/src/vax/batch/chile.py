@@ -107,19 +107,23 @@ class Chile:
             df
             .pipe(self.pipe_aggregate)
             .pipe(self.pipe_source)
+            .sort_values(["location", "date"])
         )
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df.
             assign(location=self.location)
-            [["location", "vaccine", "date", "total_vaccinations"]]
+            [["location", "date", "vaccine", "total_vaccinations"]]
+            .sort_values(["location", "date", "vaccine"])
         )
 
     def pipe_postprocess_age(self, df: pd.DataFrame) -> pd.DataFrame:
         regex = r"(\d{1,2})(?:[ a-zA-Z]+|-(\d{1,2})[ a-zA-Z]*)"
         df[["age_group_min", "age_group_max"]] = df.Age.str.extract(regex)
-        df = df[["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]]
+        df = (
+            df[["date", "age_group_min", "age_group_max", "total_vaccinations", "location"]]
+        )
         return df
 
     def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -132,7 +136,7 @@ class Chile:
             .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_location)
             .pipe(self.pipe_postprocess_age)
-            .sort_values(by="date")
+            .sort_values(["location", "date", "age_group_min"])
         )
 
     def to_csv(self, paths):

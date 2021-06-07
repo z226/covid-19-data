@@ -119,17 +119,21 @@ class ECDC:
 
     def pipe_manufacturer_filter_locations(self, df: pd.DataFrame):
         """Filters countries to be excluded and those with a high number of unknown doses."""
-        def get_perc_unk(x):
-            res = x["vaccine"].value_counts(normalize=True)
+        def _get_perc_unk(x):
+            res = x.groupby("vaccine").total_vaccinations.sum()
+            res /= res.sum()
             if not "Unknown" in res:
                 return 0
             return res.loc["Unknown"]
-        threshold_unk_ratio = 0.1
-        mask = (df.groupby("location").apply(get_perc_unk) < threshold_unk_ratio)
+        threshold_unk_ratio = 0.05
+        mask = (df.groupby("location").apply(_get_perc_unk) < threshold_unk_ratio)
         locations_valid = mask[mask].index.tolist()
         locations_valid = [loc for loc in locations_valid if loc not in locations_manufacturer_exclude]
         df = df[df.location.isin(locations_valid)]
         return df
+
+    def pipe_manufacturer_filter_entries(self, df: pd.DataFrame):
+        return df[~df.vaccine.isin(["Unknown"])]
 
     def pipeline_manufacturer(self, df: pd.DataFrame):
         group_field_renamed = "vaccine"
@@ -139,6 +143,7 @@ class ECDC:
             .pipe(self.pipeline_common, "Vaccine", group_field_renamed)
             .pipe(self.pipe_rename_vaccines)
             .pipe(self.pipe_manufacturer_filter_locations)
+            .pipe(self.pipe_manufacturer_filter_entries)
             [["location", "date", "vaccine", "total_vaccinations"]]
             .sort_values(["location", "date", "vaccine"])
         )
@@ -217,7 +222,7 @@ class ECDC:
         df_age = df.pipe(self.pipeline_age)
         # Export
         self._export_country_data(
-            df=df,
+            df=df_age,
             path_generator_fct=paths.tmp_vax_out_by_age_group,
             columns=["location", "date", "age_group_min", "age_group_max", "total_vaccinations"]
         )
@@ -226,8 +231,8 @@ class ECDC:
         df_manufacuter = df.pipe(self.pipeline_manufacturer)
         # Export
         self._export_country_data(
-            df=df,
-            path_callable=paths.tmp_vax_out_man,
+            df=df_manufacuter,
+            path_generator_fct=paths.tmp_vax_out_man,
             columns=["location", "date", "vaccine", "total_vaccinations"]
         )
 

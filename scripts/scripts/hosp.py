@@ -51,6 +51,8 @@ def undo_per_100k(df):
 
 
 def week_to_date(df):
+    if df.date.dtypes == "int64":
+        df["date"] = pd.to_datetime(df.date, format="%Y%m%d").dt.date
     daily_records = df[df["indicator"].str.contains("Daily")]
     date_week_mapping = (
         daily_records[["year_week", "date"]].groupby("year_week", as_index=False).max()

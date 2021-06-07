@@ -33,6 +33,7 @@ class GSheet:
             self.sheet = self.sheets.get(self.sheet_id)
         metadata = self.sheet.first_sheet.to_frame()
         self._check_metadata(metadata)
+        self.disabled_countries = metadata.loc[-metadata["include"], "location"].values
         metadata = metadata[metadata["include"]].sort_values(by="location")
         return metadata
 
@@ -105,7 +106,9 @@ class GSheet:
             if include_all:
                 filepaths = [os.path.join(tmpdirname, filepath) for filepath in all_files]
             else:
-                exclude = ["LOCATIONS.csv"] + [f"{country}.csv" for country in self.automated_countries]
+                exclude = ["LOCATIONS.csv"] \
+                    + [f"{country}.csv" for country in self.automated_countries] \
+                    + [f"{country}.csv" for country in self.disabled_countries]
                 filepaths = [os.path.join(tmpdirname, filepath) for filepath in all_files if filepath not in exclude]
             df_list = [read_csv_and_check(filepath) for filepath in filepaths]
         self._check_with_metadata(df_list, filepaths)

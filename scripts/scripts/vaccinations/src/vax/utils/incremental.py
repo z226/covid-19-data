@@ -36,16 +36,16 @@ def increment(
         source_url,
         people_vaccinated=None,
         people_fully_vaccinated=None):
-    assert type(location) == str
-    assert isinstance(total_vaccinations, numbers.Number)
-    assert type(people_vaccinated) == int or pd.isnull(people_vaccinated)
-    assert type(people_fully_vaccinated) == int or pd.isnull(people_fully_vaccinated)
-    assert type(date) == str
-    assert re.match(r"\d{4}-\d{2}-\d{2}", date)
-    assert date <= str(datetime.date.today() + datetime.timedelta(days=1))
-    assert type(vaccine) == str
-    assert type(source_url) == str
-
+    # Check fields
+    _check_fields(
+        location=location,
+        vaccine=vaccine,
+        source_url=source_url,
+        date=date,
+        total_vaccinations=total_vaccinations,
+        people_vaccinated=people_vaccinated,
+        people_fully_vaccinated=people_fully_vaccinated,
+    )
     filepath_automated = paths.tmp_vax_out(location)
     filepath_public = f"{GH_LINK}/{location}.csv".replace(" ", "%20")
     # Move from public to output folder
@@ -82,6 +82,49 @@ def increment(
 
     df.to_csv(paths.tmp_vax_out(location), index=False)
     # print(f"NEW: {total_vaccinations} doses on {date}")
+
+
+def _check_fields(location, source_url, vaccine, date, total_vaccinations, people_vaccinated, people_fully_vaccinated):
+    # Check location, vaccine, source_url
+    if not isinstance(location, str):
+        type_wrong = type(location).__name__
+        raise TypeError(f"Check `location` type! Should be a str, found {type_wrong}. Value was {location}")
+    if not isinstance(vaccine, str):
+        type_wrong = type(vaccine).__name__
+        raise TypeError(f"Check `vaccine` type! Should be a str, found {type_wrong}. Value was {vaccine}")
+    if not isinstance(source_url, str):
+        type_wrong = type(source_url).__name__
+        raise TypeError(f"Check `source_url` type! Should be a str, found {type_wrong}. Value was {source_url}")
+
+    # Check metrics
+    if not isinstance(total_vaccinations, numbers.Number):
+        type_wrong = type(location).__name__
+        raise TypeError(
+            f"Check `total_vaccinations` type! Should be numeric, found {type_wrong}. Value was {total_vaccinations}"
+        )
+    if not isinstance(total_vaccinations, numbers.Number):
+        type_wrong = type(location).__name__
+        raise TypeError(f"Check `total_vaccinations` type! Should be a str, found {type_wrong}. Value was {location}")
+    if not (isinstance(people_vaccinated, numbers.Number) or pd.isnull(people_vaccinated)):
+        type_wrong = type(people_vaccinated).__name__
+        raise TypeError(
+            f"Check `people_vaccinated` type! Should be numeric, found {type_wrong}. Value was {people_vaccinated}"
+        )
+    if not (isinstance(people_fully_vaccinated, numbers.Number) or pd.isnull(people_fully_vaccinated)):
+        type_wrong = type(people_fully_vaccinated).__name__
+        raise TypeError(
+            f"Check `people_fully_vaccinated` type! Should be numeric, found {type_wrong}. Value was "
+            f"{people_fully_vaccinated}"
+        )
+    # Check date
+    if not isinstance(date, str) :
+        type_wrong = type(date).__name__
+        raise TypeError(f"Check `date` type! Should be numeric, found {type_wrong}. Value was {date}")
+    if not (
+            re.match(r"\d{4}-\d{2}-\d{2}", date) and
+            date <= str(datetime.date.today() + datetime.timedelta(days=1))
+        ):
+        raise ValueError(f"Check `date`. It either does not match format YYYY-MM-DD or exceeds todays'date: {date}")
 
 
 def _increment(filepath, location, total_vaccinations, date, vaccine, source_url, people_vaccinated=None,

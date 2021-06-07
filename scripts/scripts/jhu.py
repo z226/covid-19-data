@@ -31,37 +31,10 @@ WARNING = colored("[Warning]", "yellow")
 
 DATASET_NAME = "COVID-19 - Johns Hopkins University"
 
-DATA_CORRECTIONS = [
-    {
-        "location": "Turkey",
-        "date": "2020-12-10",
-        "metric": "new_cases",
-        "smoothed_value": 32066,
-        "aggregates": (
-            "World",
-            "Asia",
-            "Asia excl. China",
-            "Upper middle income",
-            "World excl. China",
-            "World excl. China and South Korea",
-            "World excl. China, South Korea, Japan and Singapore",
-        ),
-    },
-    {
-        "location": "France",
-        "date": "2021-05-20",
-        "metric": "new_cases",
-        "smoothed_value": 15415,
-        "aggregates": (
-            "World",
-            "Europe",
-            "European Union",
-            "High income",
-            "World excl. China",
-            "World excl. China and South Korea",
-            "World excl. China, South Korea, Japan and Singapore",
-        ),
-    },
+LARGE_DATA_CORRECTIONS = [
+    ("Turkey", "2020-12-10", "cases"),
+    ("France", "2021-05-20", "cases"),
+    ("Peru", "2021-06-02", "deaths"),
 ]
 
 def print_err(*args, **kwargs):
@@ -178,29 +151,8 @@ def check_data_correctness(df_merged):
     return errors == 0
 
 def discard_rows(df):
-    for dc in DATA_CORRECTIONS:
-
-        dc["official_value"] = df.loc[
-            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
-            dc["metric"]
-        ].item()
-
-        df.loc[
-            (df["location"] == dc["location"]) & (df["date"].astype(str) == dc["date"]),
-            dc["metric"]
-        ] = dc["smoothed_value"]
-
-        for agg in dc["aggregates"]:
-            correction = dc["official_value"] - dc["smoothed_value"]
-            original = df.loc[
-                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
-                dc["metric"]
-            ].item()
-            df.loc[
-                (df["location"] == agg) & (df["date"].astype(str) == dc["date"]),
-                dc["metric"]
-            ] = original - correction
-
+    for ldc in LARGE_DATA_CORRECTIONS:
+        df.loc[(df.location == ldc[0]) & (df.date.astype(str) == ldc[1]), f"new_{ldc[2]}"] = np.nan
     return df
 
 def reinstate_rows(df):
@@ -258,12 +210,11 @@ def patch_ireland(df: pd.DataFrame) -> pd.DataFrame:
 def load_standardized(df):
     df = df[["date", "location", "new_cases", "new_deaths", "total_cases", "total_deaths"]]
     df = patch_ireland(df)
-    df = inject_owid_aggregates(df)
     df = discard_rows(df)
+    df = inject_owid_aggregates(df)
     df = inject_weekly_growth(df)
     df = inject_biweekly_growth(df)
     df = inject_doubling_days(df)
-    df = reinstate_rows(df)
     df = inject_per_million(df, [
         "new_cases",
         "new_deaths",

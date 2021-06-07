@@ -12,9 +12,9 @@ from vax.utils.dates import clean_date
 
 class Gambia:
 
-    def __init__(self, source_url: str, location: str):
-        self.source_url = source_url
-        self.location = location
+    def __init__(self):
+        self.source_url = "https://www.moh.gov.gm/covid-19-report"
+        self.location = "Gambia"
         self._num_links_max = 3
 
     def read(self, last_update) -> pd.Series:
@@ -67,7 +67,7 @@ class Gambia:
             else:
                 regex = (
                     r"As of (\d{1,2})(?:th|nd|st|rd) ([a-zA-Z]+) (202\d), ([\d,]+) and ([\d,]+) "
-                    r"people received the 1st and 2nd doses of AstraZeneca Vaccine respectively, "
+                    r"people received the 1st and 2nd doses of AstraZeneca [Vv]accine respectively, "
                     r"bringing the total number ever vaccinated to ([\d,]+)"
                 )
                 match = re.search(regex, text)
@@ -143,10 +143,7 @@ class Gambia:
 
 
 def main(paths):
-    Gambia(
-        source_url="https://www.moh.gov.gm/covid-19-report",
-        location="Gambia",
-    ).to_csv(paths) 
+    Gambia().to_csv(paths) 
 
 
 if __name__ == "__main__":

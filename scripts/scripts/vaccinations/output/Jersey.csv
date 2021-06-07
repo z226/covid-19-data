@@ -1,14 +1,15 @@
-date,total_vaccinations,people_vaccinated,people_fully_vaccinated,location,vaccine,source_url
-2021-03-14,45758,40137,5621,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-03-21,52265,43136,9129,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-03-28,59132,44318,14814,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-04-04,67760,44981,22779,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-04-11,70859,45585,25274,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-04-18,77185,49413,27772,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-04-25,82738,52405,30333,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-02,88404,52891,35513,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-12,94574,55684,38890,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-16,97366,57124,40242,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-19,99736,59281,40455,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-23,103044,59388,43656,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
-2021-05-26,105714,60116,45598,Jersey,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true
+location,date,vaccine,source_url,total_vaccinations,people_vaccinated,people_fully_vaccinated
+Jersey,2021-03-14,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,45758,40137,5621
+Jersey,2021-03-21,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,52265,43136,9129
+Jersey,2021-03-28,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,59132,44318,14814
+Jersey,2021-04-04,"Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,67760,44981,22779
+Jersey,2021-04-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,70859,45585,25274
+Jersey,2021-04-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,77185,49413,27772
+Jersey,2021-04-25,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,82738,52405,30333
+Jersey,2021-05-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,88404,52891,35513
+Jersey,2021-05-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,94574,55684,38890
+Jersey,2021-05-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,97366,57124,40242
+Jersey,2021-05-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,99736,59281,40455
+Jersey,2021-05-23,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,103044,59388,43656
+Jersey,2021-05-26,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,105714,60116,45598
+Jersey,2021-05-30,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.gov.je/Datasets/ListOpenData?ListName=COVID19Weekly&clean=true,108577,60961,47616

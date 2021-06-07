@@ -50,7 +50,7 @@ def main(paths):
         _ = driver.execute("send_command", params)
 
         driver.get(url)
-        driver.execute_script("window.scrollTo(0, 1500)")
+        driver.execute_script("window.scrollTo(0, 1700)")
         driver.find_element_by_class_name("highcharts-exporting-group").click()
 
         for item in driver.find_elements_by_class_name("highcharts-menu-item"):

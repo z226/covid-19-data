@@ -1,4 +1,7 @@
 # Vaccination update automation
+[![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3)
+[![Contribubte](https://img.shields.io/badge/-contribute-0055ff)](CONTRIBUTE.md)
+[![Data](https://img.shields.io/badge/public-data-purple)](../../../public/data/)
 
 Vaccination data is updated on a daily basis. For some countries, the update is done by means of an automated process,
 while others require some manual work. To keep track of the currently automated processes, check [this
@@ -9,7 +12,7 @@ table](automation_state.csv).
 2. [Development environment](#2-development-environment)
 3. [The data pipeline](#3-the-data-pipeline)
 4. [Other functions](#4-other-functions)
-5. [Contribute](#5-contribute)
+5. [Contribute](CONTRIBUTE.md)
 6. [FAQs](#6-FAQs)
 
 ## 1. Directory content
@@ -322,58 +325,7 @@ Countries are given from the one with the least to the one with he most number o
 
 
 ## 5. Contribute
-We welcome contributions to the projects! Note that due to the nature of our pipeline, **we cannot accept pull requests
-for manually imported country data**. To see which countries are automated and which reaquire manual import, check
-[this file](automation_state.csv).
-
-
-### Report new data values
-To report new values for a country/location, first check if the imports for that country/territory are automated. You
-can check column `automated` in [this file](automation_state.csv).
-
-- If the country imports are automated (`TRUE` value in file above), note that the new value might be added in next
-  update. **Only report new values if the data is missing for more than 48 hours!** Report the new data as a [pull request](https://github.com/owid/covid-19-data/compare).
-- If the country imports are not automated, i.e. data is manually added, (`FALSE` value in file above) you can report
-  new data in any of the following ways:
-  - Open a [new issue](https://github.com/owid/covid-19-data/issues/new), reporting the data and the corresponding
-    source.
-  - If you plan to contribute regularly to a specific country/location, consider opening a dedicated issue. This way,
-    we can easily back-track the data addded for that country/location.
-  - If this seems too complicated, alternatively, you may simply add a comment to thread
-[#230](https://github.com/owid/covid-19-data/issues/230). 
-
-*Note*: We only accept official sources or news correctly citing official sources.
-### Add new automated data collections
-The scripts that automate country imports are located in [`src/vax/batch`](src/vax/batch) or
-[`src/vax/incremental`](src/vax/incremental), depending on whether they import the data in batch (i.e. all the
-timeseries) or incrementally (last value).
-
-We welcome pull requests automations and improvements on our automations. Follow the steps bellow:
-
-1. Create a script and place it in [`src/vax/batch`](src/vax/batch) or
-[`src/vax/incremental`](src/vax/incremental) depending, on whether it is an incremental or batch update (see [#250](https://github.com/owid/covid-19-data/issues/250)
-for more details).
-2. Test that it is working and stable.
-3. Issue a pull request and wait for a review.
-
-
-
-More details: [#230](https://github.com/owid/covid-19-data/issues/230),
-[#250](https://github.com/owid/covid-19-data/issues/250)
-
-### Accepting pull requests
-Due to how our pipeline operates at the moment, pull requests are only accepted under certain conditions. These include,
-but are not limited to, the following:
-
-- Code improvements / bug fixes. As an example, you can take [#465](https://github.com/owid/covid-19-data/pull/465).
-- Updates on the data for countries with automated data imports and incremental processes (this countries are found
-  [here](src/vax/incremental)). For this case, you can create a PR modifying the corresponding file in [output
-  folder](https://github.com/owid/covid-19-data/tree/master/scripts/scripts/vaccinations/output). Create the pull
-  request only if the daily update already ran but did not update the corresponding country.
-
-You can of course, and we appreciate it very much, create pull requests for other cases.
-
-Note that files in [public folder](https://github.com/owid/covid-19-data/tree/master/public) are not to be manually modified.
+We welcome contributions! Read more in [CONTRIBUTE](CONTRIBUTE.md)
 ## 6. FAQs
 
 ### Any question or suggestion?

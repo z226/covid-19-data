@@ -12,8 +12,10 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(data: dict) -> pd.Series:
-    dose1 = clean_count(data["data"][0]["vakdose1"])
-    dose2 = clean_count(data["data"][0]["vakdose2"])
+    dose1 = data["data"][0]["vakdose1"]
+    dose1 = clean_count(dose1) if isinstance(dose1, str) else dose1
+    dose2 = data["data"][0]["vakdose2"]
+    dose2 = clean_count(dose2) if isinstance(dose2, str) else dose2
     data = pd.Series({
         "date": datetime.fromtimestamp(data["updated"] // 1000).strftime("%Y-%m-%d"),
         "people_vaccinated": dose1,

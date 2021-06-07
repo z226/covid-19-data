@@ -14,7 +14,7 @@ LOCALE_LOCK = threading.Lock()
 DATE_FORMAT = "%Y-%m-%d"
 
 
-def clean_date(text, fmt, lang=None, loc="", minus_days=0):
+def clean_date(date_or_text, fmt=None, lang=None, loc="", minus_days=0):
     """Extract a date from a `text`.
     
     The date from text is extracted using locale `loc`. Alternatively, you can provide language `lang` instead.
@@ -22,7 +22,7 @@ def clean_date(text, fmt, lang=None, loc="", minus_days=0):
     By default, system default locale is used.
 
     Args:
-        text (str): Input text.
+        date_or_text (str): Input text or date.
         fmt (str, optional): Text format. More details at
                              https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes. 
         lang (str, optional): Language two-letter code, e.g. 'da' (dansk). If given, `loc` will be ignored and redefined
@@ -34,7 +34,11 @@ def clean_date(text, fmt, lang=None, loc="", minus_days=0):
     Returns:
         str: Extracted date in format %Y-%m-%d
     """
+    if isinstance(date_or_text, datetime):
+        return date_or_text.strftime(DATE_FORMAT)
     # If lang is given, map language to a locale
+    if fmt is None:
+        raise ValueError("Input date format is required!")
     if lang is not None:
         if lang in locale.locale_alias:
             loc = locale.locale_alias[lang]
@@ -44,7 +48,7 @@ def clean_date(text, fmt, lang=None, loc="", minus_days=0):
     # Thread-safe extract date
     with _setlocale(loc):
         return (
-            datetime.strptime(text, fmt) - timedelta(days=minus_days)
+            datetime.strptime(date_or_text, fmt) - timedelta(days=minus_days)
         ).strftime(DATE_FORMAT)
 
 

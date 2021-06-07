@@ -1,18 +1,24 @@
 import pandas as pd
 
 
-class Chile:
-    def __init__(self, source_url: str, source_url_ref: str, source_url_age: str, location: str):
-        """Constructor.
+vaccine_mapping = {
+    "Pfizer": "Pfizer/BioNTech",
+    "Sinovac": "Sinovac",
+    "Astra-Zeneca": "Oxford/AstraZeneca",
+    "CanSino": "CanSino",
+}
+vaccines_one_dose = ["CanSino"]
 
-        Args:
-            source_url (str): Source data url
-            location (str): Location name
-        """
-        self.source_url = source_url
-        self.source_url_ref = source_url_ref
-        self.source_url_age = source_url_age
-        self.location = location
+
+class Chile:
+
+    def __init__(self):
+        self.location = "Chile"
+        self.source_url = "https://github.com/juancri/covid19-vaccination/raw/master/output/chile-vaccination-type.csv"
+        self.source_url_age = (
+            "https://raw.githubusercontent.com/juancri/covid19-vaccination/master/output/chile-vaccination-ages.csv"
+        )
+        self.source_url_ref = "https://www.gob.cl/yomevacuno/"
 
     def read(self) -> pd.DataFrame:
         return pd.read_csv(self.source_url)
@@ -29,33 +35,63 @@ class Chile:
     def pipe_pivot(self, df: pd.DataFrame, index: list) -> pd.DataFrame:
         return df.pivot(index=index, columns="Dose", values="value").reset_index()
 
-    def pipe_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .assign(total_vaccinations=df.First.fillna(0) + df.Second.fillna(0))
-            .rename(columns={"First": "people_vaccinated", "Second": "people_fully_vaccinated"})
+            .rename(columns={
+                "First": "people_vaccinated",
+                "Second": "people_fully_vaccinated",
+                "Type": "vaccine",
+            })
         )
 
     def pipe_rename_vaccines(self, df: pd.DataFrame) -> pd.DataFrame:
-        vaccine_mapping = {
-            "Pfizer": "Pfizer/BioNTech",
-            "Sinovac": "Sinovac",
-            "Astra-Zeneca": "Oxford/AstraZeneca"
-        }
-        assert set(df["Type"].unique()) == set(vaccine_mapping.keys())
+        vaccines_wrong = set(df["vaccine"].unique()).difference(vaccine_mapping)
+        if vaccines_wrong:
+            raise ValueError(f"Missing vaccines: {vaccines_wrong}")
         return df.replace(vaccine_mapping)
 
-    def pipe_aggregate_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_total_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .sort_values("Type")
+            .assign(
+                total_vaccinations=df.people_vaccinated.fillna(0) + df.people_fully_vaccinated.fillna(0)
+            )
+        )
+
+    def pipe_process_onedose_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df.loc[df.vaccine.isin(vaccines_one_dose), "people_vaccinated"].sum() != 0:
+            raise ValueError(
+                f"Reporting of one dose vaccines changed! Check column `people_vaccinated` for these."
+            )
+        mask = df.vaccine.isin(vaccines_one_dose)
+        df.loc[mask, "people_vaccinated"] = df.loc[mask, "people_fully_vaccinated"]
+        return df
+
+    def pipeline_base(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_melt, ["Type", "Dose"])
+            .pipe(self.pipe_filter_rows, "Type")
+            .pipe(self.pipe_pivot, ["Type", "date"])
+            .pipe(self.pipe_rename_columns)
+            .pipe(self.pipe_rename_vaccines)
+            .pipe(self.pipe_total_vaccinations)
+            .pipe(self.pipe_process_onedose_metrics)
+        )
+
+    def pipe_aggregate(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .sort_values("vaccine")
             .groupby("date", as_index=False)
             .agg(
                 people_vaccinated=("people_vaccinated", "sum"),
                 people_fully_vaccinated=("people_fully_vaccinated", "sum"),
                 total_vaccinations=("total_vaccinations", "sum"),
-                vaccine=("Type", ", ".join),
+                vaccine=("vaccine", ", ".join),
             )
+            .assign(location=self.location)
         )
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -66,30 +102,18 @@ class Chile:
         """Generalized."""
         return df.assign(source_url=self.source_url_ref)
 
-    def pipeline_base(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df
-            .pipe(self.pipe_melt, ["Type", "Dose"])
-            .pipe(self.pipe_filter_rows, "Type")
-            .pipe(self.pipe_pivot, ["Type", "date"])
-            .pipe(self.pipe_vaccinations)
-            .pipe(self.pipe_rename_vaccines)
-        )
-
     def pipeline_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .pipe(self.pipe_aggregate_metrics)
+            .pipe(self.pipe_aggregate)
             .pipe(self.pipe_source)
-            .pipe(self.pipe_location)
         )
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df[["Type", "date", "total_vaccinations"]]
-            .rename(columns={"Type": "vaccine"})
-            .assign(location="Chile")
-            .sort_values("date")
+            df.
+            assign(location=self.location)
+            [["location", "vaccine", "date", "total_vaccinations"]]
         )
 
     def pipe_postprocess_age(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -104,7 +128,8 @@ class Chile:
             .pipe(self.pipe_melt, ["Age", "Dose"])
             .pipe(self.pipe_filter_rows, "Age")
             .pipe(self.pipe_pivot, ["Age", "date"])
-            .pipe(self.pipe_vaccinations)
+            .pipe(self.pipe_rename_columns)
+            .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_location)
             .pipe(self.pipe_postprocess_age)
             .sort_values(by="date")
@@ -129,16 +154,8 @@ class Chile:
             index=False
         )
 
-
 def main(paths):
-    Chile(
-        location="Chile",
-        source_url="https://github.com/juancri/covid19-vaccination/raw/master/output/chile-vaccination-type.csv",
-        source_url_ref="https://www.gob.cl/yomevacuno/",
-        source_url_age=(
-            "https://raw.githubusercontent.com/juancri/covid19-vaccination/master/output/chile-vaccination-ages.csv"
-        )
-    ).to_csv(paths)
+    Chile().to_csv(paths)
 
 
 if __name__ == "__main__":

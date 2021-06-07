@@ -104,7 +104,7 @@ class UnitedStates:
         }
         res = filter(lambda x: x["demographic_category"] in age_groups_accepted, [d for d in data])
         df = (
-            pd.DataFrame(res, columns=["Date", "demographic_category", "administered_dose1", "series_complete_yes"])
+            pd.DataFrame(res, columns=["date", "demographic_category", "administered_dose1", "series_complete_yes"])
             .astype({
                 "administered_dose1": int,
                 "series_complete_yes": int
@@ -115,14 +115,13 @@ class UnitedStates:
 
     def pipe_age_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.rename(columns={
-            "Date": "date",
             "administered_dose1": "people_vaccinated",
             "series_complete_yes": "people_fully_vaccinated",
             "demographic_category": "age_group",
         })
 
     def pipe_age_date(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(date=clean_date_series(df.date))
+        return df.assign(date=clean_date_series(df.date, "%Y-%m-%dT%H:%M:%S.000"))
 
     def pipe_age_location(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(location=self.location)
@@ -142,9 +141,10 @@ class UnitedStates:
             .pipe(self.pipe_age_rename_columns)
             .pipe(self.pipe_age_location)
             .pipe(self.pipe_age_minmax_values)
+            .pipe(self.pipe_age_date)
             # .pipe(self.pipe_age_total_vaccinations)
-            [["date", "age_group_min", "age_group_max", "people_vaccinated", "location"]]
-            #.sort_values(["location", "date", "age_group_min"])
+            [["location", "date", "age_group_min", "age_group_max", "people_vaccinated"]]
+            .sort_values(["location", "date", "age_group_min"])
         )
 
     def to_csv(self, paths):

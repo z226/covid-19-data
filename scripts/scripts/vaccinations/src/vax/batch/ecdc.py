@@ -37,14 +37,22 @@ locations_age_exclude = [
 ]
 
 locations_manufacturer_exclude = [
-    "",
+    "Czechia",
+    "France",
+    "Germany",
+    "Italy",
+    "Latvia",
+    "Lithuania",
+    "Romania",
+    "Iceland",
+    "Switzerland",
 ]
 
 
 class ECDC:
 
-    def __init__(self, source_url: str, iso_path: str):
-        self.source_url = source_url
+    def __init__(self, iso_path: str):
+        self.source_url = "https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv"
         self.country_mapping = self._load_country_mapping(iso_path)
         self.vaccine_mapping = {
             "COM": "Pfizer/BioNTech",
@@ -52,7 +60,8 @@ class ECDC:
             "AZ": "Oxford/AstraZeneca",
             "JANSS": "Johnson&Johnson",
             "SPU": "Sputnik V",
-            "BECNBG": "Sinopharm/Beijing"
+            "BECNBG": "Sinopharm/Beijing",
+            "UNK": "Unknown",
         }
 
     def read(self):
@@ -87,31 +96,58 @@ class ECDC:
             .rename(columns={group_field: group_field_renamed})
         )
 
-    def pipe_enrich_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(
-            total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose"]].sum(axis=1),
-            date=df.YearWeekISO.apply(self._weekday_to_date),
-            location=df.ReportingCountry.replace(self.country_mapping),
-        )
-
-    def pipe_rename_vaccines(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(vaccine=df.vaccine.replace(self.vaccine_mapping))
-
     def pipe_cumsum(self, df: pd.DataFrame, group_field_renamed: str) -> pd.DataFrame:
         return df.assign(
             total_vaccinations=df.groupby(["location", group_field_renamed])["total_vaccinations"].cumsum()
         )
 
+    def pipeline_common(self, df: pd.DataFrame, group_field: str, group_field_renamed: str) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_base)
+            .pipe(self.pipe_group, group_field, group_field_renamed)
+            [["date", "location", group_field_renamed, "total_vaccinations"]]
+            .sort_values("date")
+            .pipe(self.pipe_cumsum, group_field_renamed)
+        )
+
+    def pipe_rename_vaccines(self, df: pd.DataFrame) -> pd.DataFrame:
+        vaccines_wrong = set(df.vaccine).difference(self.vaccine_mapping)
+        if vaccines_wrong:
+            raise ValueError(f"Unknown vaccines found. Check {vaccines_wrong}")
+        return df.assign(vaccine=df.vaccine.replace(self.vaccine_mapping))
+
+    def pipe_manufacturer_filter_locations(self, df: pd.DataFrame):
+        """Filters countries to be excluded and those with a high number of unknown doses."""
+        def get_perc_unk(x):
+            res = x["vaccine"].value_counts(normalize=True)
+            if not "Unknown" in res:
+                return 0
+            return res.loc["Unknown"]
+        threshold_unk_ratio = 0.1
+        mask = (df.groupby("location").apply(get_perc_unk) < threshold_unk_ratio)
+        locations_valid = mask[mask].index.tolist()
+        locations_valid = [loc for loc in locations_valid if loc not in locations_manufacturer_exclude]
+        df = df[df.location.isin(locations_valid)]
+        return df
+
+    def pipeline_manufacturer(self, df: pd.DataFrame):
+        group_field_renamed = "vaccine"
+        return (
+            df
+            .loc[df.TargetGroup == "ALL"]
+            .pipe(self.pipeline_common, "Vaccine", group_field_renamed)
+            .pipe(self.pipe_rename_vaccines)
+            .pipe(self.pipe_manufacturer_filter_locations)
+            [["location", "date", "vaccine", "total_vaccinations"]]
+            .sort_values(["location", "date", "vaccine"])
+        )
+
     def pipe_age_checks(self, df: pd.DataFrame) -> pd.DataFrame:
         # Check all age groups are valid names
-        age_groups_found = set(df.age_group)
-        if age_groups_found.difference(age_groups_known):
-            raise ValueError(f"Unknown age groups found. Check {age_groups_found}")
-        # Get valid locations
-        df = (
-            df
-            .pipe(self.pipe_age_filter_locations)
-        )
+        ages_groups_wrong = set(df.age_group).difference(age_groups_known)
+        if ages_groups_wrong:
+            raise ValueError(f"Unknown age groups found. Check {ages_groups_wrong}")
         return df
 
     def pipe_age_filter_locations(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -153,65 +189,44 @@ class ECDC:
         # df.loc[df.age_group == "1_Age<60", ["age_group_min", "age_group_max"]] = [0, 60]
         return df_
 
-    def pipeline_common(self, df: pd.DataFrame, group_field: str, group_field_renamed: str) -> pd.DataFrame:
-        return (
-            df
-            .pipe(self.pipe_base)
-            .pipe(self.pipe_group, group_field, group_field_renamed)
-            [["date", "location", group_field_renamed, "total_vaccinations"]]
-            .sort_values("date")
-            .pipe(self.pipe_cumsum, group_field_renamed)
-        )
-
-    def pipeline_manufacturer(self, df: pd.DataFrame):
-        return (
-            df
-            .pipe(self.pipeline_common, "Vaccine", "vaccine")
-            .pipe(self.pipe_rename_vaccines)
-        )
-
     def pipeline_age(self, df: pd.DataFrame):
         group_field_renamed = "age_group"
         return (
             df
             .pipe(self.pipeline_common,  "TargetGroup", group_field_renamed)
             .pipe(self.pipe_age_checks)
-            .pipe(self.pipe_age_filter_entries)
             .pipe(self.pipe_age_filter_locations)
+            .pipe(self.pipe_age_filter_entries)
             .pipe(self.pipe_age_groups)
             .drop(columns=[group_field_renamed])
+            [["location", "date", "age_group_min", "age_group_max", "total_vaccinations"]]
+            .sort_values(["location", "date", "age_group_min"])
         )
 
-    def _export_country_data(self, df, locations: list, path_callable, columns: list):
+    def _export_country_data(self, df, path_generator_fct, columns: list):
+        locations = df.location.unique()
         for location in locations:
             df_c = df[df.location==location]
             df_c.to_csv(
-                path_callable(location),
+                path_generator_fct(location),
                 index=False,
                 columns=columns,
             )
 
     def to_csv_age(self, paths, df: pd.DataFrame):
         df_age = df.pipe(self.pipeline_age)
-        # df_age = self._check_data_age(df_age)
-        return df_age
-        # df_age = df_age.pipe(self.pipe_age_groups)
         # Export
-        # locations = df_age.location.unique()
-        # self._export_country_data(
-        #     df=df,
-        #     locations=locations,
-        #     path_callable=paths.tmp_vax_out_by_age_group,
-        #     columns=["location", "date", "age_group_min", "age_group_max", "total_vaccinations"]
-        # )
+        self._export_country_data(
+            df=df,
+            path_generator_fct=paths.tmp_vax_out_by_age_group,
+            columns=["location", "date", "age_group_min", "age_group_max", "total_vaccinations"]
+        )
 
     def to_csv_manufacturer(self, paths, df: pd.DataFrame):
         df_manufacuter = df.pipe(self.pipeline_manufacturer)
         # Export
-        locations = df_manufacuter.location.unique()
         self._export_country_data(
             df=df,
-            locations=locations,
             path_callable=paths.tmp_vax_out_man,
             columns=["location", "date", "vaccine", "total_vaccinations"]
         )
@@ -227,6 +242,5 @@ class ECDC:
 
 def main(paths):
     ECDC(
-        source_url="https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv",
         iso_path=os.path.join(paths.tmp_inp, "iso", "iso.csv")
     ).to_csv(paths)

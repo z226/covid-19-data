@@ -430,6 +430,11 @@ internal_files_columns = {
         "weekly_hosp_admissions",
         "weekly_hosp_admissions_per_million",
     ],
+    "excess-mortality": [
+        "location",
+        "date",
+        "excess_mortality"
+    ],
     "auxiliary": [
         "iso_code",
         "continent",

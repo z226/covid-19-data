@@ -34,7 +34,6 @@ DATASET_NAME = "COVID-19 - Johns Hopkins University"
 LARGE_DATA_CORRECTIONS = [
     ("Turkey", "2020-12-10", "cases"),
     ("France", "2021-05-20", "cases"),
-    ("Peru", "2021-06-02", "deaths"),
 ]
 
 def print_err(*args, **kwargs):

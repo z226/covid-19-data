@@ -66,11 +66,11 @@ Mandatory fields:
 - `age_group_min`: Lower bound of the age group.
 - `age_group_max`: Upper bound of the age group (included).
 - `location`: Region name.
-- `people_vaccinated_per_100`: Percentage of people within the age group that have received at least one dose.
+- `people_vaccinated_per_hundred`: Percentage of people within the age group that have received at least one dose.
 
 
 #### Example
-|date      |age_group_min     |age_group_max|location|people_vaccinated_per_100|
+|date      |age_group_min     |age_group_max|location|people_vaccinated_per_hundred|
 |----------|------------------|-------------|------------------|--------|
 |...|...           |...            |...|...|
 |2020-12-27|20                |29           |Italy               |5.03   |

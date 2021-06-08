@@ -122,10 +122,10 @@ class NewZealand:
         # Main data
         df = df.pipe(self.pipeline)
         df.to_csv(paths.tmp_vax_out(self.location), index=False)
-        # Age data
-        df_by_age = df_by_age.pipe(self.pipeline_by_age, df['date'].max())
-        df_by_age = merge_with_current_data(df_by_age, paths.tmp_vax_out_by_age_group(self.location))
-        df_by_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        # Age data (metrics need to be relative to age group sizes)
+        # df_by_age = df_by_age.pipe(self.pipeline_by_age, df['date'].max())
+        # df_by_age = merge_with_current_data(df_by_age, paths.tmp_vax_out_by_age_group(self.location))
+        # df_by_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
 
 
 def main(paths):

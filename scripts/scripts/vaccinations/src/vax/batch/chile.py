@@ -152,11 +152,11 @@ class Chile:
             paths.tmp_vax_out_man(self.location),
             index=False
         )
-        # Age
-        df_age.to_csv(
-            paths.tmp_vax_out_by_age_group(self.location),
-            index=False
-        )
+        # Age (commented because metrics are not relative to age group sizes)
+        # df_age.to_csv(
+        #     paths.tmp_vax_out_by_age_group(self.location),
+        #     index=False
+        # )
 
 def main(paths):
     Chile().to_csv(paths)

@@ -23,6 +23,7 @@ COUNTRIES = {
     "Democratic Republic of the Congo": "Democratic Republic of Congo",
     "Djibouti": "Djibouti",
     "Egypt": "Egypt",
+    "Gambia": "Gambia",
     "Ghana": "Ghana",
     "Grenada": "Grenada",
     "Guinea-Bissau": "Guinea-Bissau",

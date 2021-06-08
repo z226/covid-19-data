@@ -55,30 +55,32 @@ Each row in the data gives the cumulative number of doses administered for a giv
 
 Along with the main data, we include vaccine data break by age groups for some countries where the data is available.
 
-Each row in the data gives the cumulative number of doses administered for a given date and an age group. Note that
+Each row in the data gives the percentage of people within an age group that have received at least one dose. Note that
 currently there is no standard for which age groups are accepted, as each country may define different ones. As a
-general rule, we try to have groups as granular as possible (10 years chunks).
+general rule, we try to have groups in 10 years chunks.
 
+**Note that the reported metric is relative, and not absolute.**
 #### Fields
+Mandatory fields:
 - `date`: Date in format YYYY-MM-DD
 - `age_group_min`: Lower bound of the age group.
 - `age_group_max`: Upper bound of the age group (included).
 - `location`: Region name.
-- `total_vaccinations`: Cumulative number of administered doses up to `date` for given `vaccine`.
+- `people_vaccinated_per_hundred`: Percentage of people within the age group that have received at least one dose.
 
 
 #### Example
-|date      |age_group_min     |age_group_max|location|total_vaccinations|
+|date      |age_group_min     |age_group_max|location|people_vaccinated_per_hundred|
 |----------|------------------|-------------|------------------|--------|
 |...|...           |...            |...|...|
-|2020-12-27|20                |29           |Italy               |686   |
-|2020-12-27|30                |39           |Italy              |1069   |
-|2020-12-27|40                |49           |Italy              |1476   |
-|2020-12-27|50                |59           |Italy              |2168   |
-|2020-12-27|60                |69           |Italy              |1461   |
-|2020-12-27|70                |79           |Italy               |129   |
-|2020-12-27|80                |89           |Italy               |118   |
-|2020-12-27|90                |             |Italy                |77   |
+|2020-12-27|20                |29           |Italy               |5.03   |
+|2020-12-27|30                |39           |Italy              |8.64   |
+|2020-12-27|40                |49           |Italy              |33.61   |
+|2020-12-27|50                |59           |Italy              |39.02   |
+|2020-12-27|60                |69           |Italy              |50.12   |
+|2020-12-27|70                |79           |Italy               |52.10   |
+|2020-12-27|80                |89           |Italy               |57.89   |
+|2020-12-27|90                |             |Italy                |63.05   |
 |...|...           |...            |...|...|
 
 

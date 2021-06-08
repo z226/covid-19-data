@@ -20,7 +20,7 @@ class Germany:
 
     def _check_vaccines(self, df: pd.DataFrame):
         """Get vaccine columns mapped to Vaccine names."""
-        EXCLUDE = ['kbv', 'dim']
+        EXCLUDE = ['kbv', 'dim', 'erst', 'zweit']
         def _is_vaccine_column(column_name: str):
             if re.search(self.regex_doses_colnames, column_name):
                 if re.search(self.regex_doses_colnames, column_name).group(1) not in EXCLUDE:

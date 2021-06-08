@@ -51,3 +51,11 @@ run_python 'import yougov; yougov.update_db()'
 # The script itself contains a check against the database
 # to make sure it doesn't run unnecessarily.
 run_python 'import vax_by_manufacturer; vax_by_manufacturer.update_db()'
+
+# =====================================================================
+# COVID-19 - Vaccinations by age
+
+# Always run the database update.
+# The script itself contains a check against the database
+# to make sure it doesn't run unnecessarily.
+run_python 'import vax_by_age; vax_by_age.update_db()'

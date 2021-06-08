@@ -8,8 +8,9 @@ import json
 import locale
 
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 
-from vax.cmd.utils import get_logger, print_eoe
+from vax.cmd.utils import get_logger
 from vax.utils.checks import VACCINES_ACCEPTED
 
 
@@ -361,6 +362,47 @@ class DatasetGenerator:
             .pipe(self.pipe_to_int)
         )
 
+    def pipe_age_checks(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df[["location", "date", "age_group_min"]].isnull().sum().sum() != 0:
+            raise ValueError(
+                "Unexpected NaN values found in one (or several) fields from `location`, `date`, `age_group_min`"
+            )
+        if not (
+            is_numeric_dtype(df.people_vaccinated_per_hundred)
+            and is_numeric_dtype(df.people_fully_vaccinated_per_hundred)
+        ):
+            raise TypeError("Metrics should be numeric! E.g., 50.23")
+        return df
+
+    def pipe_metrics_format(self, df: pd.DataFrame) -> pd.DataFrame:
+        cols_metrics = ["people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"]
+        df[cols_metrics] = df[cols_metrics].round(2)
+        return df
+
+    def pipe_age_group(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Get age group 
+        age_min = df.age_group_min.astype(str)
+        age_max = df.age_group_max.astype("Int64").apply(lambda x: str(x) if not pd.isna(x) else "+")
+        age_group = (age_min + "-" + age_max).replace(to_replace=r"-\+", value="+", regex=True)
+        return df.assign(age_group=age_group)
+
+    def pipe_age_output(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .dropna(subset=["people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"], how="all")
+            [["location", "date", "age_group", "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"]]
+            .sort_values(["location", "date", "age_group"])
+        )
+
+    def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_age_checks)
+            .pipe(self.pipe_metrics_format)
+            .pipe(self.pipe_age_group)
+            .pipe(self.pipe_age_output)
+        )
+
     def pipe_grapher(self, df: pd.DataFrame, date_ref: datetime = datetime(2020, 1, 21),
                      fillna: bool = False) -> pd.DataFrame:
         df = (
@@ -370,7 +412,7 @@ class DatasetGenerator:
                 "location": "Country",
             })
             .assign(Year=(df.date - date_ref).dt.days)
-        )
+        ).copy()
         columns_first = ["Country", "Year"]
         columns_rest = [col for col in df.columns if col not in columns_first]
         col_order = columns_first + columns_rest
@@ -400,6 +442,24 @@ class DatasetGenerator:
             .pipe(self.pipe_manufacturer_pivot)
             .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True)
             .pipe(self.pipe_to_int)
+        )
+
+    def pipe_age_pivot(self, df: pd.DataFrame, metric) -> pd.DataFrame:
+        return (
+            df
+            .pivot(
+                index=["location", "date"],
+                columns="age_group",
+                values=metric
+            )
+            .reset_index()
+        )
+
+    def pipeline_age_grapher(self, df: pd.DataFrame, metric) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_age_pivot, metric)
+            .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True)
         )
 
     def pipe_locations_to_html(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -438,17 +498,21 @@ class DatasetGenerator:
         return html_table
 
     def export(self, df_automated: pd.DataFrame, df_locations: pd.DataFrame, df_vaccinations: pd.DataFrame,
-               df_manufacturer: pd.DataFrame, json_vaccinations: dict, df_grapher: pd.DataFrame,
-               df_manufacturer_grapher: pd.DataFrame, html_table: str):
+               df_manufacturer: pd.DataFrame, df_age: pd.DataFrame, json_vaccinations: dict,
+               df_grapher: pd.DataFrame, df_manufacturer_grapher: pd.DataFrame, df_age_grapher_init: pd.DataFrame,
+               df_age_grapher_fully: pd.DataFrame, html_table: str):
         # Export
         files = [
             (df_automated, self.outputs.automated),
             (df_locations, self.outputs.locations),
             (df_vaccinations, self.outputs.vaccinations),
             (df_manufacturer, self.outputs.manufacturer),
+            (df_age, self.outputs.age),
             (json_vaccinations, self.outputs.vaccinations_json),
             (df_grapher, self.outputs.grapher),
             (df_manufacturer_grapher, self.outputs.grapher_manufacturer),
+            (df_age_grapher_init, self.outputs.grapher_age_init),
+            (df_age_grapher_fully, self.outputs.grapher_age_fully),
             (html_table, self.outputs.html_table),
         ]
         for obj, path in files:
@@ -465,7 +529,7 @@ class DatasetGenerator:
 
     def run(self):
         print("-- Generating dataset... --")
-        logger.info("1/9 Loading input data...")
+        logger.info("1/10 Loading input data...")
         try:
             df_metadata = pd.read_csv(self.inputs.metadata)
             df_vaccinations = pd.read_csv(self.inputs.vaccinations, parse_dates=["date"])
@@ -479,44 +543,58 @@ class DatasetGenerator:
             (pd.read_csv(filepath, parse_dates=["date"]) for filepath in files_manufacturer),
             ignore_index=True
         )
+        files_age = glob.glob(self.inputs.age)
+        df_age = pd.concat(
+            (pd.read_csv(filepath, parse_dates=["date"]) for filepath in files_age),
+            ignore_index=True
+        )
         
         # Metadata  
-        logger.info("2/9 Generating `automated_state` table...")
+        logger.info("2/10 Generating `automated_state` table...")
         df_automated = df_metadata.pipe(self.pipeline_automated)  # Export to AUTOMATED_STATE_FILE
-        logger.info("3/9 Generating `locations` table...")
+        logger.info("3/10 Generating `locations` table...")
         df_locations = df_vaccinations.pipe(self.pipeline_locations, df_metadata, df_iso)  # Export to LOCATIONS_FILE
 
         # Vaccinations
-        logger.info("4/9 Generating `vaccinations` table...")
+        logger.info("4/10 Generating `vaccinations` table...")
         df_vaccinations_base = df_vaccinations.pipe(self.pipeline_vaccinations)
         df_vaccinations = df_vaccinations_base.pipe(self.pipe_vaccinations_csv, df_iso)
-        logger.info("5/9 Generating `vaccinations` json...")
+        logger.info("5/10 Generating `vaccinations` json...")
         json_vaccinations = df_vaccinations.pipe(self.pipe_vaccinations_json)
 
         # Manufacturer
-        logger.info("6/9 Generating `manufacturer` table...")
+        logger.info("6/10 Generating `manufacturer` table...")
         df_manufacturer = df_manufacturer.pipe(self.pipeline_manufacturer)
 
+        # Age
+        logger.info("7/10 Generating `age` table...")
+        df_age = df_age.pipe(self.pipeline_age)
+
         # Grapher
-        logger.info("7/9 Generating `grapher` table...")
+        logger.info("8/10 Generating `grapher` tables...")
         df_grapher = df_vaccinations_base.pipe(self.pipe_grapher)
         df_manufacturer_grapher = df_manufacturer.pipe(self.pipeline_manufacturer_grapher)
+        df_age_grapher_init = df_age.pipe(self.pipeline_age_grapher, "people_vaccinated_per_hundred")
+        df_age_grapher_fully = df_age.pipe(self.pipeline_age_grapher, "people_fully_vaccinated_per_hundred")
 
         # HTML
-        logger.info("8/9 Generating HTML...")
+        logger.info("9/10 Generating HTML...")
         html_table = df_locations.pipe(self.pipe_locations_to_html)
 
         # Export
-        logger.info("9/9 Exporting files...")
+        logger.info("10/10 Exporting files...")
         self.export(
-            df_automated,
-            df_locations,
-            df_vaccinations,
-            df_manufacturer,
-            json_vaccinations,
-            df_grapher,
-            df_manufacturer_grapher,
-            html_table,
+            df_automated=df_automated,
+            df_locations=df_locations,
+            df_vaccinations=df_vaccinations,
+            df_manufacturer=df_manufacturer,
+            df_age=df_age,
+            json_vaccinations=json_vaccinations,
+            df_grapher=df_grapher,
+            df_manufacturer_grapher=df_manufacturer_grapher,
+            df_age_grapher_init=df_age_grapher_init,
+            df_age_grapher_fully=df_age_grapher_fully,
+            html_table=html_table,
         )
 
 
@@ -534,7 +612,8 @@ def main_generate_dataset(paths):
         eu_countries=os.path.join(paths.project_dir, "scripts/input/owid/eu_countries.csv"),
         income_groups=os.path.join(paths.project_dir, "scripts/input/wb/income_groups.csv"),
         income_groups_compl=os.path.join(paths.project_dir, "scripts/input/owid/income_groups_complement.csv"),
-        manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv")
+        manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv"),
+        age=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_age_group/*.csv")
     )
     outputs = Bucket(
         locations=os.path.join(paths.project_dir, "public/data/vaccinations/locations.csv"),
@@ -547,8 +626,26 @@ def main_generate_dataset(paths):
             os.path.abspath(os.path.join(paths.project_dir,
             "public/data/vaccinations/vaccinations-by-manufacturer.csv"))
         ),
+        age=(
+            os.path.abspath(os.path.join(paths.project_dir,
+            "public/data/vaccinations/vaccinations-by-age-group.csv"))
+        ),
         grapher=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations.csv")),
-        grapher_manufacturer=os.path.abspath(os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")),
+        grapher_manufacturer=os.path.abspath(
+            os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")
+        ),
+        grapher_age_init=os.path.abspath(
+            os.path.join(
+                paths.project_dir,
+                "scripts/grapher/COVID-19 - Vaccinations by age group (people vaccinated).csv"
+            )
+        ),
+        grapher_age_fully=os.path.abspath(
+            os.path.join(
+                paths.project_dir,
+                "scripts/grapher/COVID-19 - Vaccinations by age group (people fully vaccinated).csv"
+            )
+        ),
         html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
     )
     generator = DatasetGenerator(inputs, outputs)

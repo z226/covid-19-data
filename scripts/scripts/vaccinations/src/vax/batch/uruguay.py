@@ -49,7 +49,9 @@ def main(paths):
     df_age = df_age.stack(dropna=True).stack(dropna=True).rename_axis(
         ("date", "age_group_max", "age_group_min")).reset_index()
     df_age.rename(columns={0: "people_vaccinated_per_100"}, inplace=True)
-    df_age = df_age[["date", "age_group_min", "age_group_max", "people_vaccinated_per_100"]].sort_values(
+    df_age["location"] = "Uruguay"
+    df_age["age_group_max"].replace({"115": None}, inplace=True)
+    df_age = df_age[["date", "age_group_min", "age_group_max", "location", "people_vaccinated_per_100"]].sort_values(
         ["date", "age_group_min"])
 
     df_age.to_csv(paths.tmp_vax_out_by_age_group("Uruguay"), index=False)

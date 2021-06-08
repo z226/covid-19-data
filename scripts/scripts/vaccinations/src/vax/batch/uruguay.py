@@ -53,6 +53,11 @@ class Uruguay:
         )
 
     def pipe_age_checks(self, df: pd.DataFrame) -> pd.DataFrame:
+        age_groups_accepted = {'18_24', '25_34', '35_44', '45_54', '55_64', '65_74', '75_115'}
+        age_groups = set(df.columns.str.extract(r"coverage_(?:people|fully)_(.*)", expand=False).dropna())
+        age_groups_wrong = age_groups.difference(age_groups_accepted)
+        if age_groups_wrong:
+            raise ValueError(f"Invalid age groups: {age_groups_wrong}")
         return df
     
     def pipe_age_melt_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -80,6 +85,7 @@ class Uruguay:
     def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
+            .pipe(self.pipe_age_checks)
             .pipe(self.pipe_age_melt_pivot)
             .replace(to_replace=r"%", value="", regex=True)
             .assign(location=self.location)

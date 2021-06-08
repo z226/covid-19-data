@@ -14,7 +14,7 @@ def main():
     req = requests.get(url)
     soup = BeautifulSoup(req.text, 'html.parser')
     stats = soup.find_all('tr')
-    count = int(stats[8].find_all('td')[-1].text)
+    count = int(stats[9].find_all('td')[-1].text)
     # print(count)
 
     date_str = date.today().strftime("%Y-%m-%d")

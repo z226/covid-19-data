@@ -28,6 +28,10 @@ class Paths:
     @property
     def tmp(self):
         return os.path.join(self.project_dir, "scripts")
+    
+    @property
+    def tmp_inp(self):
+        return os.path.join(self.tmp, "input")
 
     @property
     def tmp_tmp(self):
@@ -35,7 +39,7 @@ class Paths:
 
     @property
     def tmp_vax(self):
-        return os.path.join(self.project_dir, "scripts", "scripts", "vaccinations")
+        return os.path.join(self.tmp_tmp, "vaccinations")
 
     @property
     def tmp_vax_out_dir(self):

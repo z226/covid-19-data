@@ -50,6 +50,10 @@ Each row in the data gives the cumulative number of doses administered for a giv
 |2021-06-01|Pfizer/BioNTech   |Lithuania           |1133371|
 |...|...           |...            |...|
 
+#### Notes
+We only include manufacturer data for countries for which the process can be automated. No manual reports are currently
+being accepted. This is to ensure scalability of the project.
+
 
 ### Age group data
 
@@ -61,13 +65,15 @@ general rule, we try to have groups in 10 years chunks.
 
 **Note that the reported metric is relative, and not absolute.**
 #### Fields
-Mandatory fields:
+**Mandatory fields:**
 - `date`: Date in format YYYY-MM-DD
 - `age_group_min`: Lower bound of the age group.
 - `age_group_max`: Upper bound of the age group (included).
 - `location`: Region name.
 - `people_vaccinated_per_hundred`: Percentage of people within the age group that have received at least one dose.
 
+**Optional fields:**
+- `people_fully_vaccinated_per_hundred`: Percentage of people within the age group that have been fully vaccinated.
 
 #### Example
 |date      |age_group_min     |age_group_max|location|people_vaccinated_per_hundred|
@@ -83,6 +89,9 @@ Mandatory fields:
 |2020-12-27|90                |             |Italy                |63.05   |
 |...|...           |...            |...|...|
 
+#### Notes
+We only include age group data for countries for which the process can be automated. No manual reports are currently
+being accepted. This is to ensure scalability of the project.
 
 ## Report new data values
 To report new values for a country/location, first check if the imports for that country/territory are automated. You
@@ -99,7 +108,10 @@ can check column `automated` in [this file](automation_state.csv).
   - If this seems too complicated, alternatively, you may simply add a comment to thread
 [#230](https://github.com/owid/covid-19-data/issues/230). 
 
-*Note*: We only accept official sources or news correctly citing official sources.
+### Notes
+- We only accept official sources or news correctly citing official sources.
+- We only accept manual reports for country aggregate vaccination data. That is, we currently do not include
+  manufacturer and age vaccination data if no automation is provided.
 
 ## Add new country automations
 To automate the data import for a country, make sure that:

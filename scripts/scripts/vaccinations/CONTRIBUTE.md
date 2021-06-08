@@ -76,18 +76,16 @@ general rule, we try to have groups in 10 years chunks.
 - `people_fully_vaccinated_per_hundred`: Percentage of people within the age group that have been fully vaccinated.
 
 #### Example
-|date      |age_group_min     |age_group_max|location|people_vaccinated_per_hundred|
-|----------|------------------|-------------|------------------|--------|
-|...|...           |...            |...|...|
-|2020-12-27|20                |29           |Italy               |5.03   |
-|2020-12-27|30                |39           |Italy              |8.64   |
-|2020-12-27|40                |49           |Italy              |33.61   |
-|2020-12-27|50                |59           |Italy              |39.02   |
-|2020-12-27|60                |69           |Italy              |50.12   |
-|2020-12-27|70                |79           |Italy               |52.10   |
-|2020-12-27|80                |89           |Italy               |57.89   |
-|2020-12-27|90                |             |Italy                |63.05   |
-|...|...           |...            |...|...|
+|location | date |age_group_min |age_group_max|people_vaccinated_per_hundred|people_fully_vaccinated_per_hundred|
+|----------|------------------|-------------|------------------|--------|--------|
+|...|...           |...            |...|...|...|
+Poland|2021-06-08|18|24|26.77|7.33|
+Poland|2021-06-08|25|49|36.01|14.2|
+Poland|2021-06-08|50|59|50.68|30.22|
+Poland|2021-06-08|60|69|63.05|35.67|
+Poland|2021-06-08|70|79|77.45|70.7|
+Poland|2021-06-08|80||59.94|56.55|
+|...|...           |...            |...|...|...|
 
 #### Notes
 We only include age group data for countries for which the process can be automated. No manual reports are currently

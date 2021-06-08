@@ -1,5 +1,6 @@
 import requests
 import tempfile
+import re
 
 import pandas as pd
 
@@ -65,75 +66,73 @@ class Jersey:
     def pipe_age_select_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[[
             "Date",
-            "VaccinationsTotalNumberDoses",
-            "VaccinationsTotalVaccinationDosesFirstDose80yearsandover",
-            "VaccinationsTotalVaccinationDosesFirstDose75to79years",
-            "VaccinationsTotalVaccinationDosesFirstDose70to74years",
-            "VaccinationsTotalVaccinationDosesFirstDose65to69years",
-            "VaccinationsTotalVaccinationDosesFirstDose60to64years",
-            "VaccinationsTotalVaccinationDosesFirstDose55to59years",
-            "VaccinationsTotalVaccinationDosesFirstDose50to54years",
-            "VaccinationsTotalVaccinationDosesFirstDose40to49years",
-            "VaccinationsTotalVaccinationDosesFirstDose30to39years",
-            "VaccinationsTotalVaccinationDosesFirstDose18to29years",
-            "VaccinationsTotalVaccinationDosesFirstDose17yearsandunder",
-            "VaccinationsTotalVaccinationDosesSecondDose80yearsandover",
-            "VaccinationsTotalVaccinationDosesSecondDose75to79years",
-            "VaccinationsTotalVaccinationDosesSecondDose70to74years",
-            "VaccinationsTotalVaccinationDosesSecondDose65to69years",
-            "VaccinationsTotalVaccinationDosesSecondDose60to64years",
-            "VaccinationsTotalVaccinationDosesSecondDose55to59years",
-            "VaccinationsTotalVaccinationDosesSecondDose50to54years",
-            "VaccinationsTotalVaccinationDosesSecondDose40to49years",
-            "VaccinationsTotalVaccinationDosesSecondDose30to39years",
-            "VaccinationsTotalVaccinationDosesSecondDose18to29years",
-            "VaccinationsTotalVaccinationDosesSecondDose17yearsandunder",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose80yearsandover",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose75to79years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose70to74years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose65to69years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose60to64years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose55to59years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose50to54years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose40to49years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose30to39years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose18to29years",
+            "VaccinationsPercentagePopulationVaccinatedFirstDose17yearsandunder",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose80yearsandover",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose75to79years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose70to74years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose65to69years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose60to64years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose55to59years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose50to54years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose40to49years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose30to39years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose18to29years",
+            "VaccinationsPercentagePopulationVaccinatedSecondDose17yearsandunder"
         ]]
 
-    def _filter_df_columns_age_group(self, df: pd.DataFrame, age_group: str) -> pd.DataFrame:
-        if age_group == "80+":
-            res = df.filter(regex=(r"VaccinationsTotalVaccinationDoses(?:First|Second)Dose80yearsandover"))
-        elif age_group == "0-17":
-            res = df.filter(regex=(r"VaccinationsTotalVaccinationDoses(?:First|Second)Dose17yearsandunder"))
-        else:
-            age_min, age_max = age_group.split("-")
-            res = df.filter(regex=(
-                r"VaccinationsTotalVaccinationDoses(?:First|Second)" + 
-                f"Dose{age_min}to{age_max}years"))
-        return res.sum(axis=1)
+    def _extract_age_group(self, age_group_raw):
+        regex_17 = r"VaccinationsPercentagePopulationVaccinated(?:First|Second)Dose17yearsandunder"
+        regex_80 = r"VaccinationsPercentagePopulationVaccinated(?:First|Second)Dose80yearsandover"
+        regex = r"VaccinationsPercentagePopulationVaccinated(?:First|Second)Dose(\d+)to(\d+)years"
+        if re.match(regex_17, age_group_raw):
+            age_group = "0-17"
+        elif re.match(regex_80, age_group_raw):
+            age_group = "80-"
+        elif re.match(regex, age_group_raw):
+            age_group = "-".join(re.match(regex, age_group_raw).group(1, 2))
+        return age_group
 
     def pipe_age_create_groups(self, df: pd.DataFrame) -> pd.DataFrame:
-        age_groups = ["0-17", "18-29", "30-39", "40-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"]
-        # df.filter(regex=(r"VaccinationsTotalVaccinationDoses(?:First|Second)Dose80yearsandover")).sum(axis=1)
-        dix = {
-            age_group: self._filter_df_columns_age_group(df, age_group) for age_group in age_groups
-        }
-        df= df.assign(**dix)
-        df = df[
-            ["Date", "0-17", "18-29", "30-39", "40-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"]]
+        # Split data in dataframes with first and second doses
+        df1 = df.filter(regex=(r"Date|VaccinationsPercentagePopulationVaccinatedFirstDose.*"))
+        df2 = df.filter(regex=(r"Date|VaccinationsPercentagePopulationVaccinatedSecondDose.*"))
+        # Melt dataframes
+        df1 = df1.melt(id_vars="Date", var_name="age_group", value_name="people_vaccinated_per_hundred")
+        df2 = df2.melt(id_vars="Date", var_name="age_group", value_name="people_fully_vaccinated_per_hundred")
+        # Process and merge dataframes
+        df1 = df1.assign(age_group=df1.age_group.apply(self._extract_age_group))
+        df2 = df2.assign(age_group=df2.age_group.apply(self._extract_age_group))
+        df = df1.merge(df2, on=["Date", "age_group"])
         return df
 
-    def pipe_age_melt(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.melt(["Date"], var_name='age_group')
-
     def pipe_age_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns={"Date": "date", "value": "total_vaccinations"})
+        return df.rename(columns={"Date": "date"})
 
     def pipe_age_minmax_values(self, df: pd.DataFrame) -> pd.DataFrame:
         df[["age_group_min", "age_group_max"]] = df.age_group.str.split("-", expand=True)
-        df = df.replace(to_replace="80+", value="80")
         return df
 
     def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
+            .pipe(self.pipe_age_select_columns)
             .pipe(self.pipe_age_create_groups)
-            .pipe(self.pipe_age_melt)
             .pipe(self.pipe_age_rename_columns)
             .pipe(self.pipe_age_minmax_values)
             .pipe(self.pipe_enrich_columns)
             .sort_values(["date", "age_group_min"])
-            [["location", "date", "age_group_min", "age_group_max", "total_vaccinations"]]
+            [["location", "date", "age_group_min", "age_group_max", "people_vaccinated_per_hundred",
+            "people_fully_vaccinated_per_hundred"]]
         )
 
     def to_csv(self, paths):

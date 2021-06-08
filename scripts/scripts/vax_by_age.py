@@ -23,5 +23,5 @@ def update_db():
             'zeroDay': ZERO_DAY
         },
         source_name="Official data collated by Our World in Data",
-        slack_notifications=False
+        slack_notifications=True
     )

@@ -6,6 +6,56 @@ vaccines_mapping = {
     "total_astrazeneca": "Oxford/AstraZeneca",
 }
 
+
+class Uruguay:
+
+    def __init__(self):
+        self.source_url = "https://raw.githubusercontent.com/3dgiordano/covid-19-uy-vacc-data/main/data/Uruguay.csv"
+        self.source_url_age = "https://raw.githubusercontent.com/3dgiordano/covid-19-uy-vacc-data/main/data/Age.csv"
+        self.location = "Uruguay"
+    
+    def read(self):
+        return pd.read_csv(self.source_url), pd.read_csv(self.source_url_age)
+    
+    def pipe_to_csv_main(self, paths, df: pd.DataFrame):
+        df.to_csv(
+            paths.tmp_vax_out(self.location),
+            index=False,
+            columns=[
+                "location",
+                "date",
+                "vaccine",
+                "source_url",
+                "total_vaccinations",
+                "people_vaccinated",
+                "people_fully_vaccinated",
+            ],
+        )
+
+    def pipeline_manufacturer(self, df: pd.DataFrame):
+        return (
+            df
+            .drop(columns=["total_vaccinations"])
+            .melt(
+                id_vars=["date", "location"],
+                value_vars=["total_coronavac", "total_pfizer", "total_astrazeneca"],
+                var_name="vaccine",
+                value_name="total_vaccinations"
+            )
+            .replace(vaccines_mapping)
+            .sort_values(["date", "vaccine"])
+        )
+
+    def to_csv(self, paths):
+        df, df_age = self.read()
+
+        # Export main
+        df.pipe(self.pipe_to_csv_main)
+        # Export manufacturer data
+        df.pipe(self.pipeline_manufacturer).to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        # Export age data
+        df_age.pipe(self.pipeline_age).to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        
 def main(paths):
     df = pd.read_csv(
         "https://raw.githubusercontent.com/3dgiordano/covid-19-uy-vacc-data/main/data/Uruguay.csv",
@@ -33,7 +83,6 @@ def main(paths):
         .replace(vaccines_mapping)
         .sort_values(["date", "vaccine"])
     )
-    assert set(vaccines_mapping.values()) == set(df_manufacturer.vaccine)
 
     df_manufacturer.to_csv(paths.tmp_vax_out_man("Uruguay"), index=False)
 

@@ -55,6 +55,22 @@ locations_manufacturer_exclude = [
 vaccines_one_dose = ["JANSS"]
 
 
+columns = {
+    'Denominator',
+    'FirstDose',
+    'FirstDoseRefused',
+    'NumberDosesReceived',
+    'Population',
+    'Region',
+    'ReportingCountry',
+    'SecondDose',
+    'TargetGroup',
+    'UnknownDose',
+    'Vaccine',
+    'YearWeekISO'
+}
+
+
 class ECDC:
 
     def __init__(self, iso_path: str):
@@ -84,8 +100,22 @@ class ECDC:
         else:
             return clean_date(d + '+2', "%Y-W%W+%w")
             #print(r.strftime("%c"))
-    
+
+    def pipe_initial_check(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Vaccines
+        vaccines_wrong = set(df.Vaccine).difference(self.vaccine_mapping)
+        if vaccines_wrong:
+            raise ValueError(f"Unknown vaccines found. Check {vaccines_wrong}")
+        columns_wrong = df.columns.difference(columns).tolist()
+        if columns_wrong:
+            raise ValueError(
+                f"Unknown columns! If new breakdown groups have been added, unexpected errors may appear."
+                f"Please review: {columns_wrong}"
+            )
+        return df
+
     def pipe_base(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.pipe(self.pipe_initial_check)
         df = df.assign(
             total_vaccinations=df[["FirstDose", "SecondDose", "UnknownDose"]].sum(axis=1),
             people_vaccinated=df.FirstDose,
@@ -130,9 +160,6 @@ class ECDC:
         )
 
     def pipe_rename_vaccines(self, df: pd.DataFrame) -> pd.DataFrame:
-        vaccines_wrong = set(df.vaccine).difference(self.vaccine_mapping)
-        if vaccines_wrong:
-            raise ValueError(f"Unknown vaccines found. Check {vaccines_wrong}")
         return df.assign(vaccine=df.vaccine.replace(self.vaccine_mapping))
 
     def pipe_manufacturer_filter_locations(self, df: pd.DataFrame):

@@ -3,6 +3,7 @@ import sys
 import pytz
 import json
 import datetime
+import requests
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
@@ -40,15 +41,25 @@ with open(os.path.join(INPUT_PATH, 'mapped_values.json'), 'r') as f:
 
 def update_csv():
     df = _merge_files()
-    df = _subset_columns(df)
+    df = _subset_and_rename_columns(df)
     df = _preprocess_cols(df)
     df = _derive_cols(df)
     df = _standardize_entities(df)
     df = _aggregate(df)
+    df_comp = _create_composite_cols(df)
+    if df_comp is not None:
+        df_comp = _rename_columns(df_comp)
+        df_comp = _reorder_columns(df_comp)
+        df_comp.to_csv(
+            os.path.join(OUTPUT_PATH, f"{DATASET_NAME}, composite variables.csv"), 
+            index=False
+        )
+    
+    df = _round(df)
     df = _rename_columns(df)
     df = _reorder_columns(df)
     df.to_csv(OUTPUT_CSV_PATH, index=False)
-
+    
 
 def update_db():
     from utils.db_imports import import_dataset
@@ -112,48 +123,59 @@ def _merge_files():
     return df
 
 
-def _subset_columns(df):
-    """keeps only the survey questions with keep=True in mapping.csv.
+def _subset_and_rename_columns(df):
+    """keeps only the survey questions with keep=True in mapping.csv and
+    renames columns.
+
+    Note: we do not use `df.rename(columns={...})` because for some columns we 
+        derive multiple variables.
     """
-    index_cols = ['country', 'date']
     assert MAPPING.keep.isin([True, False]).all(), 'All values in "keep" column of `MAPPING` must be True or False.'
-    questions_keep = MAPPING.label[MAPPING.keep & ~MAPPING.derived].dropna().tolist()
-    df = df[index_cols + questions_keep]
-    return df
+    assert MAPPING['code_name'].duplicated().sum() == 0, (
+        "All rows in the `code_name` field of mapping.csv must be unique."
+    )
+    index_cols = ['country', 'date']
+    df2 = df[index_cols]
+    for row in MAPPING[MAPPING.keep & ~MAPPING.derived].itertuples():
+        df2[row.code_name] = df[row.label]
+    return df2
 
 
 def _preprocess_cols(df):
     for row in MAPPING[MAPPING.preprocess.notnull()].itertuples():
-        if row.label in df.columns:
-            df[row.label] = df[row.label].replace(MAPPED_VALUES[row.preprocess])
+        if row.code_name in df.columns:
+            df[row.code_name] = df[row.code_name].replace(MAPPED_VALUES[row.preprocess])
             uniq_values = set(MAPPED_VALUES[row.preprocess].values())
-            assert df[row.label].drop_duplicates().dropna().isin(uniq_values).all(), f"One or more non-NaN values in {row.label} are not in {uniq_values}"
+            assert df[row.code_name].drop_duplicates().dropna().isin(uniq_values).all(), f"One or more non-NaN values in {row.code_name} are not in {uniq_values}"
     return df
 
 
 def _derive_cols(df):
-    derived_variables_to_keep = MAPPING[MAPPING['derived'] & MAPPING['keep']].label.unique().tolist()
+    derived_variables_to_keep = MAPPING[MAPPING['derived'] & MAPPING['keep']].code_name.unique().tolist()
     if 'covid_vaccinated_or_willing' in derived_variables_to_keep:
         # constructs the covid_vaccinated_or_willing variable
         # pd.crosstab(df['vac'].fillna(-1), df['vac_1'].fillna(-1))
-        vac_min_val = min(MAPPED_VALUES[MAPPING.loc[MAPPING['label'] == 'vac', 'preprocess'].squeeze()].values())
-        vac_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['label'] == 'vac', 'preprocess'].squeeze()].values())
-        vac_1_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['label'] == 'vac_1', 'preprocess'].squeeze()].values())
+        vac_min_val = min(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses', 'preprocess'].squeeze()].values())
+        vac_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses', 'preprocess'].squeeze()].values())
+        vac_1_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'willingness_covid_vaccinate_this_week', 'preprocess'].squeeze()].values())
         
-        assert not ((df['vac'] == vac_max_val) & df['vac_1'].notnull()).any(), (
+        assert not ((df['covid_vaccine_received_one_or_two_doses'] == vac_max_val) & df['willingness_covid_vaccinate_this_week'].notnull()).any(), (
             "Expected all vaccinated respondents to NOT be asked whether they would "
             "get vaccinated, but found at least one vaccinated respondent who was "
             "asked the latter question."
         )
-        assert not ((df['vac'] == vac_min_val) & df['vac_1'].isnull()).any(), (
+        assert not ((df['covid_vaccine_received_one_or_two_doses'] == vac_min_val) & df['willingness_covid_vaccinate_this_week'].isnull()).any(), (
             "Expected all unvaccinated respondents to be asked whether they would "
             "get vaccinated, but found at least one unvaccinated respondent who was "
             "not asked the latter question."
         )
         
-        df['covid_vaccinated_or_willing'] = ((df['vac'] == vac_max_val) | (df['vac_1'] == vac_1_max_val)).astype(int) * vac_max_val
-        df.loc[df['vac'].isnull() & df['vac_1'].isnull(), 'covid_vaccinated_or_willing'] = np.nan
-    
+        df['covid_vaccinated_or_willing'] = (
+            (df['covid_vaccine_received_one_or_two_doses'] == vac_max_val) | 
+            (df['willingness_covid_vaccinate_this_week'] == vac_1_max_val)
+        ).astype(int) * vac_max_val
+        df.loc[df['covid_vaccine_received_one_or_two_doses'].isnull() & df['willingness_covid_vaccinate_this_week'].isnull(), 'covid_vaccinated_or_willing'] = np.nan
+
     return df
 
 
@@ -200,13 +222,12 @@ def _aggregate(df):
     if df['date_end'].max() > today:
         df.loc[:, "date_end"] = df['date_end'].replace({df['date_end'].max(): today})
     
-    questions = [q for q in MAPPING.label.tolist() if q in df.columns]
+    questions = [q for q in MAPPING.code_name.tolist() if q in df.columns]
 
     # computes the mean for each country-date-question observation
     # (returned in long format)
     df_means = df.groupby(["entity", "date_end"])[questions] \
                  .mean() \
-                 .round(1) \
                  .rename_axis('question', axis=1) \
                  .stack() \
                  .rename('mean') \
@@ -228,7 +249,17 @@ def _aggregate(df):
     
     # converts dataframe back to wide format.
     df_agg = df_agg.unstack().reset_index()
-    df_agg.columns = [f'{lvl1}__{lvl0}' if lvl1 else lvl0 for lvl0, lvl1 in df_agg.columns]
+    new_columns = []
+    for lvl0, lvl1 in df_agg.columns:
+        if lvl1:
+            if lvl0 == 'num_responses':
+                col = f'{lvl1}__{lvl0}'
+            else:
+                col = lvl1
+        else:
+            col = lvl0
+        new_columns.append(col)
+    df_agg.columns = new_columns
     df_agg.rename(columns={'date_end': 'date'}, inplace=True)
 
     # constructs date variable for internal Grapher usage.
@@ -238,19 +269,120 @@ def _aggregate(df):
     return df_agg
 
 
-def _rename_columns(df):
-    suffixes = ['mean', 'num_responses']
-    rename_dict = {}
-    for row in MAPPING.itertuples():
-        for sfx in suffixes:
-            key = f'{row.label}__{sfx}'
-            if key in df.columns:
-                val = row.code_name if sfx == 'mean' else f'{row.code_name}__{sfx}'
-                rename_dict[key] = val
-    df = df.rename(columns=rename_dict)
+def _create_composite_cols(df):
+    ffill_limit = 7
+    vac_var_id = 145610
+    try:
+        res = requests.get(f"https://ourworldindata.org/grapher/data/variables/{vac_var_id}.json")
+        assert res.ok
+        vac_data = json.loads(res.content)
+        var_name = vac_data['variables'][f'{vac_var_id}']['name']
+        assert ZERO_DAY == vac_data['variables'][f'{vac_var_id}']['display']['zeroDay'], (
+            "Zero days do not match. Data merge will not be correct."
+        )
+        df_vac = pd.DataFrame({
+            'date': vac_data['variables'][f'{vac_var_id}']['years'],
+            'entity': [vac_data['entityKey'][f'{ent}']['name'] for ent in vac_data['variables'][f'{vac_var_id}']['entities']],
+            var_name: vac_data['variables'][f'{vac_var_id}']['values'],
+        }).sort_values(['entity', 'date'], ascending=True)
+        date_range = list(range(df_vac['date'].min(), df_vac['date'].max() + 1))
+        df_vac[df_vac['entity'] == 'United States'].set_index('date').reindex(date_range)
+        df_vac = df_vac.groupby('entity').apply(lambda gp: gp.set_index('date').reindex(date_range)).drop('entity', axis=1).reset_index().sort_values(['entity', 'date'])
+        df_vac[var_name] = df_vac.groupby('entity')[var_name].apply(lambda gp: gp.ffill(limit=ffill_limit)).dropna()
+        df_vac.dropna(subset=[var_name], inplace=True)
 
+        vac_entities = df_vac['entity'].unique()
+        yougov_entities_not_found = [ent for ent in df['entity'].drop_duplicates() if ent not in vac_entities]
+        assert len(yougov_entities_not_found) < (df['entity'].drop_duplicates().shape[0] * 0.1), (
+            "Expected nearly all YouGov entities to be in vaccination data, but "
+            "failed to find >10% of YouGov entities in the vaccination data. "
+            f"Entities not found: {yougov_entities_not_found}"
+        )
+        
+        df_temp = pd.merge(
+            df[[
+                'entity', 
+                'date_internal_use', 
+                'willingness_covid_vaccinate_this_week', 
+                'unwillingness_covid_vaccinate_this_week',
+                'uncertain_covid_vaccinate_this_week'
+            ]], 
+            df_vac[[
+                'entity',
+                'date',
+                var_name
+            ]], 
+            left_on=['entity', 'date_internal_use'], 
+            right_on=['entity', 'date'], 
+            how='inner',
+            validate='1:1',
+        )
+        df_temp[var_name] = df_temp[var_name].round(2)
+
+        # converts willingness to get vaccinated variables to a percentage of the
+        # overall population, instead of percentage of the unvaccinated population.
+        df_temp['willingness_covid_vaccinate_this_week_pct_pop'] = (
+            (100 - df_temp[var_name]) * (df_temp['willingness_covid_vaccinate_this_week']/100)
+        ).round(2)
+        df_temp['unwillingness_covid_vaccinate_this_week_pct_pop'] = (
+            (100 - df_temp[var_name]) * (df_temp['unwillingness_covid_vaccinate_this_week']/100)
+        ).round(2)
+        df_temp['uncertain_covid_vaccinate_this_week_pct_pop'] = (
+            (100 - df_temp[var_name]) * (df_temp['uncertain_covid_vaccinate_this_week']/100)
+        ).round(2)
+
+        cols = [
+            var_name,
+            'willingness_covid_vaccinate_this_week_pct_pop',
+            'unwillingness_covid_vaccinate_this_week_pct_pop',
+            'uncertain_covid_vaccinate_this_week_pct_pop'
+        ]
+        df_temp.sample(10)
+        assert all(df_temp[cols].sum(axis=1, min_count=len(cols)).dropna().round(1) == 100), (
+            f"Expected {cols} to sum to *nearly* 100 for every entity-date "
+             "observation, prior to rounding adjustment."
+        )
+        
+        # adjusts one variable to ensure sum of all cols equals exactly
+        # 100. Otherwise, rounding errors may lead the sum to be
+        # slightly off (e.g. 99.99).
+        df_temp[f'{cols[-1]}_adjusted'] = (100 - df_temp[cols[:-1]].sum(axis=1)).round(2)
+        assert all((df_temp[cols[-1]] - df_temp[f'{cols[-1]}_adjusted']).abs() < 0.1), (
+            f"Expected rounding adjustment of {cols[-1]} to be minor (< 0.1), "
+             "but adjustment was larger than this for one or more entity-date "
+             "observations."
+        )
+        assert all(df_temp[cols[:-1] + [f'{cols[-1]}_adjusted']].sum(axis=1, min_count=len(cols)).dropna().round(2) == 100), (
+            f"Expected {cols} to sum to exactly 100 for every entity-date "
+             "observation, after rounding adjustment."
+        )
+        df_temp[cols[-1]] = df_temp[f'{cols[-1]}_adjusted']
+        
+        df_temp = df_temp[[
+            'entity', 
+            'date_internal_use',
+            var_name,
+            'willingness_covid_vaccinate_this_week_pct_pop',
+            'unwillingness_covid_vaccinate_this_week_pct_pop',
+            'uncertain_covid_vaccinate_this_week_pct_pop'
+        ]]
+
+    except Exception as e:
+        df_temp = None
+        print(f'Failed to construct composite variables. Error: {e}')
+
+    return df_temp
+
+
+def _round(df):
+    index_cols = ['entity', 'date_internal_use']
+    df = df.set_index(index_cols).round(1).reset_index()
+    return df
+
+
+def _rename_columns(df):
     # renames index columns for use in `update_db`.
-    df = df.rename(columns={'entity': 'Country', 'date_internal_use': 'Year'})
+    df.rename(columns={'entity': 'Country', 'date_internal_use': 'Year'}, inplace=True)
     return df
 
 

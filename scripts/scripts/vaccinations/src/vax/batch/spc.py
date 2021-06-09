@@ -22,7 +22,8 @@ country_mapping = {
     "PF": "French Polynesia",
     "WF": "Wallis and Futuna",
     "NC": "New Caledonia",
-    "CK": "Cook Islands"
+    "CK": "Cook Islands",
+    "VU": "Vanuatu",
 }
 
 # Dictionary containing vaccines being used in each country and their start date. Element 'default' is used for all
@@ -117,7 +118,7 @@ class SPC:
             )
         )
         # Merge with legacy (spreadsheet)
-        if country in ["Fiji", "Nauru"]:
+        if country in ["Fiji", "Nauru", "Vanuatu"]:
             df = df.pipe(self.pipe_merge_legacy, country)
         # Drop duplicates
         df = df.pipe(self.pipe_drop_duplicates)

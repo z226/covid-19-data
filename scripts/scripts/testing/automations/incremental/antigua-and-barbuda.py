@@ -23,7 +23,7 @@ def main():
         'Date': [date_str],
         'Cumulative total': count,
         'Source URL': url,
-        'Source label': 'Ministry of Information, Broadcasting, Telecommunications & Information Technology',
+        'Source label': 'Ministry of Health',
         'Units': 'tests performed'
     })
 

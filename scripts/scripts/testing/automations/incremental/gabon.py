@@ -23,7 +23,7 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Government of Gabon',
-        'Units': 'unclear'
+        'Units': 'samples tested'
     })
 
     if os.path.isfile(output_file):

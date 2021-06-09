@@ -24,7 +24,7 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Ministerio de Sanidad y Bienestar Social',
-        'Units': 'unclear'
+        'Units': 'tests performed'
     })
 
     if os.path.isfile(output_file):

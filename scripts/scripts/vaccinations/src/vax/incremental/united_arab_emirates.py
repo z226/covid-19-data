@@ -1,13 +1,13 @@
-import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+from vax.utils.utils import get_soup
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import localdate
 
 
 def read(source: str) -> pd.Series:
-    soup = BeautifulSoup(requests.get(source).content, "html.parser")
+    soup = get_soup(source, verify=False)
     return parse_data(soup)
 
 

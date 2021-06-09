@@ -350,8 +350,9 @@ class DatasetGenerator:
         )
 
     def pipe_manufacturer_checks(self, df: pd.DataFrame) -> pd.DataFrame:
-        if not df.vaccine.drop_duplicates().isin(VACCINES_ACCEPTED).all():
-            raise ValueError("Non valid vaccines found in manufacturer file! Check vax.utils.checks.VACCINES_ACCEPTED")
+        vaccines_wrong = set(df.vaccine).difference(VACCINES_ACCEPTED)
+        if vaccines_wrong:
+            raise ValueError(f"Invalid vaccines found in manufacturer file! {vaccines_wrong}")
         return df
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -444,21 +445,54 @@ class DatasetGenerator:
             .pipe(self.pipe_to_int)
         )
 
-    def pipe_age_pivot(self, df: pd.DataFrame, metric) -> pd.DataFrame:
-        return (
+    def pipe_age_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = (
             df
             .pivot(
                 index=["location", "date"],
                 columns="age_group",
-                values=metric
             )
             .reset_index()
         )
+        # Ensure column order
+        columns = pd.MultiIndex.from_tuples(sorted(df.columns, key=lambda x: x[0] + x[1]))
+        df = df[columns]
+        columns_wrong = (
+            df.people_vaccinated_per_hundred.columns.difference(df.people_fully_vaccinated_per_hundred.columns)
+        )
+        if columns_wrong.any():
+            raise ValueError(f"There is missmatch between age groups in people vaccinated and people fully vaccinated")
+        return df
 
-    def pipeline_age_grapher(self, df: pd.DataFrame, metric) -> pd.DataFrame:
+    def pipe_age_partly(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Add partly vaccinated
+        y = (df["people_vaccinated_per_hundred"] - df["people_fully_vaccinated_per_hundred"]).round(2)
+        cols = pd.MultiIndex.from_tuples([("people_partly_vaccinated_per_hundred", yy) for yy in y.columns])
+        y.columns = cols
+        df[cols] = y
+        return df
+
+    def pipe_age_flatten(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Flatten columns
+        new_cols = []
+        for col in df.columns:
+            if col[0] == "people_vaccinated_per_hundred":
+                new_cols.append(f"{col[1]}_start")
+            elif col[0] == "people_fully_vaccinated_per_hundred":
+                new_cols.append(f"{col[1]}_fully")
+            elif col[0] == "people_partly_vaccinated_per_hundred":
+                new_cols.append(f"{col[1]}_partly")
+            else:
+                new_cols.append(col[0])
+        df.columns = new_cols
+        return df
+
+    def pipeline_age_grapher(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .pipe(self.pipe_age_pivot, metric)
+            .pipe(self.pipe_age_pivot)
+            .pipe(self.pipe_age_partly)
+            .pipe(self.pipe_age_flatten)
             .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True)
         )
 
@@ -499,8 +533,8 @@ class DatasetGenerator:
 
     def export(self, df_automated: pd.DataFrame, df_locations: pd.DataFrame, df_vaccinations: pd.DataFrame,
                df_manufacturer: pd.DataFrame, df_age: pd.DataFrame, json_vaccinations: dict,
-               df_grapher: pd.DataFrame, df_manufacturer_grapher: pd.DataFrame, df_age_grapher_init: pd.DataFrame,
-               df_age_grapher_fully: pd.DataFrame, html_table: str):
+               df_grapher: pd.DataFrame, df_manufacturer_grapher: pd.DataFrame, df_age_grapher: pd.DataFrame,
+               html_table: str):
         # Export
         files = [
             (df_automated, self.outputs.automated),
@@ -511,8 +545,7 @@ class DatasetGenerator:
             (json_vaccinations, self.outputs.vaccinations_json),
             (df_grapher, self.outputs.grapher),
             (df_manufacturer_grapher, self.outputs.grapher_manufacturer),
-            (df_age_grapher_init, self.outputs.grapher_age_init),
-            (df_age_grapher_fully, self.outputs.grapher_age_fully),
+            (df_age_grapher, self.outputs.grapher_age),
             (html_table, self.outputs.html_table),
         ]
         for obj, path in files:
@@ -574,8 +607,8 @@ class DatasetGenerator:
         logger.info("8/10 Generating `grapher` tables...")
         df_grapher = df_vaccinations_base.pipe(self.pipe_grapher)
         df_manufacturer_grapher = df_manufacturer.pipe(self.pipeline_manufacturer_grapher)
-        df_age_grapher_init = df_age.pipe(self.pipeline_age_grapher, "people_vaccinated_per_hundred")
-        df_age_grapher_fully = df_age.pipe(self.pipeline_age_grapher, "people_fully_vaccinated_per_hundred")
+        df_age_grapher = df_age.pipe(self.pipeline_age_grapher)
+        # df_age_grapher_fully = df_age.pipe(self.pipeline_age_grapher, "people_fully_vaccinated_per_hundred")
 
         # HTML
         logger.info("9/10 Generating HTML...")
@@ -592,8 +625,7 @@ class DatasetGenerator:
             json_vaccinations=json_vaccinations,
             df_grapher=df_grapher,
             df_manufacturer_grapher=df_manufacturer_grapher,
-            df_age_grapher_init=df_age_grapher_init,
-            df_age_grapher_fully=df_age_grapher_fully,
+            df_age_grapher=df_age_grapher,
             html_table=html_table,
         )
 
@@ -634,17 +666,8 @@ def main_generate_dataset(paths):
         grapher_manufacturer=os.path.abspath(
             os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by manufacturer.csv")
         ),
-        grapher_age_init=os.path.abspath(
-            os.path.join(
-                paths.project_dir,
-                "scripts/grapher/COVID-19 - Vaccinations by age group (people vaccinated).csv"
-            )
-        ),
-        grapher_age_fully=os.path.abspath(
-            os.path.join(
-                paths.project_dir,
-                "scripts/grapher/COVID-19 - Vaccinations by age group (people fully vaccinated).csv"
-            )
+        grapher_age=os.path.abspath(
+            os.path.join(paths.project_dir, "scripts/grapher/COVID-19 - Vaccinations by age group.csv")
         ),
         html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
     )

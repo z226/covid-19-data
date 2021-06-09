@@ -8,7 +8,7 @@ sys.path.append(CURRENT_DIR)
 
 from utils.db_imports import import_dataset
 
-DATASET_NAME = 'COVID-19 - Vaccinations by age group (people vaccinated)'
+DATASET_NAME = 'COVID-19 - Vaccinations by age group'
 OUTPUT_PATH = os.path.join(CURRENT_DIR, '../grapher/')
 OUTPUT_CSV_PATH = os.path.join(OUTPUT_PATH, f"{DATASET_NAME}.csv")
 ZERO_DAY = "2021-01-01"

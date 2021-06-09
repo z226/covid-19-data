@@ -65,14 +65,11 @@ general rule, we try to have groups in 10 years chunks.
 
 **Note that the reported metric is relative, and not absolute.**
 #### Fields
-**Mandatory fields:**
 - `date`: Date in format YYYY-MM-DD
 - `age_group_min`: Lower bound of the age group.
 - `age_group_max`: Upper bound of the age group (included).
 - `location`: Region name.
 - `people_vaccinated_per_hundred`: Percentage of people within the age group that have received at least one dose.
-
-**Optional fields:**
 - `people_fully_vaccinated_per_hundred`: Percentage of people within the age group that have been fully vaccinated.
 
 #### Example

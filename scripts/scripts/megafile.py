@@ -281,6 +281,19 @@ def get_cgrt():
     return cgrt
 
 
+def add_excess_mortality(df: pd.DataFrame) -> pd.DataFrame:
+    xm = pd.read_csv(
+        os.path.join(DATA_DIR, "excess_mortality/excess_mortality.csv"),
+        usecols=["location", "date", "p_scores_all_ages"],
+    )
+    df = (
+        df
+        .merge(xm, how="left", on=["location", "date"])
+        .rename(columns={"p_scores_all_ages": "excess_mortality"})
+    )
+    return df
+
+
 def dict_to_compact_json(d: dict):
     """
     Encodes a Python dict into valid, minified JSON.
@@ -416,6 +429,11 @@ internal_files_columns = {
         "weekly_icu_admissions_per_million",
         "weekly_hosp_admissions",
         "weekly_hosp_admissions_per_million",
+    ],
+    "excess-mortality": [
+        "location",
+        "date",
+        "excess_mortality"
     ],
     "auxiliary": [
         "iso_code",
@@ -556,6 +574,9 @@ def generate_megafile():
         "human_development_index": "un/human_development_index.csv",
     }
     all_covid = add_macro_variables(all_covid, macro_variables)
+
+    # Add excess mortality
+    all_covid = add_excess_mortality(all_covid)
 
     # Sort by location and date
     all_covid = all_covid.sort_values(["location", "date"])

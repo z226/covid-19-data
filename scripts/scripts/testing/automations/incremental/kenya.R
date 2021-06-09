@@ -6,7 +6,7 @@ count <- page %>%
   html_nodes("div.elementor-element-b36fad5") %>%
   html_text2() %>%
   str_replace_all("[^\\d]", "") %>%
-  as.integer
+  as.integer()
 
 add_snapshot(
   count = count,

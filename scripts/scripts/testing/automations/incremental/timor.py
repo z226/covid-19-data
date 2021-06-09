@@ -22,8 +22,8 @@ def main():
         'Date': [date_str],
         'Cumulative total': count,
         'Source URL': url,
-        'Source label': 'Government of Timor-Leste',
-        'Units': 'unclear'
+        'Source label': 'Ministry of Health',
+        'Units': 'test performed'
     })
 
 

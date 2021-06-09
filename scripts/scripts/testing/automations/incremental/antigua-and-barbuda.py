@@ -23,8 +23,8 @@ def main():
         'Date': [date_str],
         'Cumulative total': count,
         'Source URL': url,
-        'Source label': 'Government of Antigua and Barbuda',
-        'Units': 'unclear'
+        'Source label': 'Ministry of Health',
+        'Units': 'tests performed'
     })
 
     if os.path.isfile(output_file):

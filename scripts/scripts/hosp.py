@@ -111,7 +111,10 @@ def add_united_states(df):
     )
     flow = flow[flow["date"] <= datetime.date.today()]
     flow = flow[["date", "value"]]
-    flow = flow.groupby("date", as_index=False).sum()
+    flow = flow.groupby("date", as_index=False).agg({"value": ["sum", "count"]})
+    flow.columns = ["date", "value", "count"]
+    flow = flow[flow["count"] == 7]
+    flow = flow.drop(columns="count")
     flow.loc[:, "indicator"] = "Weekly new hospital admissions"
 
     # Merge all subframes
@@ -160,8 +163,10 @@ def add_uk(df):
     flow = uk[["date", "newAdmissions"]].copy()
     flow.loc[:, "date"] = (flow["date"] + pd.to_timedelta(6 - flow["date"].dt.dayofweek, unit="d")).dt.date
     flow = flow[flow["date"] <= datetime.date.today()]
-    flow = flow.groupby("date", as_index=False).sum()
-    flow = flow.melt("date", var_name="indicator")
+    flow = flow.groupby("date", as_index=False).agg({"newAdmissions": ["sum", "count"]})
+    flow.columns = ["date", "newAdmissions", "count"]
+    flow = flow[flow["count"] == 7]
+    flow = flow.drop(columns="count").melt("date", var_name="indicator")
 
     uk = pd.concat([stock, flow]).dropna(subset=["value"])
     uk.loc[:, "indicator"] = uk["indicator"].replace({
@@ -192,8 +197,10 @@ def add_israel(df):
     flow = israel[["date", "new_hospitalized", "serious_critical_new"]].copy()
     flow.loc[:, "date"] = (flow["date"] + pd.to_timedelta(6 - flow["date"].dt.dayofweek, unit="d")).dt.date
     flow = flow[flow["date"] <= datetime.date.today()]
-    flow = flow.groupby("date", as_index=False).sum()
-    flow = flow.melt("date", var_name="indicator")
+    flow = flow.groupby("date", as_index=False).agg({"new_hospitalized": ["sum", "count"], "serious_critical_new": "sum"})
+    flow.columns = ["date", "new_hospitalized", "count", "serious_critical_new"]
+    flow = flow[flow["count"] == 7]
+    flow = flow.drop(columns="count").melt("date", var_name="indicator")
 
     israel = pd.concat([stock, flow]).dropna(subset=["value"])
     israel.loc[:, "indicator"] = israel["indicator"].replace({

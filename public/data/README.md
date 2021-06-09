@@ -1,11 +1,21 @@
 # Data on COVID-19 (coronavirus) by _Our World in Data_
 
-Our complete COVID-19 dataset is a collection of the COVID-19 data maintained by [_Our World in Data_](https://ourworldindata.org/coronavirus). It is updated daily and includes data on confirmed cases, deaths, hospitalizations, testing, and vaccinations as well as other variables of potential interest.
-
 ### 🗂️ Download our complete COVID-19 dataset : [CSV](https://covid.ourworldindata.org/data/owid-covid-data.csv) | [XLSX](https://covid.ourworldindata.org/data/owid-covid-data.xlsx) | [JSON](https://covid.ourworldindata.org/data/owid-covid-data.json)
 
-We will continue to publish up-to-date data on confirmed cases, deaths, hospitalizations, testing, and vaccinations, throughout the duration of the COVID-19 pandemic.
+Our complete COVID-19 dataset is a collection of the COVID-19 data maintained by [_Our World in Data_](https://ourworldindata.org/coronavirus). We will update it daily throughout the duration of the COVID-19 pandemic. It includes the following data:
 
+| Metrics                     | Source                                                    | Updated | Countries |
+|-----------------------------|-----------------------------------------------------------|---------|-----------|
+| Confirmed cases             | JHU CSSE COVID-19 Data                                    | Daily   | 191       |
+| Confirmed deaths            | JHU CSSE COVID-19 Data                                    | Daily   | 183       |
+| Vaccinations                | Official data collated by Our World in Data               | Daily   | 209       |
+| Tests & positivity          | Official data collated by Our World in Data               | Weekly  | 129       |
+| Hospital & ICU              | Official data collated by Our World in Data               | Weekly  | 33        |
+| Reproduction rate           | Arroyo-Marioli F, Bullano F, Kucinskas S, Rondón-Moreno C | Daily   | 182       |
+| Policy responses            | Oxford COVID-19 Government Response Tracker               | Daily   | 181       |
+| Other variables of interest | International organizations (UN, World Bank, OECD, IHME…) | Fixed   | 218       |
+
+A [specific section of this repository](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations) is also dedicated to **vaccinations**, with a lighter dataset containing only vaccination data.
 
 ## The data you find here and our data sources
 

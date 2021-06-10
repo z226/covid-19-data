@@ -35,6 +35,16 @@ _More info:_
    - [Testing data overview](scripts/testing/README.md)
    - [Testing data contribution guideline](scripts/testing/CONTRIBUTE.md)
 
+## Excess Mortality data
+> 📁 Find it at [`scripts/excessmortality.py`](scripts/excessmortality.py)
+
+Collects excess [mortality data](https://github.com/owid/owid-datasets/tree/master/datasets/Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021))
+and exports it to human-readable format.
+
+_More info:_
+   - [owid-datasets README](https://github.com/owid/owid-datasets/blob/master/datasets/Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021)/README.md)
+
+
 
 ## Others
 > 📁 Find them at [`scripts/`](scripts/)

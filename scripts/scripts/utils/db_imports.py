@@ -1,4 +1,9 @@
+"""Update gapher database.
+
+Update vaccination by age data.
+"""
 #!/usr/bin/env python
+
 
 import sys
 import os

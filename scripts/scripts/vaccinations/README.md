@@ -1,6 +1,6 @@
 # Vaccination update automation
 [![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3)
-[![Contribubte](https://img.shields.io/badge/-contribute-0055ff)](CONTRIBUTE.md)
+[![Contribute](https://img.shields.io/badge/-contribute-0055ff)](CONTRIBUTE.md)
 [![Data](https://img.shields.io/badge/public-data-purple)](../../../public/data/)
 
 Vaccination data is updated on a daily basis. For some countries, the update is done by means of an automated process,
@@ -127,7 +127,7 @@ $ tox
 </details>
 
 ## 3. The data pipeline
-To update the data, prior to runing the code, make sure to correctly [set up the development environment](#development-environment).
+To update the data, prior to running the code, make sure to correctly [set up the development environment](#development-environment).
 
 ### Manual data updates
 
@@ -138,7 +138,7 @@ Check for new updates and manually add them in the internal spreadsheet:
 ### Automated process
 Once all manual processes have been finished, it  is time to leverage the tool `cowid-vax`. The automation step is
 further broken into 4 sub-steps, which we explain below. While these can all be run at once, we recommend running them
-one by one. Prior to runing these, make sure you are correctly using your [configuration file](#configuration-file).
+one by one. Prior to running these, make sure you are correctly using your [configuration file](#configuration-file).
 
 *Note*: you can use [vax_update.sh.template](vax_update.sh.template) as an example of how to run the data pipeline
 automated step.
@@ -263,7 +263,7 @@ $ cowid-vax get process
 
 ## 4. Other functions
 ### Tracking
-It is extremely usefull to get some insights on which data are we tracking (and which are we not). This can be done with
+It is extremely useful to get some insights on which data are we tracking (and which are we not). This can be done with
 the tool `cowid-vax-track`. Find below some use cases.
 
 *Note*: Use uption `--to-csv` to export results as csv files (a default filename is used).

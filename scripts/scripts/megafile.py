@@ -1,5 +1,5 @@
 """
-Merges the main COVID-19 testing dataset with each of the COVID-19 JHU datasets into a 'megafile';
+Merges all COVID-19 data into a 'megafile';
 - Follows a long format of 1 row per country & date, and variables as columns;
 - Published in CSV, XLSX, and JSON formats;
 - Includes derived variables that can't be easily calculated, such as X per capita;

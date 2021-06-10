@@ -1,4 +1,4 @@
-# Contribute
+# Contribute - Vaccination data
 We welcome contributions to our vaccination dataset! Note that due to the nature of our pipeline, **we cannot accept pull requests
 for manually imported country data**. To see which countries are automated and which reaquire manual import, check
 [this file](automation_state.csv).

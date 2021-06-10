@@ -4,14 +4,13 @@ import pytz
 import json
 import datetime
 import requests
+
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
 
 
 DEBUG = False
-
-DATASET_NAME = 'YouGov-Imperial COVID-19 Behavior Tracker'
 
 # MIN_RESPONSES: country-date-question observations with less than this
 # many valid responses will be dropped. If "None", no observations will
@@ -27,106 +26,160 @@ FREQ = 'M'
 # ZERO_DAY: reference date for internal yearIsDay Grapher usage.
 ZERO_DAY = "2020-01-21"
 
+# File paths
 CURRENT_DIR = os.path.dirname(__file__)
 sys.path.append(CURRENT_DIR)
-
 INPUT_PATH = os.path.join(CURRENT_DIR, "../input/yougov")
 OUTPUT_PATH = os.path.join(CURRENT_DIR, "../grapher")
-OUTPUT_CSV_PATH = os.path.join(OUTPUT_PATH, f"{DATASET_NAME}.csv")
+MAPPING_PATH = os.path.join(INPUT_PATH, "mapping.csv")
+MAPPING_VALUES_PATH = os.path.join(INPUT_PATH, 'mapped_values.json')
 
-MAPPING = pd.read_csv(os.path.join(INPUT_PATH, "mapping.csv"), na_values=None)
+MAPPING = pd.read_csv(MAPPING_PATH, na_values=None)
 MAPPING['label'] = MAPPING['label'].str.lower()
-with open(os.path.join(INPUT_PATH, 'mapped_values.json'), 'r') as f:
+with open(MAPPING_VALUES_PATH, 'r') as f:
     MAPPED_VALUES = json.load(f)
 
-def update_csv():
-    df = _merge_files()
-    df = _subset_and_rename_columns(df)
-    df = _preprocess_cols(df)
-    df = _derive_cols(df)
-    df = _standardize_entities(df)
-    df = _aggregate(df)
-    df_comp = _create_composite_cols(df)
-    if df_comp is not None:
-        df_comp = _rename_columns(df_comp)
-        df_comp = _reorder_columns(df_comp)
-        df_comp.to_csv(
-            os.path.join(OUTPUT_PATH, f"{DATASET_NAME}, composite variables.csv"), 
-            index=False
+
+class YouGov:
+
+    def __init__(self,  output_path: str, debug: bool = False):
+        self.source_url = "https://github.com/YouGov-Data/covid-19-tracker/raw/master"
+        self.debug = debug
+        self.output_path = output_path
+        self.dataset_name = "YouGov-Imperial COVID-19 Behavior Tracker"
+
+    @property
+    def output_csv_path(self):
+        return os.path.join(self.output_path, f"{self.dataset_name}.csv")
+
+    @property
+    def output_csv_path_composite(self):
+        return os.path.join(self.output_path, f"{self.dataset_name}, composite variables.csv")
+
+    def _get_source_url_country(self, country, extension):
+        return f"{self.source_url}/data/{country}.{extension}"
+
+    @property
+    def source_url_master(self):
+        return f"{self.source_url}/countries.csv"
+
+    @property
+    def list_countries(self):
+        """Get list of countries to download."""
+        # Get list of countries
+        countries = list(pd.read_csv(
+            self.source_url_master,
+            header=None)[0]
         )
-    
-    df = _round(df)
-    df = _rename_columns(df)
-    df = _reorder_columns(df)
-    df.to_csv(OUTPUT_CSV_PATH, index=False)
-    
+        if self.debug:
+            return countries[:3]
+        return countries
 
-def update_db():
-    from utils.db_imports import import_dataset
+    def read(self):
+        """Read data. Reads multiple countries and concatenates them into one file."""
+        # Load countries
+        all_data = []
+        for country in tqdm(self.list_countries):
+            tqdm.write(country)
+            df = self.read_country(country)
+            all_data.append(df)
+        # Build DataFrame
+        df = pd.concat(all_data, axis=0)
+        if df.columns.nunique() != df.columns.shape[0]:
+            raise ValueError("There are one or more duplicate columns, which may cause unexpected errors.")
+        return df
 
-    time_str = datetime.datetime.now().astimezone(pytz.timezone('Europe/London')).strftime("%-d %B %Y, %H:%M")
-    source_name = f"Imperial College London YouGov Covid 19 Behaviour Tracker Data Hub – Last updated {time_str} (London time)"
-    import_dataset(
-        dataset_name=DATASET_NAME,
-        namespace='owid',
-        csv_path=OUTPUT_CSV_PATH,
-        default_variable_display={
-            'yearIsDay': True,
-            'zeroDay': ZERO_DAY
-        },
-        source_name=source_name,
-        slack_notifications=False
-    )
-
-
-def _read_country_data(country, extension):
-    return pd.read_csv(
-        f"https://github.com/YouGov-Data/covid-19-tracker/raw/master/data/{country}.{extension}",
-        low_memory=False,
-        na_values=[
-            "", "Not sure", " ", "Prefer not to say", "Don't know", 98, "Don't Know",
-            "Not applicable - I have already contracted Coronavirus (COVID-19)",
-            "Not applicable - I have already contracted Coronavirus"
-        ]
-    )
-
-
-def _merge_files():
-
-    all_data = []
-
-    countries = list(pd.read_csv(
-        "https://github.com/YouGov-Data/covid-19-tracker/raw/master/countries.csv", header=None
-    )[0])
-
-    if DEBUG:
-        countries = countries[:3]
-
-    for country in tqdm(countries):
-        tqdm.write(country)
-        try:
-            df = _read_country_data(country, "csv")
-        except:
-            df = _read_country_data(country, "zip")
-        try:
-            df.loc[:, "date"] = pd.to_datetime(df.endtime, format="%d/%m/%Y %H:%M")
-        except:
-            df.loc[:, "date"] = pd.to_datetime(df.endtime, format="%Y-%m-%d %H:%M:%S")
-        df.loc[:, "country"] = country
+    def read_country(self, country):
+        """Read individual country data."""
+        # Load df from web
+        extensions = ["csv", "zip"]
+        df = None
+        for ext in extensions:
+            url = self._get_source_url_country(country, ext)
+            if requests.get(url).ok:
+                df = self._read_country_from_web(url)
+        if df is None:
+            raise ValueError(f"No file found for {country}")
+        # Parse date field
+        df = df.assign(country=country)
         df.columns = df.columns.str.lower()
-        all_data.append(df)
+        return df
 
-    df = pd.concat(all_data, axis=0)
+    def _read_country_from_web(self, source_url_country):
+        """Given URL, reads individual country data."""
+        return pd.read_csv(
+            source_url_country,
+            low_memory=False,
+            na_values=[
+                "", "Not sure", " ", "Prefer not to say", "Don't know", 98, "Don't Know",
+                "Not applicable - I have already contracted Coronavirus (COVID-19)",
+                "Not applicable - I have already contracted Coronavirus"
+            ]
+        )
 
-    assert df.columns.nunique() == df.columns.shape[0], 'There are one or more duplicate columns, which may cause unexpected errors.'
-    
-    return df
+    def pipeline_csv(self, df: pd.DataFrame):
+        df = (
+            df
+            .pipe(_format_date)
+            .pipe(_subset_and_rename_columns)
+            .pipe(_preprocess_cols)
+            .pipe(_derive_cols)
+            .pipe(_standardize_entities)
+            .pipe(_aggregate)
+        )
+        df_comp = _create_composite_cols(df)
+        if df_comp is not None:
+            df_comp = df_comp.pipe(_rename_columns).pipe(_reorder_columns)
+        return (
+            df
+            .pipe(_round)
+            .pipe(_rename_columns)
+            .pipe(_reorder_columns)
+        )
+
+    def to_db(self):
+        from utils.db_imports import import_dataset
+
+        time_str = datetime.datetime.now().astimezone(pytz.timezone('Europe/London')).strftime("%-d %B %Y, %H:%M")
+        source_name = (
+            f"Imperial College London YouGov Covid 19 Behaviour Tracker Data Hub – Last updated {time_str} "
+            f"(London time)"
+        )
+        import_dataset(
+            dataset_name=self.dataset_name,
+            namespace='owid',
+            csv_path=self.output_csv_path,
+            default_variable_display={
+                'yearIsDay': True,
+                'zeroDay': ZERO_DAY
+            },
+            source_name=source_name,
+            slack_notifications=False
+        )
+
+    def to_csv(self):
+        df = self.read()
+        df, df_comp = df.pipe(self.pipeline_csv)
+
+        # Export
+        if df_comp is not None:
+            df_comp.to_csv(
+                self.output_csv_path_composite, 
+                index=False
+            )
+        df.to_csv(self.output_csv_path, index=False)
+
+
+def _format_date(df: pd.DataFrame):
+        df.loc[:, "date"] = pd.to_datetime(df.endtime, format="%d/%m/%Y %H:%M", errors="coerce")
+        mask = df.date.isnull()
+        df.loc[mask, 'date'] = pd.to_datetime(df[mask]['date'], format="%Y-%m-%d %H:%M:%S", errors='coerce')
+        return df
 
 
 def _subset_and_rename_columns(df):
     """keeps only the survey questions with keep=True in mapping.csv and
     renames columns.
-
     Note: we do not use `df.rename(columns={...})` because for some columns we 
         derive multiple variables.
     """
@@ -137,16 +190,16 @@ def _subset_and_rename_columns(df):
     index_cols = ['country', 'date']
     df2 = df[index_cols]
     for row in MAPPING[MAPPING.keep & ~MAPPING.derived].itertuples():
-        df2[row.code_name] = df[row.label]
+        df2.loc[:, row.code_name] = df[row.label]
     return df2
 
 
 def _preprocess_cols(df):
     for row in MAPPING[MAPPING.preprocess.notnull()].itertuples():
         if row.code_name in df.columns:
-            df[row.code_name] = df[row.code_name].replace(MAPPED_VALUES[row.preprocess])
+            df.loc[:, row.code_name] = df[row.code_name].replace(MAPPED_VALUES[row.preprocess])
             uniq_values = set(MAPPED_VALUES[row.preprocess].values())
-            assert df[row.code_name].drop_duplicates().dropna().isin(uniq_values).all(), f"One or more non-NaN values in {row.code_name} are not in {uniq_values}"
+            assert df.loc[:, row.code_name].drop_duplicates().dropna().isin(uniq_values).all(), f"One or more non-NaN values in {row.code_name} are not in {uniq_values}"
     return df
 
 
@@ -155,10 +208,25 @@ def _derive_cols(df):
     if 'covid_vaccinated_or_willing' in derived_variables_to_keep:
         # constructs the covid_vaccinated_or_willing variable
         # pd.crosstab(df['vac'].fillna(-1), df['vac_1'].fillna(-1))
-        vac_min_val = min(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses', 'preprocess'].squeeze()].values())
-        vac_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses', 'preprocess'].squeeze()].values())
-        vac_1_max_val = max(MAPPED_VALUES[MAPPING.loc[MAPPING['code_name'] == 'willingness_covid_vaccinate_this_week', 'preprocess'].squeeze()].values())
-        
+        vac_min_val = min(
+            MAPPED_VALUES[MAPPING.loc[
+                MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses',
+                'preprocess'
+            ].squeeze()].values()
+        )
+        vac_max_val = max(
+            MAPPED_VALUES[MAPPING.loc[
+                MAPPING['code_name'] == 'covid_vaccine_received_one_or_two_doses',
+                'preprocess'
+            ].squeeze()].values()
+        )
+        vac_1_max_val = max(
+            MAPPED_VALUES[MAPPING.loc[
+                    MAPPING['code_name'] == 'willingness_covid_vaccinate_this_week',
+                    'preprocess'
+            ].squeeze()].values()
+        )
+
         assert not ((df['covid_vaccine_received_one_or_two_doses'] == vac_max_val) & df['willingness_covid_vaccinate_this_week'].notnull()).any(), (
             "Expected all vaccinated respondents to NOT be asked whether they would "
             "get vaccinated, but found at least one vaccinated respondent who was "
@@ -169,8 +237,8 @@ def _derive_cols(df):
             "get vaccinated, but found at least one unvaccinated respondent who was "
             "not asked the latter question."
         )
-        
-        df['covid_vaccinated_or_willing'] = (
+
+        df.loc[:, 'covid_vaccinated_or_willing'] = (
             (df['covid_vaccine_received_one_or_two_doses'] == vac_max_val) | 
             (df['willingness_covid_vaccinate_this_week'] == vac_1_max_val)
         ).astype(int) * vac_max_val
@@ -180,37 +248,7 @@ def _derive_cols(df):
 
 
 def _standardize_entities(df):
-    df["entity"] = df.country.replace({
-        "australia": "Australia",
-        "brazil": "Brazil",
-        "canada": "Canada",
-        "china": "China",
-        "denmark": "Denmark",
-        "finland": "Finland",
-        "france": "France",
-        "germany": "Germany",
-        "hong-kong": "Hong Kong",
-        "india": "India",
-        "indonesia": "Indonesia",
-        "italy": "Italy",
-        "japan": "Japan",
-        "malaysia": "Malaysia",
-        "mexico": "Mexico",
-        "netherlands": "Netherlands",
-        "norway": "Norway",
-        "philippines": "Philippines",
-        "saudi-arabia": "Saudi Arabia",
-        "singapore": "Singapore",
-        "south-korea": "South Korea",
-        "spain": "Spain",
-        "sweden": "Sweden",
-        "taiwan": "Taiwan",
-        "thailand": "Thailand",
-        "united-arab-emirates": "United Arab Emirates",
-        "united-kingdom": "United Kingdom",
-        "united-states": "United States",
-        "vietnam": "Vietnam"
-    })
+    df.loc[:, "entity"] = df.country.apply(lambda x: x.replace("-", " ").title())
     df = df.drop(columns=["country"])
     return df
 
@@ -226,21 +264,26 @@ def _aggregate(df):
 
     # computes the mean for each country-date-question observation
     # (returned in long format)
-    df_means = df.groupby(["entity", "date_end"])[questions] \
-                 .mean() \
-                 .rename_axis('question', axis=1) \
-                 .stack() \
-                 .rename('mean') \
-                 .to_frame()
+    df_means = (
+        df
+        .groupby(["entity", "date_end"])[questions]
+        .mean()
+        .rename_axis('question', axis=1)
+        .stack()
+        .rename('mean')
+        .to_frame()
+    )
     
     # counts the number of non-NaN responses for each country-date-question
     # observation (returned in long format)
-    df_counts = df.groupby(["entity", "date_end"])[questions] \
-                  .apply(lambda gp: gp.notnull().sum()) \
-                  .rename_axis('question', axis=1) \
-                  .stack() \
-                  .rename('num_responses') \
-                  .to_frame()
+    df_counts = (
+        df.groupby(["entity", "date_end"])[questions]
+        .apply(lambda gp: gp.notnull().sum())
+        .rename_axis('question', axis=1)
+        .stack()
+        .rename('num_responses')
+        .to_frame()
+    )
     
     df_agg = pd.merge(df_means, df_counts, left_index=True, right_index=True, how='outer', validate='1:1')
     
@@ -393,5 +436,16 @@ def _reorder_columns(df):
     return df
 
 
+def update_db():
+    YouGov(output_path=OUTPUT_PATH, debug=DEBUG).to_db()
+
+
+def main():
+    YouGov(
+        output_path=OUTPUT_PATH,
+        debug=DEBUG
+    ).read().to_csv()
+
+
 if __name__ == "__main__":
-    update_csv()
+    main()

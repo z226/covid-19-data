@@ -157,6 +157,17 @@ class YouGov:
             source_name=source_name,
             slack_notifications=False
         )
+        import_dataset(
+            dataset_name=f"{self.dataset_name}, composite variables.csv",
+            namespace='owid',
+            csv_path=self.output_csv_path,
+            default_variable_display={
+                'yearIsDay': True,
+                'zeroDay': ZERO_DAY
+            },
+            source_name=source_name,
+            slack_notifications=False
+        )
 
     def to_csv(self):
         df = self.read()

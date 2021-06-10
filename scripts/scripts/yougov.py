@@ -392,7 +392,7 @@ def _create_composite_cols(df):
             'unwillingness_covid_vaccinate_this_week_pct_pop',
             'uncertain_covid_vaccinate_this_week_pct_pop'
         ]
-        df_temp.sample(10)
+
         assert all(df_temp[cols].sum(axis=1, min_count=len(cols)).dropna().round(1) == 100), (
             f"Expected {cols} to sum to *nearly* 100 for every entity-date "
              "observation, prior to rounding adjustment."

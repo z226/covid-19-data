@@ -444,7 +444,7 @@ def update_db():
 def main():
     YouGov(
         output_path=OUTPUT_PATH,
-        debug=True
+        debug=DEBUG
     ).to_csv()
 
 

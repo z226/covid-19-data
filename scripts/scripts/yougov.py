@@ -158,7 +158,7 @@ class YouGov:
             slack_notifications=False
         )
         import_dataset(
-            dataset_name=f"{self.dataset_name}, composite variables.csv",
+            dataset_name=f"{self.dataset_name}, composite variables",
             namespace='owid',
             csv_path=self.output_csv_path,
             default_variable_display={

@@ -130,12 +130,13 @@ class YouGov:
         df_comp = _create_composite_cols(df)
         if df_comp is not None:
             df_comp = df_comp.pipe(_rename_columns).pipe(_reorder_columns)
-        return (
+        df = (
             df
             .pipe(_round)
             .pipe(_rename_columns)
             .pipe(_reorder_columns)
         )
+        return df, df_comp
 
     def to_db(self):
         from utils.db_imports import import_dataset
@@ -443,8 +444,8 @@ def update_db():
 def main():
     YouGov(
         output_path=OUTPUT_PATH,
-        debug=DEBUG
-    ).read().to_csv()
+        debug=True
+    ).to_csv()
 
 
 if __name__ == "__main__":

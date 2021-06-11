@@ -1,164 +1,166 @@
 location,date,vaccine,source_url,total_vaccinations,people_vaccinated,people_fully_vaccinated
 France,2020-12-27,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,20,20,0
-France,2020-12-28,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,89,89,0
-France,2020-12-29,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,197,197,0
-France,2020-12-30,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,318,318,0
-France,2020-12-31,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,403,403,0
-France,2021-01-01,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,471,471,0
-France,2021-01-02,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,559,559,0
-France,2021-01-03,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,649,649,0
-France,2021-01-04,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2127,2127,0
-France,2021-01-05,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7522,7522,0
-France,2021-01-06,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18819,18819,0
-France,2021-01-07,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,47378,47378,0
-France,2021-01-08,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,83613,83613,0
-France,2021-01-09,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,94535,94535,0
-France,2021-01-10,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,100155,100155,0
-France,2021-01-11,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,139144,139144,0
-France,2021-01-12,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,200009,200009,0
-France,2021-01-13,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,263770,263770,0
-France,2021-01-14,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,343637,343637,0
-France,2021-01-15,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,411127,411127,0
-France,2021-01-16,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,430915,430837,78
-France,2021-01-17,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,441426,441306,120
-France,2021-01-18,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,525969,525686,283
-France,2021-01-19,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,654540,654130,410
-France,2021-01-20,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,789870,789301,569
-France,2021-01-21,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,945389,944685,704
-France,2021-01-22,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1064177,1063311,866
-France,2021-01-23,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1102037,1101121,916
-France,2021-01-24,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1111429,1110486,943
-France,2021-01-25,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1189481,1187320,2161
-France,2021-01-26,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1291404,1286133,5271
-France,2021-01-27,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1402667,1391799,10868
-France,2021-01-28,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1539377,1514149,25228
-France,2021-01-29,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1647553,1605033,42520
-France,2021-01-30,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1680425,1633680,46745
-France,2021-01-31,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1686975,1638551,48424
-France,2021-02-01,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1759693,1690141,69552
-France,2021-02-02,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1864969,1760849,104120
-France,2021-02-03,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1972923,1831843,141080
-France,2021-02-04,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2103575,1912435,191140
-France,2021-02-05,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2216036,1979555,236481
-France,2021-02-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2247770,2000890,246880
-France,2021-02-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2257634,2005713,251921
-France,2021-02-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2349516,2051602,297914
-France,2021-02-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2486830,2116509,370321
-France,2021-02-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2632764,2185748,447016
-France,2021-02-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2817539,2271379,546160
-France,2021-02-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2969515,2349079,620436
-France,2021-02-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3010669,2370741,639928
-France,2021-02-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3022442,2375324,647118
-France,2021-02-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3135990,2412365,723625
-France,2021-02-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3285929,2461558,824371
-France,2021-02-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3438197,2510855,927342
-France,2021-02-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3624684,2578779,1045905
-France,2021-02-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3779174,2642533,1136641
-France,2021-02-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3825563,2660493,1165070
-France,2021-02-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3834795,2663352,1171443
-France,2021-02-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3944402,2699821,1244581
-France,2021-02-23,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4081073,2752434,1328639
-France,2021-02-24,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4220207,2810438,1409769
-France,2021-02-25,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4410163,2908974,1501189
-France,2021-02-26,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4592852,3020650,1572202
-France,2021-02-27,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4665954,3071772,1594182
-France,2021-02-28,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4676043,3077447,1598596
-France,2021-03-01,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4792436,3141036,1651400
-France,2021-03-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4958020,3240374,1717646
-France,2021-03-03,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5137153,3353956,1783197
-France,2021-03-04,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5366363,3514285,1852078
-France,2021-03-05,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5627588,3712117,1915471
-France,2021-03-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5850261,3916966,1933295
-France,2021-03-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5975458,4036682,1938776
-France,2021-03-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6131069,4141485,1989584
-France,2021-03-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6357436,4311074,2046362
-France,2021-03-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6590270,4486693,2103577
-France,2021-03-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6892760,4726065,2166695
-France,2021-03-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7237204,5017003,2220201
-France,2021-03-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7480718,5245233,2235485
-France,2021-03-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7546276,5307354,2238922
-France,2021-03-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7734703,5463108,2271595
-France,2021-03-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7913489,5602353,2311136
-France,2021-03-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8100315,5750353,2349962
-France,2021-03-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8309962,5915336,2394626
-France,2021-03-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8573961,6141849,2432112
-France,2021-03-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8750204,6306305,2443899
-France,2021-03-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8801559,6355032,2446527
-France,2021-03-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9002897,6522070,2480827
-France,2021-03-23,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9291854,6768621,2523233
-France,2021-03-24,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9588848,7021746,2567102
-France,2021-03-25,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9970910,7359054,2611856
-France,2021-03-26,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10367316,7713549,2653767
-France,2021-03-27,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10576835,7906415,2670420
-France,2021-03-28,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10638886,7964729,2674157
-France,2021-03-29,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10893490,8165023,2728467
-France,2021-03-30,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11244942,8446789,2798153
-France,2021-03-31,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11577213,8706109,2871104
-France,2021-04-01,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11974970,9016014,2958956
-France,2021-04-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12344636,9293553,3051083
-France,2021-04-03,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12545574,9432615,3112959
-France,2021-04-04,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12609102,9477478,3131624
-France,2021-04-05,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12678874,9536241,3142633
-France,2021-04-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13000014,9749484,3250530
-France,2021-04-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13371653,10005620,3366033
-France,2021-04-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13825659,10338168,3487491
-France,2021-04-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14346676,10742655,3604021
-France,2021-04-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14639434,10952650,3686784
-France,2021-04-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14728994,11007607,3721387
-France,2021-04-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15077905,11241271,3836634
-France,2021-04-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15527794,11546162,3981632
-France,2021-04-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15956516,11835439,4121077
-France,2021-04-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,16435856,12166893,4268963
-France,2021-04-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,16916166,12501408,4414758
-France,2021-04-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17192412,12687376,4505036
-France,2021-04-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17278255,12737787,4540468
-France,2021-04-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17619105,12940209,4678896
-France,2021-04-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18040210,13190524,4849686
-France,2021-04-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18458001,13439442,5018559
-France,2021-04-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18928975,13722114,5206861
-France,2021-04-23,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19402621,14012453,5390913
-France,2021-04-24,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19702189,14200416,5504070
-France,2021-04-25,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19809456,14268796,5543074
-France,2021-04-26,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,20183293,14486493,5702042
-France,2021-04-27,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,20651181,14766819,5898962
-France,2021-04-28,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,21128956,15061341,6091967
-France,2021-04-29,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,21676961,15413153,6304024
-France,2021-04-30,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22228471,15779766,6507980
-France,2021-05-01,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22444200,15942941,6562423
-France,2021-05-02,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22571888,16032782,6600710
-France,2021-05-03,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,23024143,16315282,6775388
-France,2021-05-04,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,23557519,16624264,7008019
-France,2021-05-05,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,24100782,16942930,7238606
-France,2021-05-06,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,24712045,17314912,7489127
-France,2021-05-07,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25335484,17680929,7765440
-France,2021-05-08,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25611627,17890126,7834634
-France,2021-05-09,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25785877,18017591,7882046
-France,2021-05-10,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,26318689,18321315,8118203
-France,2021-05-11,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,26972828,18717172,8390571
-France,2021-05-12,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,27628047,19139059,8633827
-France,2021-05-13,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,28016036,19470113,8692199
-France,2021-05-14,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,28626340,19912773,8867409
-France,2021-05-15,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29086251,20278614,8965045
-France,2021-05-16,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29306402,20477921,8986240
-France,2021-05-17,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29823899,20846163,9139737
-France,2021-05-18,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,30423783,21292733,9301590
-France,2021-05-19,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,31025223,21748659,9452603
-France,2021-05-20,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,31680195,22243090,9622307
-France,2021-05-21,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,32331352,22719486,9809543
-France,2021-05-22,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,32752292,23060401,9894475
-France,2021-05-23,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,32925208,23218826,9909383
-France,2021-05-24,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,33215181,23475463,9943648
-France,2021-05-25,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,33795072,23865836,10140520
-France,2021-05-26,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,34381066,24263466,10336391
-France,2021-05-27,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,35038298,24701729,10569366
-France,2021-05-28,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,35716075,25119623,10855349
-France,2021-05-29,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36159234,25413214,11015984
-France,2021-05-30,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36296252,25517561,11049512
-France,2021-05-31,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36849797,25867375,11265612
-France,2021-06-01,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,37512664,26278342,11537163
-France,2021-06-02,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,38141243,26675729,11782397
-France,2021-06-03,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,38848352,27123901,12060280
-France,2021-06-04,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,39591649,27562104,12387106
-France,2021-06-05,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,40076999,27858246,12585459
-France,2021-06-06,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,40254531,27986600,12635506
-France,2021-06-07,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,40841175,28310571,12906685
+France,2020-12-28,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,90,90,0
+France,2020-12-29,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,198,198,0
+France,2020-12-30,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,321,321,0
+France,2020-12-31,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,406,406,0
+France,2021-01-01,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,477,477,0
+France,2021-01-02,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,565,565,0
+France,2021-01-03,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,657,657,0
+France,2021-01-04,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2135,2135,0
+France,2021-01-05,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7534,7534,0
+France,2021-01-06,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18856,18856,0
+France,2021-01-07,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,47426,47426,0
+France,2021-01-08,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,83698,83698,0
+France,2021-01-09,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,94623,94623,0
+France,2021-01-10,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,100246,100246,0
+France,2021-01-11,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,139279,139279,0
+France,2021-01-12,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,200222,200222,0
+France,2021-01-13,Pfizer/BioNTech,https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,264082,264082,0
+France,2021-01-14,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,344016,344016,0
+France,2021-01-15,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,411545,411545,0
+France,2021-01-16,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,431363,431285,78
+France,2021-01-17,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,441877,441757,120
+France,2021-01-18,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,526467,526184,283
+France,2021-01-19,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,655108,654698,410
+France,2021-01-20,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,790511,789942,569
+France,2021-01-21,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,946108,945404,704
+France,2021-01-22,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1064944,1064078,866
+France,2021-01-23,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1102817,1101901,916
+France,2021-01-24,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1112213,1111270,943
+France,2021-01-25,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1190293,1188131,2162
+France,2021-01-26,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1292246,1286974,5272
+France,2021-01-27,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1403534,1392664,10870
+France,2021-01-28,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1540282,1515050,25232
+France,2021-01-29,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1648488,1605956,42532
+France,2021-01-30,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1681372,1634614,46758
+France,2021-01-31,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1687924,1639487,48437
+France,2021-02-01,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1760673,1691101,69572
+France,2021-02-02,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1865972,1761826,104146
+France,2021-02-03,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,1973964,1832842,141122
+France,2021-02-04,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2104669,1913478,191191
+France,2021-02-05,"Moderna, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2217169,1980630,236539
+France,2021-02-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2248914,2001974,246940
+France,2021-02-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2258785,2006803,251982
+France,2021-02-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2350703,2052719,297984
+France,2021-02-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2488047,2117605,370442
+France,2021-02-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2634092,2186908,447184
+France,2021-02-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2818957,2272601,546356
+France,2021-02-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,2971014,2350356,620658
+France,2021-02-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3012209,2372054,640155
+France,2021-02-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3023984,2376638,647346
+France,2021-02-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3137622,2413739,723883
+France,2021-02-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3287665,2463014,824651
+France,2021-02-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3439991,2512356,927635
+France,2021-02-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3626574,2580360,1046214
+France,2021-02-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3781141,2644179,1136962
+France,2021-02-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3827540,2662143,1165397
+France,2021-02-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3836774,2665003,1171771
+France,2021-02-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,3946423,2701504,1244919
+France,2021-02-23,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4083145,2754158,1328987
+France,2021-02-24,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4222377,2812251,1410126
+France,2021-02-25,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4412461,2910897,1501564
+France,2021-02-26,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4595326,3022725,1572601
+France,2021-02-27,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4668473,3073892,1594581
+France,2021-02-28,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4678569,3079574,1598995
+France,2021-03-01,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4795079,3143271,1651808
+France,2021-03-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,4960801,3242740,1718061
+France,2021-03-03,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5140218,3356596,1783622
+France,2021-03-04,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5369781,3517249,1852532
+France,2021-03-05,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5631466,3715534,1915932
+France,2021-03-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5854549,3920793,1933756
+France,2021-03-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,5979964,4040726,1939238
+France,2021-03-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6135854,4145795,1990059
+France,2021-03-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6362694,4315847,2046847
+France,2021-03-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6596243,4492175,2104068
+France,2021-03-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,6899448,4732247,2167201
+France,2021-03-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7244846,5024134,2220712
+France,2021-03-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7489108,5253109,2235999
+France,2021-03-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7554927,5315491,2239436
+France,2021-03-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7744149,5472035,2272114
+France,2021-03-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,7923016,5611355,2311661
+France,2021-03-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8109941,5759438,2350503
+France,2021-03-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8319728,5924557,2395171
+France,2021-03-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8584603,6151940,2432663
+France,2021-03-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8761608,6317157,2444451
+France,2021-03-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,8813027,6365948,2447079
+France,2021-03-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9014895,6533505,2481390
+France,2021-03-23,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9305350,6781539,2523811
+France,2021-03-24,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9604836,7037143,2567693
+France,2021-03-25,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,9988255,7375799,2612456
+France,2021-03-26,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10385972,7731592,2654380
+France,2021-03-27,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10596038,7925002,2671036
+France,2021-03-28,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10658117,7983344,2674773
+France,2021-03-29,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,10913232,8184137,2729095
+France,2021-03-30,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11266285,8467483,2798802
+France,2021-03-31,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11600689,8728912,2871777
+France,2021-04-01,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,11999164,9039500,2959664
+France,2021-04-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12369561,9317735,3051826
+France,2021-04-03,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12570777,9457072,3113705
+France,2021-04-04,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12634339,9501969,3132370
+France,2021-04-05,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,12704191,9560811,3143380
+France,2021-04-06,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13026198,9774875,3251323
+France,2021-04-07,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13399321,10032466,3366855
+France,2021-04-08,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,13854038,10365674,3488364
+France,2021-04-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14375767,10770832,3604935
+France,2021-04-10,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14668779,10981075,3687704
+France,2021-04-11,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,14758299,11035991,3722308
+France,2021-04-12,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15107541,11269955,3837586
+France,2021-04-13,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15557936,11575318,3982618
+France,2021-04-14,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,15987286,11865174,4122112
+France,2021-04-15,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,16467096,12197063,4270033
+France,2021-04-16,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,16947907,12532008,4415899
+France,2021-04-17,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17224459,12718278,4506181
+France,2021-04-18,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17310333,12768718,4541615
+France,2021-04-19,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,17651509,12971427,4680082
+France,2021-04-20,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18073423,13222522,4850901
+France,2021-04-21,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18491921,13472113,5019808
+France,2021-04-22,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,18963692,13755548,5208144
+France,2021-04-23,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19437958,14046447,5392272
+France,2021-04-24,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19737907,14234779,5505441
+France,2021-04-25,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,19845335,14303319,5544446
+France,2021-04-26,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,20220089,14521888,5703459
+France,2021-04-27,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,20698227,14812451,5900401
+France,2021-04-28,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,21202020,15132946,6093455
+France,2021-04-29,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,21760249,15494930,6305565
+France,2021-04-30,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22323145,15872859,6509600
+France,2021-05-01,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22544844,16042000,6564048
+France,2021-05-02,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,22672832,16132142,6602334
+France,2021-05-03,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,23126234,16415753,6777051
+France,2021-05-04,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,23661317,16726392,7009734
+France,2021-05-05,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,24206805,17047212,7240392
+France,2021-05-06,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,24819208,17420236,7491013
+France,2021-05-07,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25443802,17787327,7767412
+France,2021-05-08,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25720644,17997186,7836644
+France,2021-05-09,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,25895061,18124811,7884063
+France,2021-05-10,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,26428954,18429519,8120319
+France,2021-05-11,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,27085586,18827799,8392762
+France,2021-05-12,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,27744785,19253610,8636078
+France,2021-05-13,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,28133604,19585490,8694454
+France,2021-05-14,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,28748270,20032466,8869722
+France,2021-05-15,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29210104,20400215,8967378
+France,2021-05-16,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29430322,20599588,8988574
+France,2021-05-17,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,29948506,20968428,9142168
+France,2021-05-18,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,30549303,21415819,9304145
+France,2021-05-19,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,31153334,21874260,9455236
+France,2021-05-20,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,31809836,22370091,9625074
+France,2021-05-21,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,32464633,22850019,9812422
+France,2021-05-22,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,32886511,23191857,9897373
+France,2021-05-23,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,33060003,23350856,9912287
+France,2021-05-24,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,33350733,23608246,9946562
+France,2021-05-25,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,33931705,23999590,10143549
+France,2021-05-26,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,34520706,24399989,10339677
+France,2021-05-27,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,35180548,24840529,10572995
+France,2021-05-28,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,35860715,25260588,10859233
+France,2021-05-29,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36304849,25555103,11019929
+France,2021-05-30,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36442359,25659927,11053472
+France,2021-05-31,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,36997558,26011305,11269675
+France,2021-06-01,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,37662223,26423828,11541537
+France,2021-06-02,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,38294535,26824248,11787535
+France,2021-06-03,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,39004726,27274817,12066199
+France,2021-06-04,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,39750948,27715200,12393912
+France,2021-06-05,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,40237539,28012391,12592600
+France,2021-06-06,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,40415680,28141310,12642712
+France,2021-06-07,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,41006226,28468227,12915163
+France,2021-06-08,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,41749694,28963046,13179312
+France,2021-06-09,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",https://www.data.gouv.fr/fr/datasets/donnees-relatives-aux-personnes-vaccinees-contre-la-covid-19-1/,42544969,29482018,13469793

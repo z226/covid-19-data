@@ -40,13 +40,13 @@ def parse_table(url_pdf: str) -> int:
 
 
 def parse_total_vaccinations(df: pd.DataFrame) -> int:
-    num = df.iloc[-1, 5]
+    num = df.iloc[-1, 2]
     num = re.match(r"([0-9,]+)", num).group(1)
     return clean_count(num)
 
 
 def parse_people_vaccinated(df: pd.DataFrame) -> int:
-    num = df.iloc[-1, 4]
+    num = df.iloc[-1, 2]
     num = re.match(r"([0-9,]+)", num).group(1)
     return clean_count(num)
 
@@ -68,7 +68,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca")
+    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Moderna")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:

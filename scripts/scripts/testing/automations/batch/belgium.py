@@ -26,12 +26,13 @@ def pipeline(df: pd.DataFrame, source_url: str, location: str) -> pd.DataFrame:
         "Source label": "Sciensano (Belgian institute for health)",
         "Notes": pd.NA
     })
+    # Order
+    df = df.sort_values("Date")
     # Output
     df = df[[
         "Date", "Daily change in cumulative total", "Positive rate", "Units", "Source URL", 
         "Source label", "Notes"
     ]]
-
     return df
 
 
@@ -40,7 +41,7 @@ def main():
     location = "Belgium"
     df = read(source_url).pipe(pipeline, source_url, location)
     df.to_csv(
-        f"automated_sheets/{location}2.csv",
+        f"automated_sheets/{location}.csv",
         index=False
     )
 

@@ -1,0 +1,34 @@
+global:
+  project_dir: !ENV ${OWID_COVID_PROJECT_DIR}
+  credentials: !ENV ${OWID_COVID_VAX_CREDENTIALS_FILE}
+pipeline:
+  get-data:
+    parallel: True
+    countries:
+    njobs: -2
+    skip_countries:
+      - Colombia
+      - North Macedonia
+  process-data:
+    skip_complete:
+      - Pitcairn
+    skip_monotonic_check:
+      Northern Ireland:
+        - date: 2021-04-29
+          metrics: people_vaccinated
+    skip_anomaly_check:
+      Australia:
+        - date: 2021-05-24
+          metrics: people_vaccinated
+      Bahrain:
+        - date: 2021-03-06
+          metrics: total_vaccinations
+      Bolivia:
+        - date: 2021-03-06
+          metrics: people_vaccinated
+      Brazil:
+        - date: 2021-01-21
+          metrics: 
+           - total_vaccinations
+           - people_vaccinated
+  generate-dataset:

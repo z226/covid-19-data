@@ -5,7 +5,7 @@ links <- read_html("https://gov.ro/ro/media/comunicate") %>%
 url <- links[str_detect(links, "buletin")][1]
 
 url <- read_html(url) %>%
-    html_node(".pageDescription a") %>%
+    html_node(".filesBoxInner a") %>%
     html_attr("href")
 
 date <- str_extract(url, "\\d+-\\d+_BULETIN") %>%

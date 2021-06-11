@@ -25,7 +25,7 @@ def main():
 
     # get and parse table; find and assign values
     quests = requests.get(source_url, headers=headers)
-    table = pd.read_html(quests.text, index_col=0)[0]
+    table = pd.read_html(quests.text, index_col=0)[1]
 
     cumulative_total = int(table.loc['TOTAL TESTS CUMULATIVE', 4])
 

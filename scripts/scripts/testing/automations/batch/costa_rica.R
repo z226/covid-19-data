@@ -10,7 +10,7 @@ df <- fread(url, showProgress = FALSE,
             select = c("nue_posi", "conf_nexo","nue_descar", "FECHA"))
 
 df[, lab_pos := zoo::na.fill(nue_posi, 0) - zoo::na.fill(conf_nexo, 0)]
-df[, sum := zoo::na.fill(lab_pos, 0) + zoo::na.fill(nue_descar, 0)]
+df[, sum := zoo::na.fill(lab_pos, 0) + zoo::na.fill(as.integer(nue_descar), 0)]
 
 df[, `Positive rate` := round(frollsum(lab_pos, 7) / frollsum(sum, 7), 3)]
 

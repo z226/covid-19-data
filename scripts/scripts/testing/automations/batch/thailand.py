@@ -5,6 +5,7 @@ from glob import glob
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.keys import Keys
 
 
 SOURCE_URL = "https://service.dmsc.moph.go.th/labscovid19/"
@@ -40,8 +41,14 @@ def main():
                 break
         driver.get(nextcloud)
         time.sleep(5)
-        driver.find_element_by_css_selector(".directDownload a").click()
-        time.sleep(2)
+        for i in range(5):
+            driver.find_element_by_tag_name("html").send_keys(Keys.END)
+            time.sleep(1)
+        for elem in driver.find_elements_by_css_selector(".innernametext"):
+            if "testing" in elem.text:
+                elem.click()
+                break
+        time.sleep(5)
 
     file = glob("tmp/*Thailand*")[0]
     df = pd.read_excel(file)

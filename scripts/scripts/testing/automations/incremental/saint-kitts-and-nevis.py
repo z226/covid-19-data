@@ -7,14 +7,13 @@ from bs4 import BeautifulSoup
 
 
 def main():
-    url = 'https://covid19.gov.kn/stats2.php'
+    url = 'https://covid19.gov.kn/src/stats2/'
     location = "Saint Kitts and Nevis"
     output_file = f'automated_sheets/{location}.csv'
 
-    req = requests.get(url)
-    soup = BeautifulSoup(req.text, 'html.parser')
-    stats = soup.find_all('td')
-    count = int(stats[7].text)
+    soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+    df = pd.read_html(str(soup.find('table')))[0]
+    count = df.loc[df[0] == "No. of Persons Tested", 1].item()
     # print(count)
 
     date_str = date.today().strftime("%Y-%m-%d")
@@ -29,7 +28,8 @@ def main():
 
     if os.path.isfile(output_file):
         existing = pd.read_csv(output_file)
-        df = pd.concat([df, existing]).sort_values('Date', ascending=False)
+        if count > existing["Cumulative total"].max():
+            df = pd.concat([df, existing]).sort_values('Date', ascending=False).drop_duplicates()
     df.to_csv(output_file, index=False)
 
 

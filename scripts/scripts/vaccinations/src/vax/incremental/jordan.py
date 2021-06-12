@@ -82,7 +82,6 @@ class Jordan:
 
     def to_csv(self, paths):
         data = self.read().pipe(self.pipeline)
-        print(data)
         increment(
             paths=paths,
             location=data['location'],

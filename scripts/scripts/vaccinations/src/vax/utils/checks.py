@@ -6,14 +6,15 @@ import pandas as pd
 
 VACCINES_ACCEPTED = [
     "Abdala",
+    "BBIBP-CorV",
     "CanSino",
     "Covaxin",
     "EpiVacCorona",
     "Johnson&Johnson",
-    "QazVac",
     "Moderna",
     "Oxford/AstraZeneca",
     "Pfizer/BioNTech",
+    "QazVac",
     "RBD-Dimer",
     "Sinopharm/Beijing",
     "Sinopharm/HayatVax",

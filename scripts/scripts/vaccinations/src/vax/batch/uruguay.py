@@ -28,6 +28,11 @@ class Uruguay:
         return df, df_age
     
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
+        
+        # Remove rows that prevent people_vaccinated from increasing monotonically
+        last_people_vaccinated = df.sort_values("date").people_vaccinated.values[-1]
+        df = df[df.people_vaccinated <= last_people_vaccinated]
+
         return df[[
             "location",
             "date",

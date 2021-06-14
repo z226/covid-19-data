@@ -38,7 +38,7 @@ def main():
     location = "Taiwan"
     df = read(source_url).pipe(pipeline, location)
     df.to_csv(
-        f"automated_sheets/{location}2.csv",
+        f"automated_sheets_new/{location}.csv",
         index=False
     )
 

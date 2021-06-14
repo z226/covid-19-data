@@ -30,7 +30,7 @@ def pipeline(df: pd.DataFrame, source_url: str, location: str) -> pd.DataFrame:
     df = df.sort_values("Date")
     # Output
     df = df[[
-        "Date", "Daily change in cumulative total", "Positive rate", "Units", "Source URL", 
+        "Date", "Daily change in cumulative total", "Positive rate", "Country", "Units", "Source URL", 
         "Source label", "Notes"
     ]]
     return df
@@ -41,7 +41,7 @@ def main():
     location = "Belgium"
     df = read(source_url).pipe(pipeline, source_url, location)
     df.to_csv(
-        f"automated_sheets/{location}.csv",
+        f"automated_sheets_new/{location}.csv",
         index=False
     )
 

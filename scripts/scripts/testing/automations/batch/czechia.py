@@ -16,7 +16,9 @@ def pipeline(df: pd.DataFrame, location: str) -> pd.DataFrame:
     })
     # New columns
     df = df.assign(**{
-        "Daily change in cumulative total": df.pcsr + df.antigen,
+        "Daily change in cumulative total": df.pcr + df.antigen,
+    })
+    df = df.assign(**{
         "Positive rate": (
             (df["positive"].rolling(7).sum()/df["Daily change in cumulative total"].rolling(7).sum()).round(3)
         ),
@@ -41,7 +43,7 @@ def main():
     location = "Czechia"
     df = read(source_url).pipe(pipeline, location)
     df.to_csv(
-        f"automated_sheets/{location}.csv",
+        f"automated_sheets_new/{location}.csv",
         index=False
     )
 

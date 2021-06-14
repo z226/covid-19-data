@@ -1,55 +1,46 @@
-library(rvest)
+process_page <- function(page) {
+  date <- page %>%
+    html_node(".dateDetalils") %>%
+    html_text %>%
+    str_remove("Postuar më: ") %>%
+    dmy() %>%
+    as.character()
 
-existing <- fread("automated_sheets/Albania.csv")
-existing$Date <- as.Date(existing$Date, '%d/%m/%Y')
+  daily <- page %>%
+    html_node("a") %>%
+    html_text %>%
+    str_extract("[\\d,]+ testime") %>%
+    str_remove(" testime") %>%
+    as.integer()
 
-latest <- max(as.Date(existing$Date, '%d/%m/%Y'))
-date <- as.Date(format(Sys.Date(), '%Y-%m-%d'))
+  source <- page %>%
+    html_node("a") %>%
+    html_attr("href")
 
-df <- data.frame(date=double(), daily=integer(), source=character())
-i = 1
-
-while (date > latest) {
-  url <- paste('https://shendetesia.gov.al/category/lajme/page/',i,sep='')
-  pages <- read_html(url) %>%
-    html_nodes('.newsDetails')
-  
-  for (page in pages) {
-    date <- page %>%
-      html_nodes('.dateDetalils') %>%
-      html_text %>%
-      str_remove('Postuar më: ') %>% 
-      as.Date('%d/%m/%Y')
-    
-    if (date == latest) break
-    
-    daily <- page %>%
-      html_nodes('a') %>%
-      html_text %>%
-      str_extract('[\\d,]+ testime') %>%
-      str_remove(' testime') %>%
-      as.integer()
-    
-    date <- as.character(date)
-    
-    source <-  page %>%
-      html_nodes('a') %>%
-      html_attr('href')
-    
-    if(!is.na(daily)) {
-      new <- c(date, daily, source)
-      df[nrow(df) + 1, ] <- new
-    }
+  if (!is.na(daily)) {
+    data.table(Date = date, "Daily change in cumulative total" = daily, "Source URL" = source)
+  } else {
+    return(NULL)
   }
-  date <- as.Date(date)
-  i=i+1
 }
 
-df <- cbind(df, Country = 'Albania', Units = 'tests performed', 'Source label'='Ministry of Health and Social Protection', Notes = NA)
-setnames(df, c('date', 'daily', 'source'), c('Date', 'Daily change in cumulative total', 'Source URL'))
-df$Date <- as.Date(df$Date)
+url <- "https://shendetesia.gov.al/category/lajme/"
 
-df <- rbind(existing, df)
-setorder(df, -Date)
+pages <- read_html(url) %>% html_nodes(".newsDetails")
 
-fwrite(df, 'automated_sheets/Albania.csv')
+df <- rbindlist(lapply(pages, FUN = process_page))
+
+df[, Country := "Albania"]
+df[, Units := "tests performed"]
+df[, `Source label` := "Ministry of Health and Social Protection"]
+df[, Units := "tests performed"]
+df[, Notes := NA_character_]
+
+existing <- fread("automated_sheets/Albania.csv")
+existing <- existing[Date < min(df$Date)]
+existing[, Date := as.character(Date)]
+
+df <- rbindlist(list(existing, df), use.names = TRUE)
+setorder(df, Date)
+
+fwrite(df, "automated_sheets/Albania.csv")

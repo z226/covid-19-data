@@ -14,8 +14,7 @@ def main():
     req = requests.get(url)
     soup = BeautifulSoup(req.text, 'html.parser')
     stats = soup.find_all('tr')
-    count = int(stats[9].find_all('td')[-1].text)
-    # print(count)
+    count = int(stats[9].find_all('td')[-1].text.replace(".", ""))
 
     date_str = date.today().strftime("%Y-%m-%d")
     df = pd.DataFrame({
@@ -24,11 +23,13 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Ministerio de Sanidad y Bienestar Social',
-        'Units': 'tests performed'
+        'Units': 'tests performed',
+        'Notes': pd.NA,
     })
 
     if os.path.isfile(output_file):
         existing = pd.read_csv(output_file)
+        import pdb; pdb.set_trace()
         if count > existing["Cumulative total"].max():
             df = pd.concat([df, existing]).sort_values('Date', ascending=False).drop_duplicates()
     df.to_csv(output_file, index=False)

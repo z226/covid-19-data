@@ -23,7 +23,8 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Ministry of Health',
-        'Units': 'people tested'
+        'Units': 'people tested',
+        'Notes': pd.NA,
     })
 
     if os.path.isfile(output_file):

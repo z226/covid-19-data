@@ -23,12 +23,13 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Government of Gabon',
-        'Units': 'samples tested'
+        'Units': 'samples tested',
+        'Notes': pd.NA,
     })
 
     if os.path.isfile(output_file):
         existing = pd.read_csv(output_file)
-        if count > existing["Cumulative total"].max():
+        if count > existing["Cumulative total"].max() and date_str > existing["Date"].max():
             df = pd.concat([df, existing]).sort_values('Date', ascending=False).drop_duplicates()
     df.to_csv(output_file, index=False)
 

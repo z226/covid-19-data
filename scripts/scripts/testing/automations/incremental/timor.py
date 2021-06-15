@@ -23,7 +23,8 @@ def main():
         'Cumulative total': count,
         'Source URL': url,
         'Source label': 'Ministry of Health',
-        'Units': 'tests performed'
+        'Units': 'tests performed',
+        'Notes': pd.NA,
     })
 
 

@@ -30,7 +30,7 @@ class Israel:
         return df
 
     def to_csv(self):
-        output_path = os.path.join(f"automated_sheets_new", f"{self.location}.csv")
+        output_path = os.path.join(f"automated_sheets", f"{self.location}.csv")
         df = self.read().pipe(self.pipeline)
         df.to_csv(output_path, index=False)
 

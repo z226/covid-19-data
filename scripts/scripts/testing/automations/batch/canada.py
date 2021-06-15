@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 
@@ -52,10 +54,10 @@ class Canada:
     def to_csv(self):
         df = self.read().pipe(self.pipeline_base)
         # People
-        output_path = f"automated_sheets/{self.location} - people tested.csv"
+        output_path = os.path.join("automated_sheets", f"{self.location} - people tested.csv")
         df.pipe(self.pipeline_metric, "people tested", "numtested").to_csv(output_path, index=False)
         # Tests
-        output_path = f"automated_sheets/{self.location} - tests performed.csv"
+        output_path = os.path.join("automated_sheets", f"{self.location} - tests performed.csv")
         df.pipe(self.pipeline_metric, "tests performed", "numtests").to_csv(output_path, index=False)
 
 

@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment
-from vax.utils.utils import clean_string
+from vax.utils.utils import clean_column_name
 from vax.utils.dates import clean_date
 
 
@@ -29,7 +29,7 @@ class Japan:
     def _parse_colnames(self, df: pd.DataFrame) -> pd.DataFrame:
         cols_new = []
         for col in df.columns:
-            col_new = (clean_string(col[0]), clean_string(col[1]))
+            col_new = (clean_column_name(col[0]), clean_column_name(col[1]))
             cols_new.append(col_new)
         df.columns = pd.MultiIndex.from_tuples(cols_new)
         return df

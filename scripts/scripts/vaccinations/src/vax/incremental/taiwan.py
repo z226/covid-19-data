@@ -1,4 +1,3 @@
-from datetime import datetime
 import re
 
 import pandas as pd
@@ -18,13 +17,14 @@ def read(source: str) -> pd.Series:
     url = f"{source}/Category/Page/9jFXNbCe-sFK9EImRRi2Og"
     soup = get_soup(url)
     url_pdf = parse_pdf_link(source, soup)
-    df = parse_table(url_pdf)
-    total_vaccinations = parse_total_vaccinations(df)
+    dfs = parse_tables(url_pdf)
+    total_vaccinations = parse_total_vaccinations(dfs[0])
+    people_vaccinated = parse_people_vaccinated(dfs[1])
     return pd.Series({
         "total_vaccinations": total_vaccinations,
-        "people_vaccinated": total_vaccinations,
+        "people_vaccinated": people_vaccinated,
         "date": parse_date(soup),
-        "vaccine": parse_vaccines(df),
+        "vaccine": parse_vaccines(dfs[0]),
     })
 
 
@@ -39,29 +39,35 @@ def parse_pdf_link(base_url: str, soup) -> str:
     return f"{base_url}{a['href']}"
 
 
-def parse_table(url_pdf: str) -> int:
+def parse_tables(url_pdf: str) -> int:
     kwargs = {"pandas_options": {"dtype": str, "header": None}}
-    dfs_from_pdf = tabula.read_pdf(url_pdf, pages="all", **kwargs)
-    df = dfs_from_pdf[0]
-    if df.shape[1] != 3:
-        raise ValueError(f"Table format has changed! New columns were added")
-    if df.shape[0] < 3:
-        raise ValueError(f"Table format has changed! Not enough rows!")
-    # df = df.dropna(subset=[2])
-    return df
-
+    dfs = tabula.read_pdf(url_pdf, pages="all", **kwargs)
+    if dfs[0].shape[1] != 3:
+        raise ValueError(f"Table 1: format has changed! New columns were added")
+    if dfs[0].shape[0] < 3:
+        raise ValueError(f"Table 1: format has changed! Not enough rows!")
+    if dfs[1].shape[1] != 4:
+        raise ValueError(f"Table 2: format has changed! New columns were added")
+    if dfs[1].shape[0] < 16:
+        raise ValueError(f"Table 2: format has changed! Not enough rows!")
+    return dfs
 
 def parse_total_vaccinations(df: pd.DataFrame) -> int:
+    # Expect df to be "Table 1"
     num = df.iloc[-1, 2]
     num = re.match(r"([0-9,]+)", num).group(1)
     return clean_count(num)
-
 
 def parse_people_vaccinated(df: pd.DataFrame) -> int:
-    num = df.iloc[-1, 2]
-    num = re.match(r"([0-9,]+)", num).group(1)
-    return clean_count(num)
-
+    # Expect df to be "Table 2"
+    columns = [2, 3]
+    people_vaccinated = 0
+    for col in columns:
+        metrics = df.iloc[-1, col].split(" ")
+        if len(metrics) != 2:
+            raise ValueError("Table 2: 1st/2nd cell division changed!")
+        people_vaccinated += clean_count(metrics[0])
+    return people_vaccinated
 
 def parse_vaccines(df: pd.DataFrame) -> str:
     vaccines = set(df.iloc[1:-1, 0])

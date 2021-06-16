@@ -47,6 +47,8 @@ class Canada:
                 metric_field: "Cumulative total",
             })
             .drop(columns=[metric_drop])
+            .sort_values("Date")
+            .drop_duplicates(subset=["Cumulative total"], keep="last")
         )
         df = df[~df["Cumulative total"].isna()]
         return df

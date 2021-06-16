@@ -9,6 +9,7 @@ pipeline:
     skip_countries:
       - Colombia
       - North Macedonia
+      - Philippines
   process-data:
     skip_complete:
       - Pitcairn

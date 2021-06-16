@@ -651,13 +651,13 @@ def generate_megafile():
     create_latest(all_covid)
 
     print("Writing to CSV…")
-    #all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
+    all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
 
     print("Writing to XLSX…")
-    #all_covid.to_excel(os.path.join(DATA_DIR, "owid-covid-data.xlsx"), index=False, engine="xlsxwriter")
+    all_covid.to_excel(os.path.join(DATA_DIR, "owid-covid-data.xlsx"), index=False, engine="xlsxwriter")
 
     print("Writing to JSON…")
-    #df_to_json(all_covid, os.path.join(DATA_DIR, "owid-covid-data.json"), macro_variables.keys())
+    df_to_json(all_covid, os.path.join(DATA_DIR, "owid-covid-data.json"), macro_variables.keys())
 
     print("Creating internal files…")
     create_internal(all_covid)

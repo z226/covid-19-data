@@ -1,4 +1,3 @@
-from datetime import datetime
 import re
 
 import pandas as pd
@@ -61,9 +60,14 @@ def parse_total_vaccinations(df: pd.DataFrame) -> int:
 
 def parse_people_vaccinated(df: pd.DataFrame) -> int:
     # Expect df to be "Table 2"
-    num1 = df.iloc[-1, 2].split(" ")[0]
-    num2 = df.iloc[-1, 3].split(" ")[0]
-    return clean_count(num1) + clean_count(num2)
+    columns = [2, 3]
+    people_vaccinated = 0
+    for col in columns:
+        metrics = df.iloc[-1, col].split(" ")
+        if len(metrics) != 2:
+            raise ValueError("Table 2: 1st/2nd cell division changed!")
+        people_vaccinated += clean_count(metrics[0])
+    return people_vaccinated
 
 def parse_vaccines(df: pd.DataFrame) -> str:
     vaccines = set(df.iloc[1:-1, 0])

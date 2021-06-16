@@ -24,6 +24,7 @@ country_mapping = {
     "NC": "New Caledonia",
     "CK": "Cook Islands",
     "VU": "Vanuatu",
+    "PN": "Pitcairn",
 }
 
 # Dictionary containing vaccines being used in each country and their start date. Element 'default' is used for all

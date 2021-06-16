@@ -10,14 +10,16 @@ import json
 import os
 from datetime import datetime, date, timedelta
 from functools import reduce
+import yaml
+
 import pandas as pd
 
-
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../input/"))
-GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../grapher/"))
-DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../public/data/"))
+INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "input"))
+GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "grapher"))
+DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "public", "data"))
 TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal", "timestamp"))
+ANNOTATIONS_PATH = os.path.abspath(os.path.join(CURRENT_DIR, "annotations_internal.yaml"))
 
 
 def get_jhu():
@@ -402,7 +404,7 @@ internal_files_columns = {
         "total_deaths_per_million",
         "new_deaths_per_million",
         "new_deaths_smoothed_per_million",
-        "cfr"
+        "cfr",
     ],
     "vaccinations": [
         "location",
@@ -416,7 +418,7 @@ internal_files_columns = {
         "people_vaccinated_per_hundred",
         "people_fully_vaccinated_per_hundred",
         "new_vaccinations_smoothed_per_million",
-        "population"
+        "population",
     ],
     "hospital-admissions": [
         "location",
@@ -433,7 +435,7 @@ internal_files_columns = {
     "excess-mortality": [
         "location",
         "date",
-        "excess_mortality"
+        "excess_mortality",
     ],
     "auxiliary": [
         "iso_code",
@@ -453,9 +455,65 @@ internal_files_columns = {
         "handwashing_facilities",
         "hospital_beds_per_thousand",
         "life_expectancy",
-        "human_development_index"
+        "human_development_index",
     ]
 }
+
+
+class AnnotatorInternal:
+    """Adds annotations column.
+
+    Uses attribute `config` to add annotations. Its format should be as:
+    ```
+    {
+        "vaccinations": [{
+            'annotation_text': 'Data for China added on Jun 10',
+            'location': ['World', 'Asia', 'Upper middle income'],
+            'date': '2020-06-10'
+        }],
+        "case-tests": [{
+            'annotation_text': 'something',
+            'location': ['World', 'Asia', 'Upper middle income'],
+            'date': '2020-06-11'
+        }],
+    }
+    ```
+
+    Keys in config should match those in `internal_files_columns`.
+    """
+    def __init__(self, config: dict):
+        self.config = config
+
+    @classmethod
+    def from_yaml(cls, path):
+        with open(path, "r") as f:
+            dix = yaml.safe_load(f)
+        return cls(dix)
+
+    @property
+    def streams(self):
+        return list(self.config.keys())
+
+    def add_annotations(self, df: pd.DataFrame, stream: str) -> pd.DataFrame:
+        if stream in self.streams:
+            print(f"Adding annotation for {stream}")
+            return self._add_annotations(df, stream)
+        return df
+
+    def _add_annotations(self, df: pd.DataFrame, stream: str) -> pd.DataFrame:
+        df = df.assign(annotations=pd.NA)
+        conf = self.config[stream]
+        for c in conf:
+            if not ("location" in c and "annotation_text" in c):
+                raise ValueError(f"Missing field in {stream} (`location` and `annotation_text` are required).")
+            if isinstance(c["location"], str):
+                mask = df.location == c["location"]
+            elif isinstance(c["location"], list):
+                mask = df.location.isin(c["location"])
+            if "date" in c:
+                mask = mask & (df.date>=c["date"])
+            df.loc[mask, "annotations"] = c["annotation_text"]
+        return df
 
 def create_internal(df):
 
@@ -473,6 +531,10 @@ def create_internal(df):
         "population"
     ]
 
+    # Load annotations
+    annotator = AnnotatorInternal.from_yaml(ANNOTATIONS_PATH)
+
+    # Copy df
     df = df.copy()
     # Insert CFR column to avoid calculating it on the client, and enable
     # splitting up into cases & deaths columns.
@@ -482,6 +544,7 @@ def create_internal(df):
         output_path = os.path.join(dir_path, f"megafile--{name}.json")
         value_columns = list(set(columns) - set(non_value_columns))
         df_output = df[columns].dropna(subset=value_columns, how="all")
+        df_output = annotator.add_annotations(df_output, name)
         df_to_columnar_json(df_output, output_path)
 
 
@@ -588,13 +651,13 @@ def generate_megafile():
     create_latest(all_covid)
 
     print("Writing to CSV…")
-    all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
+    #all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
 
     print("Writing to XLSX…")
-    all_covid.to_excel(os.path.join(DATA_DIR, "owid-covid-data.xlsx"), index=False, engine="xlsxwriter")
+    #all_covid.to_excel(os.path.join(DATA_DIR, "owid-covid-data.xlsx"), index=False, engine="xlsxwriter")
 
     print("Writing to JSON…")
-    df_to_json(all_covid, os.path.join(DATA_DIR, "owid-covid-data.json"), macro_variables.keys())
+    #df_to_json(all_covid, os.path.join(DATA_DIR, "owid-covid-data.json"), macro_variables.keys())
 
     print("Creating internal files…")
     create_internal(all_covid)

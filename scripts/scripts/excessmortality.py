@@ -8,12 +8,14 @@ import pandas as pd
 
 
 CURRENT_DIR = os.path.dirname(__file__)
-OUTPUT_PATH = os.path.join(CURRENT_DIR, '..', '..', 'public', 'data', 'excess_mortality', 'excess_mortality.csv')
 SOURCE = (
     "https://github.com/owid/owid-datasets/raw/master/datasets/"
     "Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021)/"
     "Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021).csv"
 )
+DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "../../public/data/"))
+OUTPUT_PATH = os.path.join(DATA_DIR, "excess_mortality/excess_mortality.csv")
+TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal/timestamp"))
 
 
 def read(source):
@@ -41,11 +43,21 @@ def pipeline(df: pd.DataFrame):
     return df
 
 
+def export_timestamp(timestamp_filename):
+    with open(timestamp_filename, "w") as timestamp_file:
+        timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())
+
+
 def main():
     read(SOURCE).pipe(pipeline).to_csv(
         os.path.join(OUTPUT_PATH),
         index=False
     )
+    timestamp_filename = os.path.join(
+        TIMESTAMP_DIR,
+        "owid-covid-data-last-updated-timestamp-xm.txt"
+    )
+    export_timestamp(timestamp_filename)
 
 
 def update_dataset():

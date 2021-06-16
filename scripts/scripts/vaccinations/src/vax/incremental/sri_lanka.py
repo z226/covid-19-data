@@ -76,7 +76,7 @@ class SriLanka:
 
     def _parse_vaccines_table_as_df(self, text):
         # Extract doses relevant sentence
-        regex = r"COVID-19 Vaccination +1st Dose +2nd Dose (.*) Country Cumulative Cases"
+        regex = r"COVID-19 Vaccination +1st Dose +2nd Dose (.*) Country(/Region)? Cumulative Cases"
         vax_info = re.search(regex, text).group(1).strip()
         # Sentence to DataFrame
         results = re.findall(r"([a-zA-Z ]+) +(\d+) (-|\d+)", vax_info)

@@ -32,8 +32,8 @@ $ pip install -r requirements.txt
 In your R console, run:
 
 ```r
-install.packages(c("data.table", "googledrive", "httr", "imputeTS", "lubridate", "pdftools", "retry", "rjson", 
-                   "rvest", "stringr", "tidyr", "rio", "plyr"))
+install.packages(c("data.table", "googledrive", "googlesheets4", "httr", "imputeTS", "lubridate", "pdftools", "retry", 
+                   "rjson", "rvest", "stringr", "tidyr", "rio", "plyr", "bit64"))
 ```
 
 Note: `pdftools` requires `poppler`. In MacOS, run `brew install poppler`.

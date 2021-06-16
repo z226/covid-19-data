@@ -1,21 +1,5 @@
 location,date,vaccine,source_url,total_vaccinations,people_vaccinated,people_fully_vaccinated
 Hungary,2020-12-28,Pfizer/BioNTech,https://kormany.hu/hirek/ujabb-helyszineken-folytatodhat-az-egeszsegugyi-dolgozok-oltasa,1094,,
-Hungary,2020-12-29,Pfizer/BioNTech,https://index.hu/belfold/2020/12/29/koronavirus_operativ_torzs_sajtotajekoztato_jarvany/,2461,,
-Hungary,2020-12-30,Pfizer/BioNTech,https://www.vg.hu/kozelet/egeszsegugy-kozelet/huszonegyre-no-az-oltopontok-szama-3456613/,3789,,
-Hungary,2020-12-31,Pfizer/BioNTech,https://hungarytoday.hu/chief-medical-officer-jabs-vaccination-operative-board-2021/,5110,,
-Hungary,2021-01-03,Pfizer/BioNTech,https://vakcinainfo.gov.hu/hirek/orszagos-tisztifoorvos-az-egeszsegugyi-dolgozok-jelentkezhetnek-korhazi-oltopontokon,12000,,
-Hungary,2021-01-04,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/orszagos-tisztifoorvos-mar-valamennyi-egeszsegugyben-dolgozonak-gyogyszeresznek-elerheto,15000,,
-Hungary,2021-01-05,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/orszagos-tisztifoorvos-eddig-csaknem-21-ezer-egeszsegugyi-dolgozot-oltottak-be,21000,,
-Hungary,2021-01-06,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/orszagos-tisztifoorvos-mar-31-500-egeszsegugyi-dolgozo-kapta-meg-vakcinat-es-az,31500,,
-Hungary,2021-01-07,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/orszagos-tisztifoorvos-jovo-kedden-ujabb-39-ezer-ember-szamara-erkezik-oltoanyag,42549,,
-Hungary,2021-01-10,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/operativ-torzs-ketfele-vakcina-erkezik-kedden-magyarorszagra,71000,,
-Hungary,2021-01-11,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/696-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-128-beteg,78579,,
-Hungary,2021-01-12,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1358-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-95-beteg,86929,,
-Hungary,2021-01-13,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1-926-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-118-beteg,96101,,
-Hungary,2021-01-14,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1-513-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-111-beteg,105728,,
-Hungary,2021-01-15,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1438-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-87-beteg,112847,,
-Hungary,2021-01-16,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1241-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-77-beteg,119944,,
-Hungary,2021-01-17,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/orszagos-tisztifoorvos-ujabb-tobb-mint-35-ezer-ember-beoltasara-eleg-vakcina-erkezik,123188,,
 Hungary,2021-01-18,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/573-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-111-beteg,131332,129689,1643
 Hungary,2021-01-19,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/976-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-95-beteg,133257,130318,2939
 Hungary,2021-01-20,Pfizer/BioNTech,https://koronavirus.gov.hu/cikkek/1-410-fovel-emelkedett-beazonositott-fertozottek-szama-es-elhunyt-98-beteg,138584,134554,4030
@@ -149,4 +133,11 @@ Hungary,2021-06-01,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beij
 Hungary,2021-06-02,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu/cikkek/5-millio-227-ezer-beoltott-315-az-uj-fertozott-elhunyt-18-beteg,8959570,5227318,3732252
 Hungary,2021-06-03,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu/cikkek/5-millio-239-ezer-beoltott-269-az-uj-fertozott-elhunyt-26-beteg,9053097,5238903,3814194
 Hungary,2021-06-05,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu/cikkek/5-millio-260-ezer-beoltott-137-az-uj-fertozott-elhunyt-12-beteg,9249943,5260418,3989525
-Hungary,2021-06-09,"Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu/cikkek/5-millio-311-ezer-beoltott-206-az-uj-fertozott-elhunyt-7-beteg,9424351,5311475,4112876
+Hungary,2021-06-06,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-262-ezer-beoltott-81-az-uj-fertozott-elhunyt-12-beteg,,5261781,3994595
+Hungary,2021-06-07,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-279-ezer-beoltott-117-az-uj-fertozott-elhunyt-17-beteg,,5278680,4027056
+Hungary,2021-06-08,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-297-ezer-beoltott-179-az-uj-fertozott-elhunyt-6-beteg,,5296926,4073520
+Hungary,2021-06-09,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-311-ezer-beoltott-206-az-uj-fertozott-elhunyt-7-beteg,,5311475,4112876
+Hungary,2021-06-10,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-325-ezer-beoltott-199-az-uj-fertozott-elhunyt-8-beteg,,5324996,4157681
+Hungary,2021-06-13,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-342-ezer-beoltott-255-az-uj-fertozott-elhunyt-21-beteg,,5342379,4208619
+Hungary,2021-06-14,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-352-ezer-beoltott-57-az-uj-fertozott-elhunyt-10-beteg,,5351972,4240264
+Hungary,2021-06-15,"Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",https://koronavirus.gov.hu//cikkek/5-millio-363-ezer-beoltott-107-az-uj-fertozott-elhunyt-9-beteg,,5363124,4271990

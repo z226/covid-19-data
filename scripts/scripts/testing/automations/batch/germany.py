@@ -30,7 +30,7 @@ class Germany:
     
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.assign(**{
-            "Date": df.Kalenderwoche.apply(lambda x: datetime.strptime(x + " +1", "%W/%Y +%w").strftime("%Y-%m-%d")),
+            "Date": df.Kalenderwoche.apply(lambda x: datetime.strptime(x + " +0", "%V/%G +%w").strftime("%Y-%m-%d")),
             "Cumulative total": df["Anzahl Testungen"].cumsum(),
             "Positive rate": (df["Positivenanteil (%)"]/100).round(3),
             "Source URL": self.source_url,

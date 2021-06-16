@@ -95,9 +95,15 @@ def clean_count(count):
     return count
 
 
-def clean_string(colname):
+def clean_string(text_raw):
     """Clean column name."""
-    colname_new = unicodedata.normalize('NFKC', colname).strip()
+    text_new = unicodedata.normalize('NFKC', text_raw).strip()
+    return text_new
+
+
+def clean_column_name(colname):
+    """Clean column name."""
+    colname_new = clean_string(colname)
     if "Unnamed:" in colname_new:
         colname_new = ""
     return colname_new

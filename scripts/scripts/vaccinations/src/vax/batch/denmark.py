@@ -7,8 +7,9 @@ class Denmark:
 
     def __init__(self):
         self.location = "Denmark"
-        self.source_url_ref = "https://covid19.ssi.dk/overvagningsdata/vaccinationstilslutning"
-
+        # self.source_url_ref = "https://covid19.ssi.dk/overvagningsdata/vaccinationstilslutning"
+        self.source_url_ref = "https://covid19.ssi.dk/overvagningsdata/download-fil-med-vaccinationsdata"
+        self.date_limit_one_dose = "2021-05-27"
     def read(self, source: str) -> str:
         data = requests.get(source).json()
         return pd.DataFrame.from_records(elem["attributes"] for elem in data["features"])
@@ -33,14 +34,19 @@ class Denmark:
     def pipe_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.assign(
             people_vaccinated=df.people_vaccinated.ffill(),
-            people_fully_vaccinated=df.people_fully_vaccinated.ffill()
+            people_fully_vaccinated=df.people_fully_vaccinated.ffill(),
+            total_vaccinations=pd.NA,
         )
-        return df.assign(
-            total_vaccinations=df.people_vaccinated.fillna(0) + df.people_fully_vaccinated.fillna(0)
+        mask = df.date < self.date_limit_one_dose
+        df.loc[mask, "total_vaccinations"] = (
+            df.loc[mask, "people_vaccinated"] + df.loc[mask, "people_fully_vaccinated"].fillna(0)
         )
+        return df
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
         def _enrich_vaccine(date: str) -> str:
+            if date >= "2021-05-27":
+                return "Johnson&Johnson, Moderna, Pfizer/BioNTech"
             if date >= "2021-04-14":
                 return "Moderna, Pfizer/BioNTech"
             if date >= "2021-02-08":

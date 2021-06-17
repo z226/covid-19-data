@@ -165,8 +165,8 @@ class UnitedStates:
         df_manufacturer = self.read_manufacturer(paths)
         df_manufacturer.to_csv(paths.tmp_vax_out_man(self.location), index=False)
         # Vaccination by age group
-        df_age = self.read_age().pipe(self.pipeline_age)
-        df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        # df_age = self.read_age().pipe(self.pipeline_age)
+        # df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
 
 
 def main(paths):

@@ -1,43 +1,49 @@
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import localdate
+from vax.utils.incremental import enrich_data, increment
+from vax.utils.dates import clean_date
+from vax.utils.utils import get_soup
 
 
 def read(source: str) -> pd.Series:
-    soup = BeautifulSoup(requests.get(source).content, "html.parser")
-    return parse_data(soup)
+    soup = get_soup(source)
+    source, date = find_last_report(soup)
+    data = parse_data(source)
+    data["date"] = clean_date(date, "%Y-%m-%d", minus_days=1)
+    return data
 
 
-def parse_data(soup: BeautifulSoup) -> pd.Series:
+def find_last_report(soup) -> str:
+    for report in soup.find(id="listView").find_all("ul"):
+        if "코로나19 국내 발생 및 예방접종 현황" in report.find(class_="title").text:
+            source = "http://www.kdca.go.kr" + report.find("a")["href"]
+            date = report.find_all("li")[3].text
+            break
+    return source, date
 
-    people_vaccinated = clean_count(
-        soup
-        .find(class_="status_infoArea")
-        .find(class_="round1")
-        .find(class_="big")
-        .text
-    )
 
-    people_fully_vaccinated = clean_count(
-        soup
-        .find(class_="status_infoArea")
-        .find(class_="round2")
-        .find(class_="big")
-        .text
-    )
+def parse_data(source: str) -> pd.Series:
 
-    total_vaccinations = people_vaccinated + people_fully_vaccinated
+    soup = get_soup(source)
+    html_table = str(soup.find_all("table")[2])
+    df = pd.read_html(html_table, header=0)[0]
 
-    date = localdate("Asia/Seoul")
+    assert len(df) <= 6, "New rows in the vaccine table!"
+
+    astrazeneca = df.loc[df["백신"] == "아스트라제네카", "누적 접종(C)"].values.astype(int)
+    pfizer = df.loc[df["백신"] == "화이자", "누적 접종(C)"].values.astype(int)
+    johnson = df.loc[df["백신"] == "얀센2)", "누적 접종(C)"].values.astype(int)
+
+    total_vaccinations = astrazeneca.sum() + pfizer.sum() + johnson[0]
+    people_vaccinated = astrazeneca[0] + pfizer[0] + johnson[0]
+    people_fully_vaccinated = astrazeneca[1] + pfizer[1] + johnson[0]
 
     data = {
-        "date": date,
         "people_vaccinated": people_vaccinated,
         "people_fully_vaccinated": people_fully_vaccinated,
         "total_vaccinations": total_vaccinations,
+        "source_url": source,
     }
     return pd.Series(data=data)
 
@@ -47,11 +53,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech")
-
-
-def enrich_source(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "source_url", "http://ncv.kdca.go.kr/")
+    return enrich_data(ds, "vaccine", "Johnson&Johnson, Oxford/AstraZeneca, Pfizer/BioNTech")
 
 
 def pipeline(ds: pd.Series) -> pd.Series:
@@ -59,12 +61,11 @@ def pipeline(ds: pd.Series) -> pd.Series:
         ds
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
-        .pipe(enrich_source)
     )
 
 
 def main(paths):
-    source = "http://ncv.kdca.go.kr/"
+    source = "http://www.kdca.go.kr/board/board.es?mid=a20501010000&bid=0015"
     data = read(source).pipe(pipeline)
     increment(
         paths=paths,

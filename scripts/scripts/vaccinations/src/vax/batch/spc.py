@@ -13,17 +13,18 @@ metrics_mapping = {
     "COVIDVACADT": "total_vaccinations"
 }
 country_mapping = {
-    "SB": "Solomon Islands",
-    "TV": "Tuvalu",
-    "TO": "Tonga",
-    "WS": "Samoa",
-    "NR": "Nauru",
-    "FJ": "Fiji",
-    "PF": "French Polynesia",
-    "WF": "Wallis and Futuna",
-    "NC": "New Caledonia",
     "CK": "Cook Islands",
+    "FJ": "Fiji",
+    "NC": "New Caledonia",
+    "NR": "Nauru",
+    "PF": "French Polynesia",
+    "PN": "Pitcairn",
+    "SB": "Solomon Islands",
+    "TO": "Tonga",
+    "TV": "Tuvalu",
     "VU": "Vanuatu",
+    "WF": "Wallis and Futuna",
+    "WS": "Samoa",
 }
 
 # Dictionary containing vaccines being used in each country and their start date. Element 'default' is used for all

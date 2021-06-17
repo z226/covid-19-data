@@ -6,10 +6,11 @@ from vax.utils.dates import clean_date
 
 
 vaccine_mapping = {
+    "AstraZeneca / БНЭУ 🤝 + КОВАКС 🤝": "Oxford/AstraZeneca",
+    "Pfizer-BioNTech / КОВАКС 🤝 + ЯПОН 🤝": "Pfizer/BioNTech",
     "Pfizer-BioNTech / КОВАКС 🤝": "Pfizer/BioNTech",
     "Синофарм / БНХАУ 🤝+ 💵": "Sinopharm/Beijing",
-    "AstraZeneca / БНЭУ 🤝 + КОВАКС 🤝": "Oxford/AstraZeneca",
-    "Спутник V / ОХУ 💵": "Sputnik V"
+    "Спутник V / ОХУ 💵": "Sputnik V",
 }
 
 

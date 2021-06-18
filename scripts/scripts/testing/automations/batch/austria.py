@@ -28,7 +28,15 @@ class Austria:
             "Source label": "Federal Ministry for Social Affairs, Health, Care and Consumer Protection",
             "Notes": pd.NA,
             "Date": df.Date.apply(lambda x: datetime.strptime(x, "%d.%m.%Y").strftime("%Y-%m-%d")),
-        }).sort_values("Date", ascending=False)
+        })
+
+        df = (
+            df
+            .sort_values("Cumulative total")
+            .groupby("Cumulative total", as_index=False)
+            .head(1)
+            .sort_values("Date", ascending=False)
+        )
         return df
 
     def to_csv(self):

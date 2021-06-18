@@ -37,7 +37,7 @@ def main():
         driver.find_element_by_class_name("fa-file-download").click()
         time.sleep(1)
         driver.find_element_by_id("tamizadosFER").click()
-        time.sleep(2)
+        time.sleep(5)
 
     file = glob("tmp/Tamizados*")[0]
     df = pd.read_csv(file)

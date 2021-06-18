@@ -13,6 +13,7 @@ COUNTRIES = {
     "Anguilla": "Anguilla",
     "Belarus": "Belarus",
     "Benin": "Benin",
+    "Bhutan": "Bhutan",
     "Bonaire, Sint Eustatius and Saba": "Bonaire Sint Eustatius and Saba",
     "British Virgin Islands": "British Virgin Islands",
     "Burkina Faso": "Burkina Faso",

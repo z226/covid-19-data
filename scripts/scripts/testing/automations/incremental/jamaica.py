@@ -25,9 +25,9 @@ def main():
 
     # get and parse table; find and assign values
     quests = requests.get(source_url, headers=headers)
-    table = pd.read_html(quests.text, index_col=0)[1]
+    table = pd.read_html(quests.text, index_col=0)[0]
 
-    cumulative_total = int(table.loc['TOTAL TESTS CUMULATIVE', 4])
+    cumulative_total = int(table.loc['TOTAL TESTS CUMULATIVE', table.shape[1]])
 
     if cumulative_total > data["Cumulative total"].max() and date > data["Date"].max():
 

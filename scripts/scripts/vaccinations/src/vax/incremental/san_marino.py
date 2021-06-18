@@ -17,10 +17,14 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
         if "new Chart" in str(script):
             chart_data = str(script)
             break
+    people_fully_vaccinated = parse_people_fully_vaccinated(chart_data)
+    people_vaccinated = parse_people_vaccinated(chart_data)
+    if people_vaccinated < people_fully_vaccinated:
+        people_vaccinated = people_fully_vaccinated
     return pd.Series(data={
         "date": parse_date(chart_data),
-        "people_vaccinated": parse_people_vaccinated(chart_data),
-        "people_fully_vaccinated": parse_people_fully_vaccinated(chart_data),
+        "people_vaccinated": people_vaccinated,
+        "people_fully_vaccinated": people_fully_vaccinated,
         "total_vaccinations": parse_total_vaccinations(chart_data),
     })
 

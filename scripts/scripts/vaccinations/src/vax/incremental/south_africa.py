@@ -1,69 +1,65 @@
 import re
 
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import localdate
+from vax.utils.utils import get_soup
 
 
-def read(source: str) -> pd.Series:
-    soup = BeautifulSoup(requests.get(source).content, "html.parser")
-    return parse_data(soup)
+class SouthAfrica:
 
+    def __init__(self):
+        self.location = "South Africa"
+        self.source_url = "https://sacoronavirus.co.za/"
 
-def parse_data(soup: BeautifulSoup) -> pd.Series:
-    data = {"date": get_date(soup), "total_vaccinations": parse_total_vaccinations(soup)}
-    return pd.Series(data=data)
+    def read(self) -> pd.Series:
+        soup = get_soup(self.source_url)
+        return self._parse_data(soup)
 
+    def _parse_data(self, soup: BeautifulSoup) -> pd.Series:
+        return pd.Series(data={
+            "date": localdate("Africa/Johannesburg"),
+            "total_vaccinations": self._parse_total_vaccinations(soup),
+        })
 
-def get_date(soup: BeautifulSoup) -> str:
-    return localdate("Africa/Johannesburg")
+    def _parse_total_vaccinations(self, soup: BeautifulSoup) -> str:
+        return clean_count(
+            soup
+            .find(class_="counter-box-content", string=re.compile("Vaccines Administered"))
+            .parent
+            .find(class_="display-counter")["data-value"]
+        )
 
+    def pipe_location(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(ds, "location", self.location)
 
-def parse_total_vaccinations(soup: BeautifulSoup) -> str:
-    return clean_count(
-        soup
-        .find(class_="counter-box-content", string=re.compile("Vaccines Administered"))
-        .parent
-        .find(class_="display-counter")["data-value"]
-    )
+    def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(ds, "vaccine", "Johnson&Johnson, Pfizer/BioNTech")
 
+    def pipe_source(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(ds, "source_url", self.source_url)
 
-def enrich_location(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "location", "South Africa")
+    def pipeline(self, ds: pd.Series) -> pd.Series:
+        return (
+            ds
+            .pipe(self.pipe_location)
+            .pipe(self.pipe_vaccine)
+            .pipe(self.pipe_source)
+        )
 
-
-def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Johnson&Johnson, Pfizer/BioNTech")
-
-
-def enrich_source(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "source_url", "https://sacoronavirus.co.za/")
-
-
-def pipeline(ds: pd.Series) -> pd.Series:
-    return (
-        ds
-        .pipe(enrich_location)
-        .pipe(enrich_vaccine)
-        .pipe(enrich_source)
-    )
+    def to_csv(self, paths):
+        data = self.read().pipe(self.pipeline)
+        increment(
+            paths=paths,
+            location=str(data["location"]),
+            total_vaccinations=int(data["total_vaccinations"]),
+            date=str(data["date"]),
+            source_url=str(data["source_url"]),
+            vaccine=str(data["vaccine"])
+        )
 
 
 def main(paths):
-    source = "https://sacoronavirus.co.za/"
-    data = read(source).pipe(pipeline)
-    increment(
-        paths=paths,
-        location=str(data["location"]),
-        total_vaccinations=int(data["total_vaccinations"]),
-        date=str(data["date"]),
-        source_url=str(data["source_url"]),
-        vaccine=str(data["vaccine"])
-    )
-
-
-if __name__ == "__main__":
-    main()
+    SouthAfrica().to_csv(paths)

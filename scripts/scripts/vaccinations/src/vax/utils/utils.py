@@ -35,6 +35,13 @@ def read_xlsx_from_url(url: str, as_series: bool = False, **kwargs) -> pd.DataFr
     return df
 
 
+def download_file_from_url(url, save_path, chunk_size=128):
+    r = requests.get(url, stream=True)
+    with open(save_path, 'wb') as fd:
+        for chunk in r.iter_content(chunk_size=chunk_size):
+            fd.write(chunk)
+
+
 def get_headers() -> dict:
     """Get generic header for requests.
 

@@ -14,11 +14,12 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
-    a = 1
+    a = 1 + 2
+    b = 1
     regex_1 = (
         r"([\d,]+) C(ovid|OVID)-19 vaccinations has been given in total in the Cayman Islands"
     )
-    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations had been given in total in the Cayman Islands"
+    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations (?:had|have) been given in total in the Cayman Islands"
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 
     # regex_2 = (
@@ -27,8 +28,8 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     # assert total_vaccinations >= people_vaccinated
     # people_fully_vaccinated = total_vaccinations - people_vaccinated
     regex_2 = (
-        r"Of these ([\d,]+) \((?:[\d,]+)% of (?:[\d,]+)\) have had at least one dose of a C(?:ovid|OVID)-19 vaccine "
-        r"and (?:[\d,]+)% \(([\d,]+)\) have completed the two-dose course\."
+        r"Of these,? ([\d,]+) \((?:[\d,]+)% of (?:[\d,]+)\) (?:have)? had at least one dose of a C(?:ovid|OVID)-19 "
+        r"vaccine and (?:approximately)? (?:[\d,]+)% \(([\d,]+)\) have completed the two-dose course\."
     )
     matches = re.search(regex_2, soup.text)
     people_vaccinated = clean_count(matches.group(1))

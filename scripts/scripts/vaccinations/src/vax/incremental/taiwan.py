@@ -41,7 +41,7 @@ class Taiwan:
             people_vaccinated = self._parse_people_vaccinated(dfs[1])
             if people_vaccinated:
                 data["people_vaccinated"] = people_vaccinated,
-            return data
+        return data
 
     def _parse_pdf_link(self, soup) -> str:
         a = soup.find(class_="download").find("a")

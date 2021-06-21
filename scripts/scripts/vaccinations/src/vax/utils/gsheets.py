@@ -10,11 +10,29 @@ from gsheets import Sheets
 from vax.utils.checks import country_df_sanity_checks
 
 
-class GSheet:
-    def __init__(self, credentials: str, sheet_id: str):
-        self.sheet_id = sheet_id
+class GSheetApi:
+
+    def __init__(self, credentials) -> None:
+        self.credentials = credentials
         self.sheets = Sheets.from_files(credentials)
-        self.sheet = self.sheets.get(self.sheet_id)
+
+    def get_sheet(self, sheet_id):
+        return self.sheets.get(sheet_id)
+
+    def get_worksheet(self, sheet_id, worksheet_title):
+        sheet = self.sheets.get(sheet_id)
+        try:
+            return sheet.find(worksheet_title)
+        except KeyError:
+            raise KeyError(f"No worksheet with title {worksheet_title} was found.")
+
+
+class VaccinationGSheet:
+    def __init__(self, gsheets_api, sheet_id: str):
+        self._api = gsheets_api
+        self.sheet_id = sheet_id
+        self.sheets = self._api.sheets
+        self.sheet = self._api.get_sheet(self.sheet_id)
         self.metadata = self.get_metadata()
 
     @classmethod
@@ -30,7 +48,7 @@ class GSheet:
     def get_metadata(self, refresh: bool = False) -> pd.DataFrame:
         """Get metadata from LOCATIONS tab."""
         if refresh:
-            self.sheet = self.sheets.get(self.sheet_id)
+            self.sheet = self._api.get_sheet(self.sheet_id)
         metadata = self.sheet.first_sheet.to_frame()
         self._check_metadata(metadata)
         self.disabled_countries = metadata.loc[-metadata["include"], "location"].values
@@ -96,7 +114,7 @@ class GSheet:
             List[pd.DataFrame]: List with dataframe per country.
         """
         if refresh:
-            self.sheet = self.sheets.get(self.sheet_id)
+            self.sheet = self._api.get_sheet(self.sheet_id)
         with tempfile.TemporaryDirectory() as tmpdirname:
             # Download
             tmpfile = os.path.join(tmpdirname, "%(sheet)s.csv")

@@ -4,6 +4,7 @@ from datetime import date
 from pyaml_env import parse_config
 from itertools import chain
 
+from vax.utils.gsheets import GSheetApi
 from vax.cmd.get_data import (
     modules_name, modules_name_batch, modules_name_incremental, country_to_module
 )
@@ -69,6 +70,18 @@ class ConfigParams(object):
     @property
     def credentials_file_exists(self):
         return os.path.isfile(self.credentials_file)
+
+    @property
+    def google_credential_file(self):
+        field = "google_credentials"
+        if field in self._credentials:
+            return self._credentials[field]
+        else:
+            raise ValueError(f"Field 'google_credentials' not found in credentials file. Please check.")
+
+    @property
+    def gsheets_api(self):
+        return GSheetApi(self.google_credential_file)
 
     def _get_project_dir_from_config(self):
         try:

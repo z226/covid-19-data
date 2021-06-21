@@ -1,6 +1,6 @@
 import pandas as pd
 
-from vax.utils.gsheets import GSheet
+from vax.utils.gsheets import VaccinationGSheet
 from vax.process import process_location
 from vax.cmd.utils import get_logger, print_eoe
 
@@ -8,13 +8,13 @@ from vax.cmd.utils import get_logger, print_eoe
 logger = get_logger()
 
 
-def main_process_data(paths, google_credentials: str, google_spreadsheet_vax_id: str, skip_complete: list = None,
+def main_process_data(paths, gsheets_api, google_spreadsheet_vax_id: str, skip_complete: list = None,
                       skip_monotonic: dict = {}, skip_anomaly: dict = {}):
     print("-- Processing data... --")
     # Get data from sheets
     logger.info("Getting data from Google Spreadsheet...")
-    gsheet = GSheet(
-        google_credentials,
+    gsheet = VaccinationGSheet(
+        gsheets_api,
         google_spreadsheet_vax_id
     )
     df_manual_list = gsheet.df_list()

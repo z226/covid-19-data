@@ -22,55 +22,61 @@ modules_name_incremental = list(country_to_module_incremental.values())
 modules_name = modules_name_batch + modules_name_incremental
 
 
-def _get_data_country(module_name: str, paths: str, skip_countries: list):
-    country = module_name.split(".")[-1]
-    if country.lower() in skip_countries:
-        logger.info(f"{module_name}: skipped! ⚠️")
+class CountryDataGetter:
+    def __init__(self, paths: str, skip_countries: list, gsheets_api):
+        self.paths = paths
+        self.skip_countries = skip_countries
+        self.gsheets_api = gsheets_api
+
+    def run(self, module_name: str):
+        country = module_name.split(".")[-1]
+        if country.lower() in self.skip_countries:
+            logger.info(f"{module_name}: skipped! ⚠️")
+            return {
+                "module_name": module_name,
+                "success": None,
+                "skipped": True
+            }
+        args = [self.paths]
+        if country == "colombia":
+            args.append(self.gsheets_api)
+        logger.info(f"{module_name}: started")
+        module = importlib.import_module(module_name)
+        try:
+            module.main(*args)
+        except Exception as err:
+            success = False
+            logger.error(f"{module_name}: ❌ {err}", exc_info=True)
+        else:
+            success = True
+            logger.info(f"{module_name}: SUCCESS ✅")
         return {
             "module_name": module_name,
-            "success": None,
-            "skipped": True
+            "success": success,
+            "skipped": False
         }
-    logger.info(f"{module_name}: started")
-    module = importlib.import_module(module_name)
-    try:
-        module.main(paths)
-    except Exception as err:
-        success = False
-        logger.error(f"{module_name}: ❌ {err}", exc_info=True)
-    else:
-        success = True
-        logger.info(f"{module_name}: SUCCESS ✅")
-    return {
-        "module_name": module_name,
-        "success": success,
-        "skipped": False
-    }
 
 
 def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name: list = modules_name,
-                  skip_countries: list = []):
+                  skip_countries: list = [], gsheets_api=None):
     """Get data from sources and export to output folder.
 
     Is equivalent to script `run_python_scripts.py`
     """
     print("-- Getting data... --")
     skip_countries = [x.lower() for x in skip_countries]
+    country_data_getter = CountryDataGetter(paths, skip_countries, gsheets_api)
     if parallel:
         modules_execution_results = Parallel(n_jobs=n_jobs, backend="threading")(
-            delayed(_get_data_country)(
+            delayed(country_data_getter.run)(
                 module_name,
-                paths,
-                skip_countries,
             ) for module_name in modules_name
         )
     else:
         modules_execution_results = []
         for module_name in modules_name:
-            modules_execution_results.append(_get_data_country(
+            modules_execution_results.append(country_data_getter.run(
                 module_name,
-                paths,
-                skip_countries,
             ))
 
     modules_failed = [m["module_name"] for m in modules_execution_results if m["success"] is False]
@@ -79,7 +85,7 @@ def main_get_data(paths, parallel: bool = False, n_jobs: int = -2, modules_name:
     modules_execution_results = []
     for module_name in modules_failed:
         modules_execution_results.append(
-            _get_data_country(module_name, paths, skip_countries)
+            country_data_getter.run(module_name)
         )
     modules_failed_retrial = [m["module_name"] for m in modules_execution_results if m["success"] is False]
     if len(modules_failed_retrial) > 0:

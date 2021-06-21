@@ -18,7 +18,7 @@ class Albania:
             "title": r"Vaksinimi antiCOVID\/ Kryhen [0-9,]+ vaksinime",
             "date":  r"Postuar më: (\d{1,2}\/\d{1,2}\/202\d)",
             "total_vaccinations": r"total ([\d,]+) doza të vaksinës ndaj COVID19",
-            "people_fully_vaccinated": r"Prej tyre,? ([\d,]+) qytetarë i kanë marrë të dyja dozat e vaksinës antiCOVID",
+            "people_fully_vaccinated": r"Prej tyre,? ([\d,]+) ?qytetarë i kanë marrë të dyja dozat e vaksinës antiCOVID",
         }
 
     def read(self, last_update: str) -> pd.DataFrame:

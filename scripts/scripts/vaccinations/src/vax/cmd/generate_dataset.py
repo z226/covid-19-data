@@ -405,7 +405,7 @@ class DatasetGenerator:
         )
 
     def pipe_grapher(self, df: pd.DataFrame, date_ref: datetime = datetime(2020, 1, 21),
-                     fillna: bool = False) -> pd.DataFrame:
+                     fillna: bool = False, fillna_0: bool = True) -> pd.DataFrame:
         df = (
             df
             .rename(columns={
@@ -423,7 +423,11 @@ class DatasetGenerator:
             .sort_values(col_order)
         )
         if fillna:
-            df[columns_rest] = df.groupby(["Country"])[columns_rest].fillna(method="ffill").fillna(0)
+            filled = df.groupby(["Country"])[columns_rest].fillna(method="ffill")
+            if fillna_0:
+                df[columns_rest] = filled.fillna(0)
+            else:
+                df[columns_rest] = filled
         return df
 
     def pipe_manufacturer_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -493,7 +497,7 @@ class DatasetGenerator:
             .pipe(self.pipe_age_pivot)
             .pipe(self.pipe_age_partly)
             .pipe(self.pipe_age_flatten)
-            .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True)
+            .pipe(self.pipe_grapher, date_ref=datetime(2021, 1, 1), fillna=True, fillna_0=False)
         )
 
     def pipe_locations_to_html(self, df: pd.DataFrame) -> pd.DataFrame:

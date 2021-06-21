@@ -24,12 +24,13 @@ def main():
             n_jobs=cfg.njobs,
             modules_name=cfg.countries,
             skip_countries=cfg.skip_countries,
+            gsheets_api=config.gsheets_api,
         )
     if "process" in config.mode:
         cfg = config.ProcessDataConfig()
         main_process_data(
             paths=paths,
-            google_credentials=creds.google_credentials,
+            gsheets_api=config.gsheets_api,
             google_spreadsheet_vax_id=creds.google_spreadsheet_vax_id,
             skip_complete=cfg.skip_complete,
             skip_monotonic=cfg.skip_monotonic_check,

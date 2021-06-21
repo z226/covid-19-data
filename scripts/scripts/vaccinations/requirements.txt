@@ -2,7 +2,6 @@ beautifulsoup4==4.9.3
 chromedriver-binary==87.0.4280.88.0
 dateparser==1.0.0
 gsheets==0.5.1
-gspread==3.7.0
 joblib==1.0.1
 lxml>=4.6.3
 odfpy~=1.4.1

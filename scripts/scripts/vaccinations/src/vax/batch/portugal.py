@@ -3,14 +3,14 @@ import pandas as pd
 
 def read(source_url: str) -> pd.DataFrame:
     return pd.read_csv(source_url, usecols=[
-        "data", "doses", "pessoas_vacinadas_completamente", "pessoas_vacinadas_parcialmente"
+        "data", "vacinas", "pessoas_vacinadas_completamente", "pessoas_vacinadas_parcialmente"
     ])
 
 
 def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.rename(columns={
         "data": "date",
-        "doses": "total_vaccinations",
+        "vacinas": "total_vaccinations",
         "pessoas_vacinadas_completamente": "people_fully_vaccinated",
     })
 
@@ -45,7 +45,7 @@ def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def sanity_checks(df: pd.DataFrame) -> pd.DataFrame:
-    assert all(df.total_vaccinations >= df.people_vaccinated)
+    assert all(df.total_vaccinations.fillna(0) >= df.people_vaccinated.fillna(0))
     return df
 
 

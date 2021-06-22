@@ -40,7 +40,7 @@ class Taiwan:
         if len(dfs) >= 2:
             people_vaccinated = self._parse_people_vaccinated(dfs[1])
             if people_vaccinated:
-                data["people_vaccinated"] = people_vaccinated,
+                data["people_vaccinated"] = people_vaccinated
         return data
 
     def _parse_pdf_link(self, soup) -> str:
@@ -69,22 +69,20 @@ class Taiwan:
         return clean_count(num)
 
     def _parse_people_vaccinated(self, df: pd.DataFrame) -> int:
-        # Expect df to be "Table 2"
-        # if dfs[1].shape[1] != 4:
-        #     raise ValueError(f"Table 2: format has changed! New columns were added")
-        # if dfs[1].shape[0] < 16:
-        #     raise ValueError(f"Table 2: format has changed! Not enough rows!")
-        if df.shape != (16, 4):
+        # Verify certain key features in this table to make sure we
+        # are extract the .
+        if df.shape[1] != 4 or df.iloc[3,2] != "第 1劑 第 2劑" or df.iloc[3,3] != "第 1劑 第 2劑" or df.iloc[-1,0] != "總計":
             return None
-        else:
-            columns = [2, 3]
-            people_vaccinated = 0
-            for col in columns:
-                metrics = df.iloc[-1, col].split(" ")
-                if len(metrics) != 2:
-                    raise ValueError("Table 2: 1st/2nd cell division changed!")
-                people_vaccinated += clean_count(metrics[0])
-            return people_vaccinated
+
+        columns = [2, 3]
+        people_vaccinated = 0
+        for col in columns:
+            metrics = df.iloc[-1, col].split(" ")
+            if len(metrics) != 2:
+                raise ValueError("Table 2: 1st/2nd cell division changed!")
+            people_vaccinated += clean_count(metrics[0])
+
+        return people_vaccinated
 
     def _parse_vaccines(self, df: pd.DataFrame) -> str:
         vaccines = set(df.iloc[1:-1, 0])

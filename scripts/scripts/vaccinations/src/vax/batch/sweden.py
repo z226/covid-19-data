@@ -36,7 +36,7 @@ class Sweden(object):
 
     def exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
         # The data contains an error that creates a negative change in the people_vaccinated series
-        df = df[df.date.astype(str) != "2021-06-06"]
+        df = df[df.date.astype(str) != "2021-06-13"]
         return df
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:

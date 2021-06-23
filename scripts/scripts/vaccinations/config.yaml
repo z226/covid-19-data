@@ -32,4 +32,7 @@ pipeline:
           metrics: 
            - total_vaccinations
            - people_vaccinated
+      Nigeria:
+        - date: 2021-06-15
+          metrics: people_fully_vaccinated
   generate-dataset:

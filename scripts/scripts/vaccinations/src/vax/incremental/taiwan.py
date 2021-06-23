@@ -31,16 +31,13 @@ class Taiwan:
         return data
 
     def parse_data(self, dfs: list, soup):
-        total_vaccinations = self._parse_total_vaccinations(dfs[0])
+        stats = self._parse_stats(dfs[0])
         data = pd.Series({
-            "total_vaccinations": total_vaccinations,
+            "total_vaccinations": stats['total_vaccinations'],
+            "people_vaccinated": stats['people_vaccinated'],
             "date": self._parse_date(soup),
             "vaccine": self._parse_vaccines(dfs[0]),
         })
-        if len(dfs) >= 2:
-            people_vaccinated = self._parse_people_vaccinated(dfs[1])
-            if people_vaccinated:
-                data["people_vaccinated"] = people_vaccinated
         return data
 
     def _parse_pdf_link(self, soup) -> str:
@@ -58,34 +55,18 @@ class Taiwan:
         dfs = tabula.read_pdf(url_pdf, pages="all", **kwargs)
         return dfs
 
-    def _parse_total_vaccinations(self, df: pd.DataFrame) -> int:
-        # Expect df to be "Table 1"
-        if df.shape[1] != 3:
-            raise ValueError(f"Table 1: format has changed! New columns were added")
-        if df.shape[0] < 3:
-            raise ValueError(f"Table 1: format has changed! Not enough rows!")
-        num = df.iloc[-1, 2]
-        num = re.match(r"([0-9,]+)", num).group(1)
-        return clean_count(num)
-
-    def _parse_people_vaccinated(self, df: pd.DataFrame) -> int:
-        # Verify certain key features in this table to make sure we
-        # are extract the .
-        if df.shape[1] != 4 or df.iloc[3,2] != "第 1劑 第 2劑" or df.iloc[3,3] != "第 1劑 第 2劑" or df.iloc[-1,0] != "總計":
-            return None
-
-        columns = [2, 3]
-        people_vaccinated = 0
-        for col in columns:
-            metrics = df.iloc[-1, col].split(" ")
-            if len(metrics) != 2:
-                raise ValueError("Table 2: 1st/2nd cell division changed!")
-            people_vaccinated += clean_count(metrics[0])
-
-        return people_vaccinated
+    def _parse_stats(self, df: pd.DataFrame) -> int:
+        if df.shape[1] != 4 or df.iloc[0,0] != "廠牌" or df.iloc[0,1] != "劑次" or not (df.iloc[-1,0] == "總計" or df.iloc[-2,0] == "總計"):
+            raise ValueError(f"Table 1: format has changed!")
+        num_dose1 = clean_count(df.iloc[-3, 3])
+        num_dose2 = clean_count(df.iloc[-1, 3])
+        return {
+            "total_vaccinations": (num_dose1 + num_dose2),
+            "people_vaccinated": num_dose1,
+        }
 
     def _parse_vaccines(self, df: pd.DataFrame) -> str:
-        vaccines = set(df.iloc[1:-1, 0])
+        vaccines = set(df.iloc[1:-1, 0].dropna()) - set(['總計'])
         vaccines_wrong = vaccines.difference(vaccines_mapping)
         if vaccines_wrong:
             raise ValueError(f"Invalid vaccines: {vaccines_wrong}")

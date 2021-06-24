@@ -25,6 +25,6 @@ if __name__ == "__main__":
       tb = traceback.format_exc()
       send_error(
         channel="corona-data-updates",
-        title=f'Updated Grapher dataset: {process.DATASET_NAME}',
+        title=f'Updating Grapher dataset: {process.DATASET_NAME}',
         trace=tb,
       )

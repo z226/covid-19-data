@@ -19,7 +19,6 @@ processes = [
 
 if __name__ == "__main__":
   for process in processes:
-    print(process)
     try:
       process.update_db()
     except Exception as e:
@@ -27,6 +26,5 @@ if __name__ == "__main__":
       send_error(
         channel="corona-data-updates",
         title=f'Updated Grapher dataset: {process.DATASET_NAME}',
-        message=tb,
+        trace=tb,
       )
-

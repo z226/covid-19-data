@@ -15,10 +15,11 @@ SUCCESS_COLOR = "#01a715"
 def send_error(channel, title, message=None, trace=None):
     if not client: return None
     title = f"Error: {title}"
-    if trace:
-        if message is None:
-            message = ""
-        message += f"\n```{trace}```"
+    if message is None:
+        message = ""
+    if trace is None:
+        trace = ""
+    message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[
@@ -34,10 +35,11 @@ def send_error(channel, title, message=None, trace=None):
 def send_warning(channel, title, message=None, trace=None):
     if not client: return None
     title = f"Warning: {title}"
-    if trace:
-        if message is None:
-            message = ""
-        message += f"\n```{trace}```"
+    if message is None:
+        message = ""
+    if trace is None:
+        trace = ""
+    message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[
@@ -52,10 +54,11 @@ def send_warning(channel, title, message=None, trace=None):
 
 def send_success(channel, title, message=None, trace=None):
     if not client: return None
-    if trace:
-        if message is None:
-            message = ""
-        message += f"\n```{trace}```"
+    if message is None:
+        message = ""
+    if trace is None:
+        trace = ""
+    message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[

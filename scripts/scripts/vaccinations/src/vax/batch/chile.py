@@ -14,9 +14,8 @@ class Chile:
 
     def __init__(self):
         self.location = "Chile"
-        self.source_url = "https://github.com/juancri/covid19-vaccination/raw/master/output/chile-vaccination-type.csv"
-        self.source_url_age = (
-            "https://raw.githubusercontent.com/juancri/covid19-vaccination/master/output/chile-vaccination-ages.csv"
+        self.source_url = (
+            "https://raw.githubusercontent.com/MinCiencia/Datos-COVID19/master/output/producto76/fabricante.csv"
         )
         self.source_url_ref = "https://www.gob.cl/yomevacuno/"
 
@@ -24,7 +23,8 @@ class Chile:
         return pd.read_csv(self.source_url)
 
     def read_age(self) -> pd.DataFrame:
-        return pd.read_csv(self.source_url_age)
+        raise NotImplementedError("No source available")
+        #return pd.read_csv(self.source_url_age)
 
     def pipe_melt(self, df: pd.DataFrame, id_vars: list) -> pd.DataFrame:
         return df.melt(id_vars, var_name="date", value_name="value")
@@ -33,15 +33,15 @@ class Chile:
         return df[(df[colname] != "Total") & (df.value > 0)]
 
     def pipe_pivot(self, df: pd.DataFrame, index: list) -> pd.DataFrame:
-        return df.pivot(index=index, columns="Dose", values="value").reset_index()
+        return df.pivot(index=index, columns="Dosis", values="value").reset_index()
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
             .rename(columns={
-                "First": "people_vaccinated",
-                "Second": "people_fully_vaccinated",
-                "Type": "vaccine",
+                "Primera": "people_vaccinated",
+                "Segunda": "people_fully_vaccinated",
+                "Fabricante": "vaccine",
             })
         )
 
@@ -71,9 +71,9 @@ class Chile:
     def pipeline_base(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .pipe(self.pipe_melt, ["Type", "Dose"])
-            .pipe(self.pipe_filter_rows, "Type")
-            .pipe(self.pipe_pivot, ["Type", "date"])
+            .pipe(self.pipe_melt, ["Fabricante", "Dosis"])
+            .pipe(self.pipe_filter_rows, "Fabricante")
+            .pipe(self.pipe_pivot, ["Fabricante", "date"])
             .pipe(self.pipe_rename_columns)
             .pipe(self.pipe_rename_vaccines)
             .pipe(self.pipe_total_vaccinations)
@@ -129,7 +129,7 @@ class Chile:
     def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
-            .pipe(self.pipe_melt, ["Age", "Dose"])
+            .pipe(self.pipe_melt, ["Age", "Dosis"])
             .pipe(self.pipe_filter_rows, "Age")
             .pipe(self.pipe_pivot, ["Age", "date"])
             .pipe(self.pipe_rename_columns)
@@ -141,7 +141,6 @@ class Chile:
 
     def to_csv(self, paths):
         df = self.read().pipe(self.pipeline_base)
-        df_age = self.read_age().pipe(self.pipeline_age)
         # Main data
         df.pipe(self.pipeline_vaccinations).to_csv(
             paths.tmp_vax_out(self.location),

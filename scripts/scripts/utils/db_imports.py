@@ -69,7 +69,8 @@ def import_dataset(dataset_name, namespace, csv_path, default_variable_display, 
 
         if file_modified_time <= db_dataset_modified_time:
             print(f"Dataset is up to date: {dataset_name}")
-            sys.exit(0)
+            return None
+            # sys.exit(0)
 
         print("Updating database...")
 

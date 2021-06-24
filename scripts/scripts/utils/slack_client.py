@@ -17,9 +17,8 @@ def send_error(channel, title, message=None, trace=None):
     title = f"Error: {title}"
     if message is None:
         message = ""
-    if trace is None:
-        trace = ""
-    message += f"\n```{trace}```"
+    if trace is not None:
+        message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[
@@ -37,9 +36,8 @@ def send_warning(channel, title, message=None, trace=None):
     title = f"Warning: {title}"
     if message is None:
         message = ""
-    if trace is None:
-        trace = ""
-    message += f"\n```{trace}```"
+    if trace is not None:
+        message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[
@@ -56,9 +54,8 @@ def send_success(channel, title, message=None, trace=None):
     if not client: return None
     if message is None:
         message = ""
-    if trace is None:
-        trace = ""
-    message += f"\n```{trace}```"
+    if trace is not None:
+        message += f"\n```{trace}```"
     return client.chat_postMessage(
         channel=channel,
         attachments=[

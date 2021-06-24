@@ -391,7 +391,10 @@ class DatasetGenerator:
         return (
             df
             .dropna(subset=["people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"], how="all")
-            [["location", "date", "age_group", "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"]]
+            [[
+                "location", "date", "age_group",
+                "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"
+            ]]
             .sort_values(["location", "date", "age_group"])
         )
 

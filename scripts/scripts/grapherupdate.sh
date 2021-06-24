@@ -20,43 +20,6 @@ run_python() {
 git checkout $BRANCH
 git pull
 
-# =====================================================================
-# Global vaccination data
-
-# Always run the database update.
-# The script itself contains a check against the database
-# to make sure it doesn't run unnecessarily.
-run_python 'import global_vaccinations; global_vaccinations.update_db()'
-
-# =====================================================================
-# Testing data
-
-# Always run the database update.
-# The script itself contains a check against the database
-# to make sure it doesn't run unnecessarily.
-run_python 'import global_testing; global_testing.update_db()'
-
-# =====================================================================
-# YouGov Imperial COVID-19 behavior tracker data
-
-# Always run the database update.
-# The script itself contains a check against the database
-# to make sure it doesn't run unnecessarily.
-run_python 'import yougov; yougov.update_db_main()'
-run_python 'import yougov; yougov.update_db_composite()'
-
-# =====================================================================
-# COVID-19 - Vaccinations by manufacturer
-
-# Always run the database update.
-# The script itself contains a check against the database
-# to make sure it doesn't run unnecessarily.
-run_python 'import vax_by_manufacturer; vax_by_manufacturer.update_db()'
-
-# =====================================================================
-# COVID-19 - Vaccinations by age
-
-# Always run the database update.
-# The script itself contains a check against the database
-# to make sure it doesn't run unnecessarily.
-run_python 'import vax_by_age; vax_by_age.update_db()'
+# Run all db updates
+cd $SCRIPTS_DIR/scripts
+python grapherupdate.py 

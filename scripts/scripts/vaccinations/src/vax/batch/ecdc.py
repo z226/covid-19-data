@@ -1,9 +1,8 @@
 import os
-from datetime import datetime
 
 import pandas as pd
 
-from vax.utils.dates import clean_date
+from vax.utils.dates import clean_date, localdate
 
 
 age_groups_known = {
@@ -75,6 +74,7 @@ class ECDC:
 
     def __init__(self, iso_path: str):
         self.source_url = "https://opendata.ecdc.europa.eu/covid19/vaccine_tracker/csv/data.csv"
+        self.source_url_ref = "https://www.ecdc.europa.eu/en/publications-data/data-covid-19-vaccination-eu-eea"
         self.country_mapping = self._load_country_mapping(iso_path)
         self.vaccine_mapping = {
             "COM": "Pfizer/BioNTech",
@@ -94,12 +94,10 @@ class ECDC:
         return dict(zip(country_mapping["alpha-2"], country_mapping["location"]))
 
     def _weekday_to_date(self, d):
-        if datetime.now().weekday() >= 5:
-            return clean_date(d + '+5', "%Y-W%W+%w")
-            #print(r.strftime("%c"))
-        else:
-            return clean_date(d + '+2', "%Y-W%W+%w")
-            #print(r.strftime("%c"))
+        new_date = clean_date(d + '+5', "%Y-W%W+%w")
+        if new_date > localdate("Europe/London"):
+            new_date = clean_date(d + '+2', "%Y-W%W+%w")
+        return new_date
 
     def pipe_initial_check(self, df: pd.DataFrame) -> pd.DataFrame:
         # Vaccines
@@ -303,8 +301,8 @@ class ECDC:
             df=df_age,
             path_generator_fct=paths.tmp_vax_out_by_age_group,
             columns=[
-                "location", "date", "age_group_min", "age_group_max", "people_vaccinated_per_hundred",
-                "people_fully_vaccinated_per_hundred",
+                "location", "date", "age_group_min", "age_group_max",
+                "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred",
             ]
         )
 

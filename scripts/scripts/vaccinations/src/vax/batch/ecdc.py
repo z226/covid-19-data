@@ -294,7 +294,7 @@ class ECDC:
                 columns=columns,
             )
 
-    def to_csv_age(self, paths, df: pd.DataFrame):
+    def export_age(self, paths, df: pd.DataFrame):
         df_age = df.pipe(self.pipeline_age)
         # Export
         self._export_country_data(
@@ -306,7 +306,7 @@ class ECDC:
             ]
         )
 
-    def to_csv_manufacturer(self, paths, df: pd.DataFrame):
+    def export_manufacturer(self, paths, df: pd.DataFrame):
         df_manufacuter = df.pipe(self.pipeline_manufacturer)
         # Export
         self._export_country_data(
@@ -315,16 +315,16 @@ class ECDC:
             columns=["location", "date", "vaccine", "total_vaccinations"]
         )
 
-    def to_csv(self, paths):
+    def export(self, paths):
         # Read data
         df = self.read().pipe(self.pipe_base)
         # Age
-        self.to_csv_age(paths, df)
+        self.export_age(paths, df)
         # Manufacturer
-        self.to_csv_manufacturer(paths, df)
+        self.export_manufacturer(paths, df)
 
 
 def main(paths):
     ECDC(
         iso_path=os.path.join(paths.tmp_inp, "iso", "iso.csv")
-    ).to_csv(paths)
+    ).export(paths)

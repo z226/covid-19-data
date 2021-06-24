@@ -1,5 +1,4 @@
 import os
-from scripts.scripts.gmobility import DATASET_NAME
 import sys
 import pytz
 import json

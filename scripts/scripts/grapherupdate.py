@@ -17,6 +17,7 @@ processes = [
 
 if __name__ == "__main__":
   for process in processes:
+    print(process)
     try:
       process.update_db()
     except Exception as e:

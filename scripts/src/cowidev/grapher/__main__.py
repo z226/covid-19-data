@@ -21,11 +21,11 @@ updaters = [u() for u in updaters]
 def main():
     for updater in updaters:
         try:
-            updater().run()
+            updater.run()
         except Exception as e:
             tb = traceback.format_exc()
             send_error(
                 channel="corona-data-updates",
-                title=f'Updating Grapher dataset: {updater().dataset_name}',
+                title=f'Updating Grapher dataset: {updater.dataset_name}',
                 trace=tb,
             )

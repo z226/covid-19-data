@@ -60,8 +60,10 @@ def get_metric(metric, region):
         print_err("Unknown metric requested.\n")
         sys.exit(1)
 
-    # Relabel cruise ships as 'International'
-    df.loc[df["Country/Region"].isin(["Diamond Princess", "MS Zaandam"]), "Country/Region"] = "International"
+    # Relabel as 'International'
+    df.loc[df["Country/Region"].isin([
+        "Diamond Princess", "MS Zaandam", "Summer Olympics 2020",
+    ]), "Country/Region"] = "International"
 
     # Relabel Hong Kong to its own time series
     df.loc[df["Province/State"] == "Hong Kong", "Country/Region"] = "Hong Kong"

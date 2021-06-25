@@ -35,18 +35,20 @@ def main_process_data(paths, gsheets_api, google_spreadsheet_vax_id: str, skip_c
         return process_location(df, monotonic_check_skip, anomaly_check_skip)
 
     logger.info("Processing and exporting data...")
-    _ = []
+    vax_valid = []
     for df in vax:
         if "location" not in df:
             raise ValueError(f"Column `location` missing. df: {df.tail(5)}")
-        if df.loc[0, "location"].lower() not in skip_complete:
-            _.append(_process_location(df))
-    vax = _
-    # Export
-    for df in vax:
         country = df.loc[0, "location"]
-        df.to_csv(paths.pub_vax_loc(country), index=False)
-    df = pd.concat(vax).sort_values(by=["location", "date"])
+        if country.lower() not in skip_complete:
+            df = _process_location(df)
+            vax_valid.append(df)
+            # Export
+            df.to_csv(paths.pub_vax_loc(country), index=False)
+            logger.info(f"{country}: SUCCESS ✅")
+        else:
+            logger.info(f"{country}: SKIPPED 🚧")
+    df = pd.concat(vax_valid).sort_values(by=["location", "date"])
     df.to_csv(paths.tmp_vax_all, index=False)
     gsheet.metadata.to_csv(paths.tmp_met_all, index=False)
     logger.info("Exported ✅")

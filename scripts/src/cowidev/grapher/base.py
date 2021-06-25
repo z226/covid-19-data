@@ -2,7 +2,7 @@ import os
 import pytz
 from datetime import datetime, timedelta
 
-from utils.db_imports import import_dataset
+from cowidev.grapher.utils.db_imports import import_dataset
 
 
 class GrapherBaseUpdater:

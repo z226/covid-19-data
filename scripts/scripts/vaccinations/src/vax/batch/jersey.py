@@ -4,6 +4,7 @@ import re
 
 import pandas as pd
 
+from vax.utils.files import export_metadata
 
 class Jersey:
 
@@ -144,6 +145,7 @@ class Jersey:
         # Age data
         df_age = df_base.pipe(self.pipeline_age)
         df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        export_metadata(df_age, "Government of Jersey", self.source_url, paths.tmp_vax_metadata_age)
 
 
 def main(paths):

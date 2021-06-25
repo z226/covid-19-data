@@ -5,6 +5,8 @@ manufacturers were added, so that we can maintain control over this.
 """
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 vaccine_mapping = {
     "Comirnaty": "Pfizer/BioNTech",
@@ -179,13 +181,15 @@ def global_pipeline(df: pd.DataFrame) -> pd.DataFrame:
 def main(paths):
     source = "https://onemocneni-aktualne.mzcr.cz/api/v2/covid-19/ockovani.csv"
 
-    global_output = paths.tmp_vax_out("Czechia")
-    by_manufacturer_output = paths.tmp_vax_out_man("Czechia")
-
     base = read(source).pipe(base_pipeline)
 
-    base.pipe(breakdown_per_vaccine).to_csv(by_manufacturer_output, index=False)
-    base.pipe(global_pipeline).to_csv(global_output, index=False)
+    # Manufacturer data
+    df_man = base.pipe(breakdown_per_vaccine)
+    df_man.to_csv(paths.tmp_vax_out_man("Czechia"), index=False)
+    export_metadata(df_man, "Ministry of Health", source, paths.tmp_vax_metadata_man)
+
+    # Main data
+    base.pipe(global_pipeline).to_csv(paths.tmp_vax_out("Czechia"), index=False)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ import requests
 
 from vax.utils.incremental import enrich_data, increment
 from vax.utils.dates import clean_date, clean_date_series
+from vax.utils.files import export_metadata
 
 
 vaccines_mapping = {
@@ -164,6 +165,12 @@ class UnitedStates:
         # Vaccination by manufacturer
         df_manufacturer = self.read_manufacturer(paths)
         df_manufacturer.to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        export_metadata(
+            df_manufacturer,
+            "Centers for Disease Control and Prevention",
+            self.source_url,
+            paths.tmp_vax_metadata_man
+        )
         # Vaccination by age group
         # df_age = self.read_age().pipe(self.pipeline_age)
         # df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)

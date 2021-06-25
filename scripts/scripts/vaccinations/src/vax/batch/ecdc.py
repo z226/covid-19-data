@@ -3,6 +3,7 @@ import os
 import pandas as pd
 
 from vax.utils.dates import clean_date, localdate
+from vax.utils.files import export_metadata
 
 
 age_groups_known = {
@@ -284,35 +285,49 @@ class ECDC:
             .sort_values(["location", "date", "age_group_min"])
         )
 
-    def _export_country_data(self, df, path_generator_fct, columns: list):
-        locations = df.location.unique()
-        for location in locations:
-            df_c = df[df.location==location]
-            df_c.to_csv(
-                path_generator_fct(location),
-                index=False,
-                columns=columns,
-            )
+    def _export_country_data(self, df: pd.DataFrame, location: str, output_path: str, columns: list):
+        df_c = df[df.location==location]
+        df_c.to_csv(
+            output_path,
+            index=False,
+            columns=columns,
+        )
 
     def export_age(self, paths, df: pd.DataFrame):
         df_age = df.pipe(self.pipeline_age)
         # Export
-        self._export_country_data(
-            df=df_age,
-            path_generator_fct=paths.tmp_vax_out_by_age_group,
-            columns=[
-                "location", "date", "age_group_min", "age_group_max",
-                "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred",
-            ]
-        )
+        locations = df_age.location.unique()
+        for location in locations:
+            self._export_country_data(
+                df=df_age,
+                location=location,
+                output_path=paths.tmp_vax_out_by_age_group(location),
+                columns=[
+                    "location", "date", "age_group_min", "age_group_max",
+                    "people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred",
+                ]
+            )
+        self._export_metadata(df_age, paths.tmp_vax_metadata_age)
 
     def export_manufacturer(self, paths, df: pd.DataFrame):
         df_manufacuter = df.pipe(self.pipeline_manufacturer)
         # Export
-        self._export_country_data(
-            df=df_manufacuter,
-            path_generator_fct=paths.tmp_vax_out_man,
-            columns=["location", "date", "vaccine", "total_vaccinations"]
+        locations = df_manufacuter.location.unique()
+        for location in locations:
+            self._export_country_data(
+                df=df_manufacuter,
+                location=location,
+                output_path=paths.tmp_vax_out_man(location),
+                columns=["location", "date", "vaccine", "total_vaccinations"]
+            )
+        self._export_metadata(df_manufacuter, paths.tmp_vax_metadata_man)
+
+    def _export_metadata(self, df, output_path):
+        export_metadata(
+            df=df,
+            source_name="European Centre for Disease Prevention and Control (ECDC)",
+            source_url=self.source_url_ref,
+            output_path=output_path
         )
 
     def export(self, paths):

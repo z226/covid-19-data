@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.incremental import increment, clean_count
+from vax.utils.files import export_metadata
 
 
 VACCINE_PROTOCOLS = {
@@ -98,7 +99,7 @@ def main(paths):
     df = df.replace(vaccine_mapping)
 
     df.to_csv(paths.tmp_vax_out_man("Iceland"), index=False)
-
+    export_metadata(df, "Ministry of Health", url, paths.tmp_vax_metadata_man)
 
 if __name__ == '__main__':
     main()

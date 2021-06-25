@@ -1,6 +1,8 @@
 import re
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 vaccines_mapping = {
     "total_coronavac": "Sinovac",
@@ -108,10 +110,13 @@ class Uruguay:
         # Export main
         df.pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False)
         # Export manufacturer data
-        df.pipe(self.pipeline_manufacturer).to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        df_man = df.pipe(self.pipeline_manufacturer)
+        df_man.to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        export_metadata(df_man, "Ministry of Health via vacuna.uy", self.source_url, paths.tmp_vax_metadata_man)
         # Export age data
-        df_age.pipe(self.pipeline_age).to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
-
+        df_age = df_age.pipe(self.pipeline_age)
+        df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        export_metadata(df_age, "Ministry of Health via vacuna.uy", self.source_url_age, paths.tmp_vax_metadata_age)
 
 def main(paths):
     Uruguay().to_csv(paths)

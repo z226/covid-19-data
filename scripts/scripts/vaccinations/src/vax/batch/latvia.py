@@ -1,6 +1,7 @@
 import pandas as pd
 
 from vax.utils.utils import get_soup
+from vax.utils.files import export_metadata
 
 
 vaccine_mapping = {
@@ -123,8 +124,9 @@ class Latvia:
         # Main data
         df_base.pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False)
         # Manufacturer data
-        df_base.pipe(self.pipeline_manufacturer).to_csv(paths.tmp_vax_out_man(self.location), index=False)
-
+        df_man = df_base.pipe(self.pipeline_manufacturer)
+        df_man.to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        export_metadata(df_man, "National Health Service", self.source_url, paths.tmp_vax_metadata_man)
 
 def main(paths):
     Latvia().to_csv(paths)

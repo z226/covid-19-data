@@ -1,5 +1,7 @@
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 def main(paths):
 
@@ -20,7 +22,7 @@ def main(paths):
     df = df.replace(vaccine_mapping)
     df["total_vaccinations"] = df["prima_dose"] + df["seconda_dose"]
     df = df.rename(columns={"data_somministrazione": "date", "fornitore": "vaccine", "fascia_anagrafica": "age_group"})
-    df_age_group = df.copy()
+    # df_age_group = df.copy()
 
     # Data by manufacturer
     by_manufacturer = (
@@ -31,6 +33,12 @@ def main(paths):
     by_manufacturer["total_vaccinations"] = by_manufacturer.groupby("vaccine")["total_vaccinations"].cumsum()
     by_manufacturer["location"] = "Italy"
     by_manufacturer.to_csv(paths.tmp_vax_out_man("Italy"), index=False)
+    export_metadata(
+        by_manufacturer,
+        "Extraordinary commissioner for the Covid-19 emergency",
+        url,
+        paths.tmp_vax_metadata_man
+    )
 
     # Vaccination data
     df = df.rename(columns={

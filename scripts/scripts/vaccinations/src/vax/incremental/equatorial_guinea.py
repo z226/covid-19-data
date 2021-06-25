@@ -1,11 +1,10 @@
 import re
-import unicodedata
 
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
-from vax.utils.dates import clean_date
+from vax.utils.dates import extract_clean_date
 
 
 class EquatorialGuinea:
@@ -34,10 +33,13 @@ class EquatorialGuinea:
         return clean_count(people_vaccinated), clean_count(people_fully_vaccinated)
 
     def parse_date(self, soup):
-        regex = r"Datos: a  (\d{1,2}) ([a-zA-Z]+) de (202\d)"
-        text = unicodedata.normalize('NFKC', soup.text)
-        match = re.search(regex, text)
-        return clean_date(match.group(), "Datos: a  %d %B de %Y", "es")
+        return extract_clean_date(
+            text=soup.text,
+            regex=r"Datos:\s{1,2}a (\d{1,2} [a-zA-Z]+ de 202\d)",
+            date_format="%d %B de %Y",
+            lang="es",
+            unicode_norm=True
+        )
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, 'location', self.location)

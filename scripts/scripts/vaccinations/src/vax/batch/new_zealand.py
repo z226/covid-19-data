@@ -5,7 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 import vax.utils.utils as utils
-from vax.utils.incremental import merge_with_current_data
+
 
 class NewZealand:
 
@@ -34,8 +34,9 @@ class NewZealand:
         soup = utils.get_soup(self.source_url)
         link = self._parse_file_link(soup)
         df = utils.read_xlsx_from_url(link, sheet_name="Date")
-        df_by_age = utils.read_xlsx_from_url(link, sheet_name="Ethnicity, Age, Gender by dose")
-        return df, df_by_age
+        print(link)
+        #df_by_age = utils.read_xlsx_from_url(link, sheet_name="Ethnicity Age Gender by dose")
+        return df#, df_by_age
 
     def _parse_file_link(self, soup: BeautifulSoup) -> str:
         href = soup.find(id="download").find_next("a")["href"]
@@ -118,7 +119,7 @@ class NewZealand:
 
     def to_csv(self, paths):
         """Generalized."""
-        df, df_by_age = self.read()
+        df = self.read()
         # Main data
         df = df.pipe(self.pipeline)
         df.to_csv(paths.tmp_vax_out(self.location), index=False)

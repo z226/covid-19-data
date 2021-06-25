@@ -15,7 +15,7 @@ class Andorra:
         self.location = location
 
     def read(self) -> pd.Series:
-        soup = get_soup(self.source_url)
+        soup = get_soup(self.source_url, verify=False)
         return self.parse_data(soup)
 
     def parse_data(self, soup):

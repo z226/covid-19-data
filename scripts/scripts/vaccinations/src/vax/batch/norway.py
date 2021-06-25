@@ -43,16 +43,16 @@ def main(paths):
     })
 
     with webdriver.Chrome(options=op) as driver:
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(15)
         # Setting Chrome to trust downloads
         driver.command_executor._commands["send_command"] = ("POST", "/session/$sessionId/chromium/send_command")
         params = {"cmd": "Page.setDownloadBehavior", "params": {"behavior": "allow", "downloadPath": "."}}
         _ = driver.execute("send_command", params)
 
         driver.get(url)
-        driver.execute_script("window.scrollTo(0, 1700)")
+        driver.execute_script("window.scrollTo(0, 1800)")
         driver.find_element_by_class_name("highcharts-exporting-group").click()
-
+        time.sleep(2)
         for item in driver.find_elements_by_class_name("highcharts-menu-item"):
             if item.text == "Last ned CSV":
                 item.click()

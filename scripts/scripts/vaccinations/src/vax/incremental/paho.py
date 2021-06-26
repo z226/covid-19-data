@@ -20,6 +20,7 @@ logger = get_logger()
 COUNTRIES = {
     "Bermuda": "Bermuda",
     "Bahamas": "Bahamas",
+    "Dominica": "Dominica",
     "Jamaica": "Jamaica",
     "Venezuela": "Venezuela",
 }

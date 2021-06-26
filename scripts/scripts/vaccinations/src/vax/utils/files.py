@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from bs4 import UnicodeDammit
 
 
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "_static"))
@@ -92,3 +93,10 @@ def export_metadata(df: pd.DataFrame, source_name: str, source_url: str, output_
         [["location", "last_observation_date", "source_name", "source_url"]]
         .to_csv(output_path, index=False)
     )
+
+
+def get_file_encoding(file_path):
+    with open(file_path, 'rb') as file:
+        content = file.read()
+    suggestion = UnicodeDammit(content)
+    return suggestion.original_encoding

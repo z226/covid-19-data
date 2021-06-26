@@ -4,6 +4,10 @@ import numpy as np
 from vax.utils.incremental import increment
 from vax.utils.checks import VACCINES_ONE_DOSE
 from vax.utils.who import VACCINES_WHO_MAPPING
+from vax.cmd.utils import get_logger
+
+
+logger = get_logger()
 
 
 # Dict mapping WHO country names -> OWID country names
@@ -145,7 +149,6 @@ def calculate_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def increment_countries(df: pd.DataFrame, paths):
     for row in df.sort_values("COUNTRY").iterrows():
         row = row[1]
-        print(row["COUNTRY"])        
         cond = row[["PERSONS_VACCINATED_1PLUS_DOSE", "people_fully_vaccinated", "TOTAL_VACCINATIONS"]].isnull().all()
         if not cond:
             increment(
@@ -158,7 +161,8 @@ def increment_countries(df: pd.DataFrame, paths):
                 vaccine=row["VACCINES_USED"],
                 source_url="https://covid19.who.int/",
             )
-
+            country = row["COUNTRY"]
+            logger.info(f"\tvax.incremental.who.{country}: SUCCESS ✅")
 
 def main(paths):
     source_url = "https://covid19.who.int/who-data/vaccination-data.csv"

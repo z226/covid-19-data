@@ -34,13 +34,13 @@ class Colombia:
 
     def _parse_total_vaccinations(self, worksheet):
         nrow_doses_1 = 15
-        if worksheet.at(nrow_doses_1, 9) == "Total dosis aplicadas":
-            return worksheet.at(nrow_doses_1, 10)
+        if worksheet.at(nrow_doses_1, 10) == "Total dosis aplicadas":
+            return worksheet.at(nrow_doses_1, 11)
 
     def _parse_people_fully_vaccinated(self, worksheet):
         nrow_doses_1 = 26
-        if worksheet.at(nrow_doses_1, 9) == "Total dosis acumuladas segundas dosis":
-            return worksheet.at(nrow_doses_1, 10)
+        if worksheet.at(nrow_doses_1, 10) == "Total dosis acumuladas segundas dosis":
+            return worksheet.at(nrow_doses_1, 11)
 
     def _parse_date(self, worksheet):
         nrow_date = 43

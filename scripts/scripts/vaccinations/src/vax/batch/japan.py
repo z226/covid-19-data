@@ -220,6 +220,8 @@ class Japan:
 
     def export(self, paths):
         df = self.read().pipe(self.base_pipeline)
+        # Drop total_vaccinations == 0 rows added by groupby.
+        df = df.drop(df[df.total_vaccinations == 0].index).reset_index()
         # Manufacturer
         df.pipe(self.pipeline_manufacturer).to_csv(
             paths.tmp_vax_out_man(self.location),

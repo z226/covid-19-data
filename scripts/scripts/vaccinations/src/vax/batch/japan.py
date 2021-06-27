@@ -1,206 +1,178 @@
 from datetime import datetime
 
 import pandas as pd
-import numpy as np
 
-vaccine_mapping = {
-    "ファイザー社": "Pfizer/BioNTech",
-    "武田/モデルナ社": "Moderna",
-}
+from vax.utils.utils import get_soup, clean_df_columns_multiindex
+from vax.utils.dates import clean_date_series
 
 
 class Japan:
-    def __init__(self, source_url_health: str, source_url_general: str,
-                 source_url_ref: str, location: str):
-        self.source_url_health = source_url_health
-        self.source_url_general = source_url_general
-        self.source_url_ref = source_url_ref
-        self.location = location
-
-        self.column_mapping = {
-            'Unnamed: 0': 'date',
+    def __init__(self):
+        self.source_url_1 = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
+        self.source_url_2_health = "https://www.kantei.go.jp/jp/content/IRYO-vaccination_data3.xlsx"
+        self.source_url_2_general = "https://www.kantei.go.jp/jp/content/KOREI-vaccination_data3.xlsx"
+        self.source_url_2_ref = "https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html"
+        self.location = "Japan"
+        self.vaccine_mapping = {
+            "ファイザー社": "Pfizer/BioNTech",
+            "武田/モデルナ社": "Moderna",
         }
-
-        def _comma_merger(values):
-            ret = []
-            for v in values:
-                ret += v.split(', ')
-            return ', '.join(set(ret))
-
-        self.merge_data_aggregators = {
-            'source_url': _comma_merger,
-        }
-
-        for japanese_name, english_name in vaccine_mapping.items():
-            self.column_mapping[
-                japanese_name] = 'people_vaccinated_' + english_name
-            self.column_mapping[
-                japanese_name +
-                '.1'] = 'people_fully_vaccinated_' + english_name
-            self.merge_data_aggregators['people_vaccinated_' +
-                                        english_name] = sum
-            self.merge_data_aggregators['people_fully_vaccinated_' +
-                                        english_name] = sum
 
     def read(self):
-        df_health_early = self._health_early_data()
-        df_health = self._parse_data(self.source_url_health, skiprows=3)
-        df_general = self._parse_data(self.source_url_general, skiprows=4)
-        return self._merge_data(self._merge_data(df_health_early, df_health),
-                                df_general)
+        df_1 = self.read_1().pipe(self.pipeline_1)
+        df_2 = self.read_2().pipe(self.pipeline_2)
+        return (
+            pd.concat([
+                df_1,
+                df_2
+            ])
+            .reset_index(drop=True)
+        )
 
-    def _health_early_data(self):
-        # Early health data until Apr/09 exists on a separate HTML page.
-        # Hardcode the data since it is no longer updating.
-        raw_data = [(2, 17, 125, 0), (2, 18, 486, 0), (2, 19, 4428, 0),
-                    (2, 22, 6895, 0), (2, 24, 5954, 0), (2, 25, 4008, 0),
-                    (2, 26, 6634, 0), (3, 1, 3255, 0), (3, 2, 2987, 0),
-                    (3, 3, 2531, 0), (3, 4, 1871, 0), (3, 5, 7295, 0),
-                    (3, 8, 24327, 0), (3, 9, 36762, 0), (3, 10, 41357, 35),
-                    (3, 11, 31826, 408), (3, 12, 46453, 2905),
-                    (3, 15, 55204, 4529), (3, 16, 67446, 1470),
-                    (3, 17, 73352, 4942), (3, 18, 67217, 4000),
-                    (3, 19, 63041, 7092), (3, 22, 70115, 3748),
-                    (3, 23, 43801, 2627), (3, 24, 38731, 3323),
-                    (3, 25, 31571, 2371), (3, 26, 43993, 3754),
-                    (3, 29, 44039, 23754), (3, 30, 27242, 31827),
-                    (3, 31, 24213, 28795), (4, 1, 16156, 31217),
-                    (4, 2, 20026, 26560), (4, 5, 43297, 56889),
-                    (4, 6, 39420, 52262), (4, 7, 40371, 64171),
-                    (4, 8, 29956, 64542), (4, 9, 35313, 69598)]
-        date_col = []
-        people_vaccinated_col = []
-        people_fully_vaccinated_col = []
-        for month, day, dose1, dose2 in raw_data:
-            date_col.append(datetime(2021, month, day))
-            people_vaccinated_col.append(dose1)
-            people_fully_vaccinated_col.append(dose2)
-
-        df = pd.DataFrame()
-        df['date'] = date_col
-        df['people_vaccinated_Pfizer/BioNTech'] = people_vaccinated_col
-        df['people_fully_vaccinated_Pfizer/BioNTech'] = people_fully_vaccinated_col
-        df['people_vaccinated_Moderna'] = 0
-        df['people_fully_vaccinated_Moderna'] = 0
-        df['source_url'] = 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html'
+    def read_1(self):
+        soup = get_soup(self.source_url_1)
+        dfs = pd.read_html(str(soup), header=0)
+        if len(dfs) != 1:
+            raise ValueError(f"Only one table should be present. {len(dfs)} tables detected.")
+        df = dfs[0]
         return df
 
-    def _parse_data(self, source: str, skiprows: int) -> pd.Series:
+    def pipe_1_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.rename(columns={
+            "日付": "date",
+            "接種回数": "total_vaccinations",
+            "内１回目": "people_vaccinated",
+            "内２回目": "people_fully_vaccinated",
+        })
 
-        df = pd.read_excel(source, usecols="A,D:G", skiprows=skiprows)
+    def pipe_1_filter_dates(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[df.date != "合計"]
 
-        # Sanity checks
-        assert [*df.columns
-                ] == ['Unnamed: 0'] + list(vaccine_mapping.keys()) + [
-                    x + '.1' for x in vaccine_mapping.keys()
-                ], "Columns are not as expected. Unknown field detected."
+    def pipe_1_source(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(source_url=self.source_url_1)
 
-        # Select the correct subregion with time series.
-        df = df.iloc[1:][::-1]
-        while type(df.iloc[0, 0]) is not datetime:
-            df = df.iloc[1:]
+    def pipe_1_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(vaccine="Pfizer/BioNTech")
 
-        return df.pipe(self.pipe_rename_columns).pipe(self.pipe_source)
+    def pipe_1_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(date=clean_date_series(df.date, "%Y/%m/%d"))
 
-    def _merge_data(self, df_health: pd.DataFrame,
-                    df_general: pd.DataFrame) -> pd.DataFrame:
-        return pd.concat([
-            df_health.sort_values(by='date'),
-            df_general.sort_values(by='date')
-        ]).groupby('date').agg(
-            self.merge_data_aggregators).sort_values(by='date').reset_index()
+    def pipeline_1(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_1_rename_columns)
+            .pipe(self.pipe_1_filter_dates)
+            .pipe(self.pipe_1_source)
+            .pipe(self.pipe_1_vaccine)
+            .pipe(self.pipe_1_date)
+        )
 
-    def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns=self.column_mapping)
+    def read_2(self):
+        df_health = self._parse_data_2(
+            source=self.source_url_2_health,
+            header=[2, 3],
+            date_col="集計日"
+        )
+        df_general = self._parse_data_2(
+            source=self.source_url_2_general,
+            header=[2, 3, 4],
+            date_col="接種日",
+            extra_levels=["すべて"]
+        )
+        return (
+            pd.concat([
+                df_health,
+                df_general,
+            ])
+            .reset_index(drop=True)
+        )
+
+    def _parse_data_2(self, source: str, header: list, date_col: str, extra_levels: list = None) -> pd.DataFrame:
+        # Read general
+        df = pd.read_excel(source, header=header)
+        df = df.dropna(axis=1, how='all')
+        # Clean column names
+        df = clean_df_columns_multiindex(df)
+        # Filter date rows
+        df = df[df[date_col].apply(isinstance, args=(datetime,))].set_index(date_col).sort_index()
+        # Build DataFrame
+        if extra_levels is None:
+            extra_levels = []
+        doses_1 = df.loc[:, tuple(extra_levels + ["内1回目"])]
+        doses_2 = df.loc[:, tuple(extra_levels + ["内2回目"])]
+        return (
+            pd.DataFrame({
+                "people_vaccinated": doses_1.sum(axis=1),
+                "people_fully_vaccinated": doses_2.sum(axis=1),
+                "vaccine": self._parse_data_2_vaccines(doses_1, doses_2, date_col),
+            })
+            .reset_index()
+            .rename(columns={date_col: "date"})
+        )
+
+    def _parse_data_2_vaccines(self, doses_1, doses_2, date_col) -> pd.DataFrame:
+        if not all(doses_1.columns == doses_2.columns):
+            raise ValueError("Missmatch in vaccines for dose 1 and dose 2")
+        x = doses_1.cumsum()
+        vaccines_wrong = set(x.columns).difference(self.vaccine_mapping)
+        if vaccines_wrong:
+            raise ValueError(f"Unknown vaccine(s): {vaccines_wrong}")
+        vaccines = x.mask(x==0).stack().reset_index().groupby(date_col).level_1.unique()
+        return vaccines
+
+    def pipe_2_aggregate(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .groupby("date", as_index=False)
+            .agg({
+                "people_vaccinated": "sum",
+                "people_fully_vaccinated": "sum",
+                "vaccine": lambda x: ", ".join(sorted(set(self.vaccine_mapping[xxx] for xx in list(x) for xxx in xx)))
+            })
+        )
+
+    def pipe_2_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(total_vaccinations=df.people_vaccinated+df.people_fully_vaccinated)
+
+    def pipe_2_source(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(source_url=self.source_url_2_ref)
+
+    def pipe_2_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(date=clean_date_series(df.date))
+
+    def pipeline_2(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_2_aggregate)
+            .pipe(self.pipe_2_metrics)
+            .pipe(self.pipe_2_source)
+            .pipe(self.pipe_2_date)
+        )
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(location=self.location)
 
-    def pipe_source(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(source_url=self.source_url_ref)
-
-    def pipe_assign_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
-        def _get_vaccine(data: tuple) -> str:
-            vaccines = []
-            _, ds = data
-            for vaccine_name in vaccine_mapping.values():
-                if ds['people_vaccinated_' + vaccine_name] + ds[
-                        'people_fully_vaccinated_' + vaccine_name] > 0:
-                    vaccines.append(vaccine_name)
-            return ', '.join(vaccines)
-
-        df['vaccine'] = [_get_vaccine(row) for row in df.iterrows()]
-        return df
-
-    def pipe_calc_row_data(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(
-            people_vaccinated=lambda ds: sum(ds['people_vaccinated_' + x] for x
-                                             in vaccine_mapping.values()),
-            people_fully_vaccinated=lambda ds: sum(
-                ds['people_fully_vaccinated_' + x]
-                for x in vaccine_mapping.values())).assign(
-                    total_vaccinations=lambda ds: ds.people_vaccinated + ds.
-                    people_fully_vaccinated)
-
     def pipe_cumsum(self, df: pd.DataFrame) -> pd.DataFrame:
-        df['people_vaccinated'] = df['people_vaccinated'].cumsum()
-        df['people_fully_vaccinated'] = df['people_fully_vaccinated'].cumsum()
-        df['total_vaccinations'] = df['total_vaccinations'].cumsum()
+        df = df.sort_values("date")
+        column_metrics = ["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+        df.loc[:, column_metrics] = df[column_metrics].cumsum()
         return df
-
-    def pipe_separate_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
-        df_by_vaccine = []
-        reset_assign = {}
-        for vaccine_name in vaccine_mapping.values():
-            reset_assign['people_vaccinated_' + vaccine_name] = 0
-            reset_assign['people_fully_vaccinated_' + vaccine_name] = 0
-        for vaccine_name in vaccine_mapping.values():
-            assign = reset_assign.copy()
-            del assign['people_vaccinated_' + vaccine_name]
-            del assign['people_fully_vaccinated_' + vaccine_name]
-            df_by_vaccine.append(df.copy().assign(**assign).pipe(
-                self.pipe_calc_row_data).pipe(self.pipe_cumsum))
-        return pd.concat(df_by_vaccine)
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.pipe(self.pipe_calc_row_data).pipe(self.pipe_location).pipe(
-            self.pipe_assign_vaccine).pipe(self.pipe_cumsum)[[
-                'date', 'total_vaccinations', 'people_vaccinated',
-                'people_fully_vaccinated', 'location', 'source_url', 'vaccine'
-            ]]
+        return (
+            df
+            .pipe(self.pipe_location)
+            .pipe(self.pipe_cumsum)
+            [[
+                "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated",
+                "people_fully_vaccinated",
+            ]])
 
-    def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.pipe(self.pipe_separate_manufacturer).pipe(
-            self.pipe_location).pipe(self.pipe_assign_vaccine)[[
-                'date',
-                'location',
-                'vaccine',
-                'total_vaccinations',
-            ]].sort_values(
-                by=['date', 'vaccine']).query('total_vaccinations > 0')
-
-    def to_csv(self, paths):
-        df = self.read()
-        df.copy().pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location),
-                                             index=False,
-                                             float_format='%.f')
-        df.copy().pipe(self.pipeline_manufacturer).to_csv(
-            paths.tmp_vax_out_man(f"{self.location}"),
-            index=False,
-            float_format='%.f')
+    def export(self, paths):
+        df = self.read().pipe(self.pipeline)
+        df.to_csv(paths.tmp_vax_out(self.location), index=False, float_format='%.f')
 
 
 def main(paths):
-    Japan(
-        source_url_health=
-        "https://www.kantei.go.jp/jp/content/IRYO-vaccination_data3.xlsx",
-        source_url_general=
-        "https://www.kantei.go.jp/jp/content/KOREI-vaccination_data3.xlsx",
-        source_url_ref=
-        "https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html",
-        location="Japan",
-    ).to_csv(paths)
+    Japan().export(paths)
 
-
-if __name__ == "__main__":
-    main()

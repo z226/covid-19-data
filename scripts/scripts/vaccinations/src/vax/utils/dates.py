@@ -112,7 +112,7 @@ def localdate(tz, hour_limit=None, date_format=None):
     return local_time.strftime(date_format)
 
 
-def clean_date_series(ds: pd.Series, format_input: str, format_output: str = "%Y-%m-%d") -> pd.Series:
+def clean_date_series(ds: pd.Series, format_input: str = None, format_output: str = "%Y-%m-%d") -> pd.Series:
     if format_output is None:
         format_output = DATE_FORMAT
     return pd.to_datetime(ds, format=format_input).dt.strftime(format_output)

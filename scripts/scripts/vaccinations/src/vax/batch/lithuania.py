@@ -3,6 +3,8 @@ import json
 import requests
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 def main(paths):
 
@@ -54,6 +56,7 @@ def main(paths):
     )
     vax["location"] = "Lithuania"
     vax.to_csv(paths.tmp_vax_out_man("Lithuania"), index=False)
+    export_metadata(vax, "Ministry of Health", DATA_URL, paths.tmp_vax_metadata_man)
 
     # Unpivot
     df = (

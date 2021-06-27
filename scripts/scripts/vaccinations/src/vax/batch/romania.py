@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 class Romania:
 
@@ -145,7 +147,7 @@ class Romania:
         # Export manufacturer data
         df = df_base.copy().pipe(self.pipeline_manufacturer)
         df.to_csv(paths.tmp_vax_out_man(f"{self.location}"), index=False)
-
+        export_metadata(df, "Government of Romania via datelazi.ro", self.source_url, paths.tmp_vax_metadata_man)
 
 def main(paths):
     Romania(

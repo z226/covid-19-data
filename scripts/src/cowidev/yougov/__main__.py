@@ -139,25 +139,6 @@ class YouGov:
         )
         return df, df_comp
 
-    def to_db(self, suffix=""):
-        from utils.db_imports import import_dataset
-        time_str = datetime.datetime.now().astimezone(pytz.timezone('Europe/London')).strftime("%-d %B %Y, %H:%M")
-        source_name = (
-            f"Imperial College London YouGov Covid 19 Behaviour Tracker Data Hub – Last updated {time_str} "
-            f"(London time)"
-        )
-        import_dataset(
-            dataset_name=self.dataset_name + suffix,
-            namespace='owid',
-            csv_path=self.output_csv_path,
-            default_variable_display={
-                'yearIsDay': True,
-                'zeroDay': ZERO_DAY
-            },
-            source_name=source_name,
-            slack_notifications=False
-        )
-
     def to_csv(self):
         df = self.read()
         df, df_comp = df.pipe(self.pipeline_csv)
@@ -435,19 +416,6 @@ def _reorder_columns(df):
     data_cols = sorted([col for col in df.columns if col not in index_cols])
     df = df[index_cols + data_cols]
     return df
-
-
-def update_db():
-    update_db_main()
-    update_db_composite()
-
-
-def update_db_main():
-    YouGov(output_path=OUTPUT_PATH, debug=DEBUG).to_db()
-
-
-def update_db_composite():
-    YouGov(output_path=OUTPUT_PATH, debug=DEBUG).to_db(suffix=", composite variables")
 
 
 def main():

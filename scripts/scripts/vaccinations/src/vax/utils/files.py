@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from bs4 import UnicodeDammit
 
 
 STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "_static"))
@@ -67,3 +68,35 @@ def load_data(data_filename: str, file_ext: str = "csv"):
     else:
         raise ValueError("Only CSV format supported")
     return df
+
+
+def export_metadata(df: pd.DataFrame, source_name: str, source_url: str, output_path: str):
+    if "location" not in df or "date" not in df:
+        raise ValueError("df must have columns `location` and `date`.")
+    df = (
+        df
+        .sort_values("date")[["location", "date"]]
+        .drop_duplicates(subset=["location"], keep="last")
+        .rename(columns={"date": "last_observation_date"})
+        .assign(
+            source_name=source_name,
+            source_url=source_url,
+        )
+    )
+    if os.path.isfile(output_path):
+        df_current = pd.read_csv(output_path)
+        df_current = df_current.loc[~df_current.location.isin(df.location)]
+        df = pd.concat([df_current, df])
+    (
+        df
+        .sort_values("location")
+        [["location", "last_observation_date", "source_name", "source_url"]]
+        .to_csv(output_path, index=False)
+    )
+
+
+def get_file_encoding(file_path):
+    with open(file_path, 'rb') as file:
+        content = file.read()
+    suggestion = UnicodeDammit(content)
+    return suggestion.original_encoding

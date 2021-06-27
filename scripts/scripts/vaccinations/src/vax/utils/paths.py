@@ -22,6 +22,14 @@ class Paths:
         return os.path.join(self.pub_vax, "country_data", f"{location}.csv")
 
     @property
+    def pub_vax_metadata_man(self):
+        return os.path.join(self.pub_vax, "locations_manufacturer.csv")
+
+    @property
+    def pub_vax_metadata_age(self):
+        return os.path.join(self.pub_vax, "locations_age.csv")
+
+    @property
     def in_us_states(self):
         return os.path.join(self.tmp_vax, "us_states", "input")
 
@@ -56,6 +64,18 @@ class Paths:
     @property
     def tmp_html(self):
         return os.path.join(self.tmp_vax, "source_table.html")
+
+    @property
+    def tmp_vax_metadata(self):
+        return os.path.join(self.tmp_vax_out_dir, "metadata")
+
+    @property
+    def tmp_vax_metadata_age(self):
+        return os.path.join(self.tmp_vax_metadata, "locations_age.csv")
+
+    @property
+    def tmp_vax_metadata_man(self):
+        return os.path.join(self.tmp_vax_metadata, "locations_manufacturer.csv")
 
     def tmp_vax_out(self, location):
         return os.path.join(self.tmp_vax_out_dir, f"{location}.csv")

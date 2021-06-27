@@ -6,6 +6,7 @@ from math import isnan
 import glob
 import json
 import locale
+from shutil import copyfile
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
@@ -24,12 +25,13 @@ class Bucket(object):
 
 class DatasetGenerator:
 
-    def __init__(self, inputs, outputs):
+    def __init__(self, inputs, outputs, paths):
         # Inputs
         self.inputs = inputs
         # Outputs
         self.outputs = outputs
         # Others
+        self.paths = paths
         self.aggregates = self.build_aggregates()
         self._countries_covered = None
 
@@ -567,6 +569,11 @@ class DatasetGenerator:
             else:
                 raise ValueError("Format not supported. Currently only csv, json and html are accepted!")
 
+    def _cp_locations_files(self):
+        copyfile(self.paths.tmp_vax_metadata_man, self.paths.pub_vax_metadata_man)
+        copyfile(self.paths.tmp_vax_metadata_age, self.paths.pub_vax_metadata_age)
+
+
     def run(self):
         print("-- Generating dataset... --")
         logger.info("1/10 Loading input data...")
@@ -635,6 +642,7 @@ class DatasetGenerator:
             df_age_grapher=df_age_grapher,
             html_table=html_table,
         )
+        self._cp_locations_files()
 
 
 def main_generate_dataset(paths):
@@ -652,7 +660,7 @@ def main_generate_dataset(paths):
         income_groups=os.path.join(paths.project_dir, "scripts/input/wb/income_groups.csv"),
         income_groups_compl=os.path.join(paths.project_dir, "scripts/input/owid/income_groups_complement.csv"),
         manufacturer=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_manufacturer/*.csv"),
-        age=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_age_group/*.csv")
+        age=os.path.join(paths.project_dir, "scripts/scripts/vaccinations/output/by_age_group/*.csv"),
     )
     outputs = Bucket(
         locations=os.path.join(paths.project_dir, "public/data/vaccinations/locations.csv"),
@@ -678,7 +686,7 @@ def main_generate_dataset(paths):
         ),
         html_table=os.path.abspath(os.path.join(paths.project_dir, "scripts/scripts/vaccinations/source_table.html")),
     )
-    generator = DatasetGenerator(inputs, outputs)
+    generator = DatasetGenerator(inputs, outputs, paths)
     generator.run()
 
     # Export timestamp

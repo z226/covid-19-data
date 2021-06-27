@@ -20,6 +20,6 @@ run_python() {
 git checkout $BRANCH
 git pull
 
-# Run all db updates
-cd $SCRIPTS_DIR/scripts
-python grapherupdate.py 
+# Run Grapher updates
+export OWID_COVID_PROJECT_DIR=${ROOT_DIR}
+cowidev-grapher

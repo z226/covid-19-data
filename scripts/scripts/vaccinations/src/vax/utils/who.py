@@ -16,6 +16,7 @@ VACCINES_WHO_MAPPING = {
     "RIBSP - QazCovid": "QazVac",
     "SII - Covishield": "Oxford/AstraZeneca",
     "Sinovac - CoronaVac": "Sinovac",
+    "Soberana02": "Soberana02",
     "SRCVB - EpiVacCorona": "EpiVacCorona",
     "Wuhan CNBG - Inactivated": "Sinopharm/Wuhan",
 }

@@ -10,6 +10,7 @@ pipeline:
       - North Macedonia
       - Philippines
       - South Africa
+      - Gabon
   process-data:
     skip_complete:
       - Pitcairn

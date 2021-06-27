@@ -1,5 +1,7 @@
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 def main(paths):
 
@@ -32,6 +34,7 @@ def main(paths):
 
     manufacturer = df[["date", "total_vaccinations", "vaccine"]].assign(location="France")
     manufacturer.to_csv(paths.tmp_vax_out_man("France"), index=False)
+    export_metadata(manufacturer, "Public Health France", source, paths.tmp_vax_metadata_man)
 
     # Infer fully vaccinated for one-dose vaccines
     df.loc[df.vaccine.isin(one_dose_vaccines), "people_fully_vaccinated"] = df.people_vaccinated

@@ -1,5 +1,7 @@
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 vaccine_mapping = {
     "Pfizer": "Pfizer/BioNTech",
@@ -147,9 +149,16 @@ class Chile:
             index=False
         )
         # Manufacturer
-        df.pipe(self.pipeline_manufacturer).to_csv(
+        df_man = df.pipe(self.pipeline_manufacturer)
+        df_man.to_csv(
             paths.tmp_vax_out_man(self.location),
             index=False
+        )
+        export_metadata(
+            df_man,
+            "Ministerio de Ciencia, Tecnología, Conocimiento e Innovación",
+            self.source_url_ref,
+            paths.tmp_vax_metadata_man
         )
         # Age (commented because metrics are not relative to age group sizes)
         # df_age.to_csv(

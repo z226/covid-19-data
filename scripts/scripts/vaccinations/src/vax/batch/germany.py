@@ -3,6 +3,8 @@ from typing import Dict
 
 import pandas as pd
 
+from vax.utils.files import export_metadata
+
 
 class Germany:
 
@@ -124,6 +126,7 @@ class Germany:
             paths.tmp_vax_out_man(self.location),
             index=False
         )
+        export_metadata(df, "Robert Koch Institut", self.source_url_ref, paths.tmp_vax_metadata_man)
 
 
 def main(paths):

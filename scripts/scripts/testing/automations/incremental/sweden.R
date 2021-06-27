@@ -5,10 +5,10 @@ df <- page %>%
     html_node("#content-primary table") %>%
     html_table() %>%
     data.table()
-df[, Weekly := as.integer(str_replace_all(`NukleinsyrapåvisningGenomförda tester`, "\\s", ""))]
+df[, Weekly := as.integer(str_replace_all(`Genomförda test`, "\\s", ""))]
 
-df <- df[str_detect(Vecka, "Vecka")]
-df[, Vecka := as.integer(str_replace(Vecka, "Vecka ", ""))]
+df <- df[str_detect(Vecka, "[vV]ecka")]
+df[, Vecka := as.integer(str_replace(Vecka, "[vV]ecka ", ""))]
 df <- df[Vecka < 52]
 df[, Date := ymd("2021-01-03") + 7 * Vecka]
 

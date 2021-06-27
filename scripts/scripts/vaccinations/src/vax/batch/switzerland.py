@@ -5,6 +5,7 @@ from zipfile import ZipFile
 import pandas as pd
 
 from vax.utils.utils import get_soup, download_file_from_url
+from vax.utils.files import export_metadata
 
 class Switzerland:
 
@@ -126,9 +127,16 @@ class Switzerland:
             index=False
         )
 
-        manufacturer_data.pipe(self.pipeline_manufacturer).to_csv(
+        df_man = manufacturer_data.pipe(self.pipeline_manufacturer)
+        df_man.to_csv(
             paths.tmp_vax_out_man("Switzerland"),
             index=False
+        )
+        export_metadata(
+            df_man,
+            "Federal Office of Public Health",
+            self.source_url,
+            paths.tmp_vax_metadata_man
         )
 
 

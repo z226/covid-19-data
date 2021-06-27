@@ -26,7 +26,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "vaccine", "Covaxin, Oxford/AstraZeneca")
+    return enrich_data(ds, "vaccine", "Covaxin, Oxford/AstraZeneca, Sputnik V")
 
 
 def enrich_source(ds: pd.Series) -> pd.Series:
@@ -44,6 +44,7 @@ def pipeline(ds: pd.Series) -> pd.Series:
 
 def main(paths):
     date_str = localdatenow()
+    # alternative: https://www.mygov.in/sites/default/files/covid/vaccine/vaccine_counts_today.json
     source = f"https://api.cowin.gov.in/api/v1/reports/v2/getPublicReports?state_id=&district_id=&date={date_str}"
     data = read(source).pipe(pipeline)
     increment(

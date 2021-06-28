@@ -12,8 +12,8 @@ from vax.utils.utils import get_soup
 
 
 vaccines_mapping = {
-    "Covishield Vaccine": "Oxford/AstraZeneca",
-    "Sinopharm Vaccine": "Sinopharm/Beijing",
+    "Covishield": "Oxford/AstraZeneca",
+    "Sinopharm": "Sinopharm/Beijing",
     "Sputnik V": "Sputnik V",
 }
 

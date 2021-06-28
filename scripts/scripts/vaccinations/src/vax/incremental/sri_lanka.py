@@ -12,8 +12,8 @@ from vax.utils.utils import get_soup
 
 
 vaccines_mapping = {
-    "Covishield Vaccine": "Oxford/AstraZeneca",
-    "Sinopharm Vaccine": "Sinopharm/Beijing",
+    "Covishield": "Oxford/AstraZeneca",
+    "Sinopharm": "Sinopharm/Beijing",
     "Sputnik V": "Sputnik V",
 }
 
@@ -76,10 +76,10 @@ class SriLanka:
 
     def _parse_vaccines_table_as_df(self, text):
         # Extract doses relevant sentence
-        regex = r"COVID-19 Vaccination +1st Dose +2nd Dose (.*)"# Country(/Region)? Cumulative Cases"
-        vax_info = re.search(regex, text).group(1).strip()
+        regex = r"COVID-19 Vaccination (.*) District"# Country(/Region)? Cumulative Cases"
+        vax_info = re.search(regex, text).group(1).strip().replace('No', '').replace('Vaccine', '')
         # Sentence to DataFrame
-        results = re.findall(r"([a-zA-Z ]+) +(\d+) (-|\d+)", vax_info)
+        results = re.findall(r"([a-zA-Z ]+?) +1st\sDose (\d+) 2nd Dose (\d+)", vax_info)
         df = (
             pd.DataFrame(results, columns=["vaccine", "doses_1", "doses_2"])
             .replace("-", 0)

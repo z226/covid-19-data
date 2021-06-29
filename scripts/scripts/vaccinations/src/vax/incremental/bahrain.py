@@ -26,8 +26,9 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
 
     people_vaccinated = int(soup.find_all(class_="count")[0]["data-count"])
     people_fully_vaccinated = int(soup.find_all(class_="count")[1]["data-count"])
+    booster_shots = int(soup.find_all(class_="count")[2]["data-count"])
     assert people_vaccinated >= people_fully_vaccinated
-    total_vaccinations = people_vaccinated + people_fully_vaccinated
+    total_vaccinations = people_vaccinated + people_fully_vaccinated + booster_shots
 
     date = soup.find(class_="reportdate").text
     date = re.search(r"\d+ \w+ 202\d", date).group(0)

@@ -17,30 +17,38 @@ class Colombia:
 
     def read(self) -> pd.Series:
         ws = self.gsheets_api.get_worksheet(self.sheet_id, "Reporte diario")
-        return self._parse_data(ws)
+        df = self._parse_data(ws)
+        return df
 
     def _parse_data(self, worksheet):
         if worksheet.nrows != 44:
             raise ValueError("Sheet format changed!")
         total_vaccinations = self._parse_total_vaccinations(worksheet)
         people_fully_vaccinated = self._parse_people_fully_vaccinated(worksheet)
+        unique_doses = self._parse_unique_doses(worksheet)
         if total_vaccinations is None or people_fully_vaccinated is None:
             return None
         return pd.Series({
             "date": self._parse_date(worksheet),
             "total_vaccinations": total_vaccinations,
             "people_fully_vaccinated": people_fully_vaccinated,
+            "people_vaccinated": total_vaccinations - people_fully_vaccinated + unique_doses,
         })
 
     def _parse_total_vaccinations(self, worksheet):
         nrow_doses_1 = 15
-        if worksheet.at(nrow_doses_1, 10) == "Total dosis aplicadas":
-            return worksheet.at(nrow_doses_1, 11)
+        if worksheet.at(nrow_doses_1, 13) == "Total dosis aplicadas":
+            return worksheet.at(nrow_doses_1, 14)
 
     def _parse_people_fully_vaccinated(self, worksheet):
-        nrow_doses_1 = 26
-        if worksheet.at(nrow_doses_1, 10) == "Total dosis acumuladas segundas dosis":
-            return worksheet.at(nrow_doses_1, 11)
+        nrow_doses_1 = 32
+        if worksheet.at(nrow_doses_1, 13) == "Esquemas completos con segundas dosis y dosis única":
+            return worksheet.at(nrow_doses_1, 14)
+
+    def _parse_unique_doses(self, worksheet):
+        nrow_doses_unique = 29
+        if worksheet.at(nrow_doses_unique, 13) == "Total dosis únicas acumuladas":
+            return worksheet.at(nrow_doses_unique, 14)
 
     def _parse_date(self, worksheet):
         nrow_date = 43
@@ -48,9 +56,6 @@ class Colombia:
             return clean_date(worksheet.at(nrow_date, 2), "%d/%m/%Y")
         else:
             raise ValueError("Date is not where it is expected be! Check worksheet")
-
-    def pipe_metrics(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "people_vaccinated", ds.total_vaccinations - ds.people_fully_vaccinated)
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", "Colombia")
@@ -64,7 +69,6 @@ class Colombia:
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
             ds
-            .pipe(self.pipe_metrics)
             .pipe(self.pipe_location)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_source)

@@ -27,7 +27,7 @@ def connect_parse_data(source: str) -> pd.Series:
             block_title = block.find_element_by_class_name("sn-kpi-measure-title").get_attribute("title")
             if "Total de Doses Aplicadas (Dose1)" in block_title:
                 people_vaccinated = block.find_element_by_class_name("sn-kpi-value").text
-            elif "Total de Doses Aplicadas(Dose 2)" in block_title:
+            elif "Total de Doses Aplicadas (Doses 2 e Única)" in block_title:
                 people_fully_vaccinated = block.find_element_by_class_name("sn-kpi-value").text
             elif "Total de Doses Aplicadas" in block_title:
                 total_vaccinations = block.find_element_by_class_name("sn-kpi-value").text

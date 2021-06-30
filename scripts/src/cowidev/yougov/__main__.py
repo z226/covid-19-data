@@ -1,6 +1,4 @@
 import os
-import sys
-import pytz
 import json
 import datetime
 import requests
@@ -8,6 +6,8 @@ import requests
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
+
+from cowidev.utils.utils import get_project_dir
 
 
 DEBUG = False
@@ -28,10 +28,10 @@ FREQ = 'M'
 ZERO_DAY = "2020-01-21"
 
 # File paths
-CURRENT_DIR = os.path.dirname(__file__)
-sys.path.append(CURRENT_DIR)
-INPUT_PATH = os.path.join(CURRENT_DIR, "../input/yougov")
-OUTPUT_PATH = os.path.join(CURRENT_DIR, "../grapher")
+PROJECT_DIR = get_project_dir()
+
+INPUT_PATH = os.path.join(PROJECT_DIR, "scripts", "input", "yougov")
+OUTPUT_PATH = os.path.join(PROJECT_DIR, "scripts", "grapher")
 MAPPING_PATH = os.path.join(INPUT_PATH, "mapping.csv")
 MAPPING_VALUES_PATH = os.path.join(INPUT_PATH, 'mapped_values.json')
 

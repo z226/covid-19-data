@@ -114,3 +114,11 @@ def clean_column_name(colname):
     if "Unnamed:" in colname_new:
         colname_new = ""
     return colname_new
+
+
+def clean_df_columns_multiindex(df):
+    columns_new = []
+    for col in df.columns:
+        columns_new.append([clean_column_name(c) for c in col])
+    df.columns = pd.MultiIndex.from_tuples(columns_new)
+    return df

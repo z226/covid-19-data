@@ -50,6 +50,10 @@ class Australia:
             source_url="https://covidlive.com.au/vaccinations"
         )
 
+    def pipe_exclude_rows(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Wrong data on 2021-06-22 prevents the series from increasing monotonically
+        return df[df.date != "2021-06-22"]
+
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
@@ -59,6 +63,7 @@ class Australia:
             .pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_metadata)
+            .pipe(self.pipe_exclude_rows)
             .sort_values("date")
         )
 

@@ -4,7 +4,7 @@ Update vaccination by manufacturer data.
 """
 
 
-from cowidev.grapher.base import GrapherBaseUpdater
+from cowidev.grapher.db.base import GrapherBaseUpdater
 
 
 class GrapherVaxAgeUpdater(GrapherBaseUpdater):

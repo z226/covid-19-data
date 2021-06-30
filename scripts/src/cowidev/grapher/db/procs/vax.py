@@ -1,4 +1,4 @@
-from cowidev.grapher.base import GrapherBaseUpdater
+from cowidev.grapher.db.base import GrapherBaseUpdater
 
 
 class GrapherVaxUpdater(GrapherBaseUpdater):

@@ -1,11 +1,11 @@
 import traceback
 
-from cowidev.grapher.procs.vax import GrapherVaxUpdater
-from cowidev.grapher.procs.testing import GrapherTestUpdater
-from cowidev.grapher.procs.yougov import GrapherYougovUpdater
-from cowidev.grapher.procs.vax_age import GrapherVaxAgeUpdater
-from cowidev.grapher.procs.vax_manufacturer import GrapherVaxManufacturerUpdater
-from cowidev.grapher.utils.slack_client import send_error
+from cowidev.grapher.db.procs.vax import GrapherVaxUpdater
+from cowidev.grapher.db.procs.testing import GrapherTestUpdater
+from cowidev.grapher.db.procs.yougov import GrapherYougovUpdater
+from cowidev.grapher.db.procs.vax_age import GrapherVaxAgeUpdater
+from cowidev.grapher.db.procs.vax_manufacturer import GrapherVaxManufacturerUpdater
+from cowidev.grapher.db.utils.slack_client import send_error
 
 
 updaters = [

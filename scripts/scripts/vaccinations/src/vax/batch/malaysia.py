@@ -28,9 +28,9 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def main():
+def main(paths):
     source = "https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vax_malaysia.csv"
-    read(source).pipe(pipeline).to_csv("Malaysia", index=False)
+    read(source).pipe(pipeline).to_csv(paths.tmp_vax_out("Malaysia"), index=False)
 
 if __name__ == "__main__":
     main()

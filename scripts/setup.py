@@ -50,7 +50,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "cowidev-grapher=cowidev.grapher.__main__:main" ,
+            "cowidev-grapher-db=cowidev.grapher.db.__main__:main" ,
         ]
     }
 )

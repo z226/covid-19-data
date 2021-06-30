@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 
 from cowidev.utils.utils import get_project_dir
+from cowidev.grapher.csv.core import Grapheriser
 
 
 class VariantsETL:
@@ -39,7 +40,7 @@ class VariantsETL:
             "total_sequences": "num_sequences_total",
         }
         self.columns_out = [
-            "location", "date", "variant", "num_sequences", "freq_sequences", "num_sequences_total"
+            "location", "date", "variant", "num_sequences", "perc_sequences", "num_sequences_total"
         ]
 
     def extract(self) -> dict:
@@ -53,7 +54,7 @@ class VariantsETL:
             .pipe(self.pipe_edit_columns)
             .pipe(self.pipe_filter_locations)
             .pipe(self.pipe_variant_others)
-            .pipe(self.pipe_frequency)
+            .pipe(self.pipe_percent)
             .pipe(self.pipe_out)
         )
         return df
@@ -61,7 +62,12 @@ class VariantsETL:
     def load(self, df: pd.DataFrame) -> None:
         # Export data
         output_path = os.path.join(get_project_dir(), "public", "data", "variants", "covid-variants.csv")
+        output_path_grapher = os.path.join(get_project_dir(), "scripts", "grapher", "COVID-19 - Variants.csv")
         df.to_csv(output_path, index=False)
+        Grapheriser(
+            pivot_column="variant",
+            pivot_values="perc_sequences"
+        ).run(output_path, output_path_grapher)
 
     def json_to_df(self, data: dict) -> pd.DataFrame:
         df = pd.json_normalize(
@@ -101,9 +107,9 @@ class VariantsETL:
         df = pd.concat([df, df_c])
         return df
 
-    def pipe_frequency(self, df: pd.DataFrame) -> pd.DataFrame:
+    def pipe_percent(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
-            freq_sequences=(df["num_sequences"] / df["num_sequences_total"]).round(2)
+            perc_sequences=(100 * df["num_sequences"] / df["num_sequences_total"]).round(2)
         )
 
     def pipe_out(self, df: pd.DataFrame) -> pd.DataFrame:

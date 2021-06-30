@@ -6,3 +6,7 @@ def main():
     data = etl.extract()
     df = etl.transform(data)
     etl.load(df)
+
+
+if __name__ == "__main__":
+    main()

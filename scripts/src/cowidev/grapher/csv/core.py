@@ -41,8 +41,10 @@ class Grapheriser:
             .rename(columns={
                 self.location: "Country",
             })
-            .assign(Year=(df[self.date] - self.date_ref).dt.days)
+            .assign(date=(df[self.date] - self.date_ref).dt.days)
+            .rename(columns={"date": "Year"})
         ).copy()
+        return df
 
     def pipe_order_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         col_order = self.columns_metadata + self.columns_data(df)
@@ -64,7 +66,7 @@ class Grapheriser:
         return df
 
     def pipeline(self, input_path: str):
-        df = pd.read_csv(input_path, parse_dates=self.dates)
+        df = pd.read_csv(input_path, parse_dates=[self.date])
         df = (
             df
             .pipe(self.pipe_pivot)

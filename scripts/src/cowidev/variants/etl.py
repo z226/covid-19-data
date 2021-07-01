@@ -12,24 +12,24 @@ class VariantsETL:
         self.source_url = (
             "https://raw.githubusercontent.com/hodcroftlab/covariants/master/web/data/perCountryData.json"
         )
-        self.variants_mapping = {
-            '20A.EU2': 'B.1.160',
-            '20A/S:439K': 'B.1.258',
-            '20A/S:98F': 'B.1.221',
-            '20B/S:1122L': 'B.1.1.302',
-            '20B/S:626S': 'B.1.1.277',
-            '20C/S:80Y': 'B.1.367',
-            '20E (EU1)': 'B.1.177',
-            '20H (Beta, V2)': 'Beta',
-            '20I (Alpha, V1)': 'Alpha',
-            '20J (Gamma, V3)': 'Gamma',
-            '21A (Delta)': 'Delta',
-            '21B (Kappa)': 'Kappa',
-            '21C (Epsilon)': 'Epsilon',
-            '21D (Eta)': 'Eta',
-            '21F (Iota)': 'Iota',
-            'S:677H.Robin1': 'S:677H.Robin1',
-            'S:677P.Pelican': 'S:677P.Pelican',
+        self.variants_details = {
+            '20A.EU2': {'rename': 'B.1.160', 'who': False},
+            '20A/S:439K': {'rename': 'B.1.258', 'who': False},
+            '20A/S:98F': {'rename': 'B.1.221', 'who': False},
+            '20B/S:1122L': {'rename': 'B.1.1.302', 'who': False},
+            '20B/S:626S': {'rename': 'B.1.1.277', 'who': False},
+            '20C/S:80Y': {'rename': 'B.1.367', 'who': False},
+            '20E (EU1)': {'rename': 'B.1.177', 'who': False},
+            '20H (Beta, V2)': {'rename': 'Beta', 'who': True},
+            '20I (Alpha, V1)': {'rename': 'Alpha', 'who': True},
+            '20J (Gamma, V3)': {'rename': 'Gamma', 'who': True},
+            '21A (Delta)': {'rename': 'Delta', 'who': True},
+            '21B (Kappa)': {'rename': 'Kappa', 'who': True},
+            '21C (Epsilon)': {'rename': 'Epsilon', 'who': True},
+            '21D (Eta)': {'rename': 'Eta', 'who': True},
+            '21F (Iota)': {'rename': 'Iota', 'who': True},
+            'S:677H.Robin1': {'rename': 'S:677H.Robin1', 'who': False},
+            'S:677P.Pelican': {'rename': 'S:677P.Pelican', 'who': False}
         }
         self.country_mapping = {
             "USA": "United States",
@@ -43,6 +43,14 @@ class VariantsETL:
             "location", "date", "variant", "num_sequences", "perc_sequences", "num_sequences_total"
         ]
 
+    @property
+    def variants_mapping(self):
+        return {k: v["rename"] for k, v in self.variants_details.items()}
+
+    @property
+    def variants_who(self):
+        return [v["rename"] for v in self.variants_details.values() if v["who"]]
+
     def extract(self) -> dict:
         data = requests.get(self.source_url).json()
         data = list(filter(lambda x: x["region"] == "World", data["regions"]))[0]["distributions"]
@@ -52,8 +60,10 @@ class VariantsETL:
         df = (
             self.json_to_df(data)
             .pipe(self.pipe_edit_columns)
+            .pipe(self.pipe_check_variants)
             .pipe(self.pipe_filter_locations)
             .pipe(self.pipe_variant_others)
+            .pipe(self.pipe_variant_non_who)
             .pipe(self.pipe_percent)
             .pipe(self.pipe_out)
         )
@@ -92,6 +102,12 @@ class VariantsETL:
         df = df.rename(columns=self.column_rename)
         return df
 
+    def pipe_check_variants(self, df: pd.DataFrame) -> pd.DataFrame:
+        variants_missing = set(df.variant).difference(self.variants_mapping.values())
+        if variants_missing:
+            raise ValueError(f"Unknown variants {variants_missing}. Edit class attribute self.variants_details")
+        return df
+
     def pipe_filter_locations(self, df: pd.DataFrame) -> pd.DataFrame:
         # Filter locations
         populations_path = os.path.join(get_project_dir(), "scripts", "input", "un", "population_2020.csv")
@@ -106,6 +122,16 @@ class VariantsETL:
         df_c = df_c.assign(others=df_c["num_sequences_total"] - df_c["all_seq"])
         df_c = df_c.melt(id_vars=["location", "date", "num_sequences_total"], value_vars="num_sequences_others", var_name="variant", value_name="num_sequences")
         df = pd.concat([df, df_c])
+        return df
+
+    def pipe_variant_non_who(self, df: pd.DataFrame) -> pd.DataFrame:
+        x = df[-df.variant.isin(self.variants_who)]
+        if x.groupby(["location", "date"]).num_sequences_total.nunique().max() != 1:
+            raise ValueError("Different value of `num_sequences_total` found for the same location and date")
+        x = x.groupby(["location", "date", "num_sequences_total"], as_index=False).agg({
+            "num_sequences": sum,
+        }).assign(variant="non_who")
+        df = pd.concat([df, x], ignore_index=True)
         return df
 
     def pipe_percent(self, df: pd.DataFrame) -> pd.DataFrame:

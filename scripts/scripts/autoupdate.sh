@@ -211,7 +211,8 @@ run_python 'import gmobility; gmobility.update_db()'
 # the CSVs has changed, and we need to run the update script.
 if [ $hour == 20 ] ; then
   echo "Generating CoVariants dataset..."
-  python -m cowidev.variants
+  python -m cowidev.variants etl
+  python -m cowidev.variants grapher-file
   git add .
   git commit -m "data(variants): automated update"
   git push

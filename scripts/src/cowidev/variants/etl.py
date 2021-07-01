@@ -4,7 +4,6 @@ import requests
 import pandas as pd
 
 from cowidev.utils.utils import get_project_dir
-from cowidev.grapher.csv.core import Grapheriser
 
 
 class VariantsETL:
@@ -69,16 +68,9 @@ class VariantsETL:
         )
         return df
 
-    def load(self, df: pd.DataFrame) -> None:
+    def load(self, df: pd.DataFrame, output_path: str) -> None:
         # Export data
-        output_path = os.path.join(get_project_dir(), "public", "data", "variants", "covid-variants.csv")
-        output_path_grapher = os.path.join(get_project_dir(), "scripts", "grapher", "COVID-19 - Variants.csv")
         df.to_csv(output_path, index=False)
-        Grapheriser(
-            pivot_column="variant",
-            pivot_values="perc_sequences",
-            fillna_0=True,
-        ).run(output_path, output_path_grapher)
 
     def json_to_df(self, data: dict) -> pd.DataFrame:
         df = pd.json_normalize(
@@ -141,3 +133,13 @@ class VariantsETL:
 
     def pipe_out(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[self.columns_out].sort_values(["location", "date"])
+
+    def run(self, output_path: str):
+        data = self.extract()
+        df = self.transform(data)
+        self.load(df, output_path)
+
+
+def run_etl(output_path: str):
+    etl = VariantsETL()
+    etl.run(output_path)

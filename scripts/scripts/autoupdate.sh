@@ -209,12 +209,10 @@ run_python 'import gmobility; gmobility.update_db()'
 # Variants
 # If there are any unstaged changes in the repo, then one of
 # the CSVs has changed, and we need to run the update script.
-if has_changed './public/data/variants/covid-variants.csv'; then
+if [ $hour == 20 ] ; then
   echo "Generating CoVariants dataset..."
   python -m cowidev.variants
   git add .
-  git commit -m "feat(variants): automated update"
+  git commit -m "data(variants): automated update"
   git push
-else
-  echo "CoVariants export is up to date"
 fi

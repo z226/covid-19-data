@@ -32,6 +32,7 @@ class GrapherBaseUpdater:
             "Either specify attribute `_input_csv_path` or set environment variable ${OWID_COVID_PROJECT_DIR}."
         )
 
+    @property
     def time_str(self):
         return (
             (datetime.now() - timedelta(minutes=10))

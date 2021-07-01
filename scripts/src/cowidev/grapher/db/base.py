@@ -1,8 +1,10 @@
 import os
 import pytz
 from datetime import datetime, timedelta
+import traceback
 
 from cowidev.grapher.db.utils.db_imports import import_dataset
+from cowidev.grapher.db.utils.slack_client import send_error
 
 
 class GrapherBaseUpdater:
@@ -41,14 +43,22 @@ class GrapherBaseUpdater:
         )
 
     def run(self):
-        import_dataset(
-            dataset_name=self.dataset_name,
-            namespace=self.namespace,
-            csv_path=self.input_csv_path,
-            default_variable_display={
-                'yearIsDay': self.year_is_day,
-                'zeroDay': self.zero_day
-            },
-            source_name=self.source_name,
-            slack_notifications=self.slack_notifications
-        )
+        try:
+            import_dataset(
+                dataset_name=self.dataset_name,
+                namespace=self.namespace,
+                csv_path=self.input_csv_path,
+                default_variable_display={
+                    'yearIsDay': self.year_is_day,
+                    'zeroDay': self.zero_day
+                },
+                source_name=self.source_name,
+                slack_notifications=self.slack_notifications
+            )
+        except Exception as e:
+            tb = traceback.format_exc()
+            send_error(
+                channel="corona-data-updates",
+                title=f'Updating Grapher dataset: {self.dataset_name}',
+                trace=tb,
+            )

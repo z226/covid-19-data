@@ -66,7 +66,8 @@ class VariantsETL:
         df.to_csv(output_path, index=False)
         Grapheriser(
             pivot_column="variant",
-            pivot_values="perc_sequences"
+            pivot_values="perc_sequences",
+            fillna_0=True,
         ).run(output_path, output_path_grapher)
 
     def json_to_df(self, data: dict) -> pd.DataFrame:

@@ -58,11 +58,9 @@ class Grapheriser:
     def pipe_fillna(self, df: pd.DataFrame) -> pd.DataFrame:
         columns_data = self.columns_data(df)
         if self.fillna:
-            filled = df.groupby(["Country"])[columns_data].fillna(method="ffill")
-            if self.fillna_0:
-                df[columns_data] = filled.fillna(0)
-            else:
-                df[columns_data] = filled
+            df[columns_data] = df.groupby(["Country"])[columns_data].fillna(method="ffill")
+        if self.fillna_0:
+            df[columns_data] = df[columns_data].fillna(0)
         return df
 
     def pipeline(self, input_path: str):

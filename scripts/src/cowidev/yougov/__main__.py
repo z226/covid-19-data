@@ -98,7 +98,7 @@ class YouGov:
         for ext in extensions:
             url = self._get_source_url_country(country, ext)
             if requests.get(url).ok:
-                df = self._read_country_from_web(url)
+                df = self._read_country_from_web(url, ext)
         if df is None:
             raise ValueError(f"No file found for {country}")
         # Parse date field
@@ -106,8 +106,12 @@ class YouGov:
         df.columns = df.columns.str.lower()
         return df
 
-    def _read_country_from_web(self, source_url_country):
+    def _read_country_from_web(self, source_url_country, extension):
         """Given URL, reads individual country data."""
+        if extension == "csv":
+            extension = None
+        elif extension != "zip":
+            raise ValueError("Invalid extension. Accepted are 'csv' and 'zip'.")
         return pd.read_csv(
             source_url_country,
             low_memory=False,
@@ -115,7 +119,8 @@ class YouGov:
                 "", "Not sure", " ", "Prefer not to say", "Don't know", 98, "Don't Know",
                 "Not applicable - I have already contracted Coronavirus (COVID-19)",
                 "Not applicable - I have already contracted Coronavirus"
-            ]
+            ],
+            extension=extension,
         )
 
     def pipeline_csv(self, df: pd.DataFrame):

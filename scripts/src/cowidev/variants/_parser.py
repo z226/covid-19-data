@@ -14,7 +14,7 @@ def _parse_args():
         choices=CHOICES,
         default="etl",
         help=(
-            "Choose a step: i) `etl` to get all data and DS ready file, 2) `grapher-file` to generate"
+            "Choose a step: 1) `etl` to get all data and DS ready file, 2) `grapher-file` to generate"
             " a grapher-friendly file, 3) `explorer-file` to generate a explorer-friendly file, 4) `grapher-db`"
             " to update Grapher DB."
         )

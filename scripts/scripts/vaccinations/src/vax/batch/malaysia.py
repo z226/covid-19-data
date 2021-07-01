@@ -4,14 +4,20 @@ import pandas as pd
 class Malaysia:
     def __init__(self) -> None:
         self.location = "Malaysia"
-        self.source_url = "https://raw.githubusercontent.com/CITF-Malaysia/citf-public/main/vax_malaysia.csv"
+        self.source_url = "https://github.com/CITF-Malaysia/citf-public/raw/main/vaccination/vax_malaysia.csv"
         self.source_url_ref = "https://github.com/CITF-Malaysia/citf-public"
 
     def read(self) -> pd.DataFrame:
-        return pd.read_csv(self.source_url, usecols=["date", "dose1_cumul", "dose2_cumul", "total_cumul"])
+        return pd.read_csv(self.source_url, usecols=[
+            "date", "dose1_cumul", "dose2_cumul", "total_cumul"
+        ])
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns={"dose1_cumul": "people_vaccinated", "dose2_cumul": "people_fully_vaccinated", "total_cumul": "total_vaccinations"})
+        return df.rename(columns={
+            "dose1_cumul": "people_vaccinated",
+            "dose2_cumul": "people_fully_vaccinated",
+            "total_cumul": "total_vaccinations",
+        })
 
     def pipe_vaccine(self, df: pd.DataFrame) -> str:
         def _enrich_vaccine(date):

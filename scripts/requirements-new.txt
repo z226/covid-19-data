@@ -1,0 +1,9 @@
+pandas~=1.2.5
+numpy~=1.21.0
+tqdm==4.61.1
+requests~=2.25.0
+python-dotenv~=0.18.0
+PyMySQL==0.9.3
+slackclient==2.9.3
+PyYAML==5.4.1
+termcolor==1.1.0

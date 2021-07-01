@@ -8,7 +8,7 @@ Update vaccination by age data.
 import sys
 import os
 import pandas as pd
-import pytz
+
 import json
 from dotenv import load_dotenv
 from datetime import datetime, timezone

@@ -17,5 +17,5 @@ git add source_table.html
 git add automation_state.csv
 git add ../../grapher/*
 git add ../../../public/data/*
-git commit -m 'feat(vax): Update'
+git commit -m 'data(vax): Update'
 git push origin master

@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 
 def get_project_dir(err: bool = False):
@@ -8,4 +9,9 @@ def get_project_dir(err: bool = False):
             "Please have  ${OWID_COVID_PROJECT_DIR}."
         )
     return project_dir
-    
+
+
+def export_timestamp(timestamp_filename: str):
+    timestamp_filename = os.path.join(get_project_dir(), "public", "data", "internal", "timestamp", timestamp_filename)
+    with open(timestamp_filename, "w") as timestamp_file:
+        timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())

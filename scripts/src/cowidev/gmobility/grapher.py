@@ -84,6 +84,6 @@ def run_db_updater(input_path: str):
     dataset_name = get_filename(input_path)
     GrapherBaseUpdater(
         dataset_name=dataset_name,
-        source_name=f"Google COVID-19 Community Mobility Trends – Last updated {time_str_grapher} (London time)",
+        source_name=f"Google COVID-19 Community Mobility Trends – Last updated {time_str_grapher()} (London time)",
         zero_day=ZERO_DAY,
     ).run()

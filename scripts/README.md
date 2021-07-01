@@ -37,7 +37,7 @@ _More info:_
    - [Testing data contribution guideline](scripts/testing/CONTRIBUTE.md)
 
 ## Excess Mortality data
-> 📁 Find it at [`scripts/excessmortality.py`](scripts/excessmortality.py)
+> 📁 Find it at [`cowidev.excess_mortality`](src/cowidev/excess_mortality/)
 
 Collects excess [mortality data](https://github.com/owid/owid-datasets/tree/master/datasets/Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021))
 and exports it to human-readable format.
@@ -45,7 +45,20 @@ and exports it to human-readable format.
 _More info:_
    - [owid-datasets README](https://github.com/owid/owid-datasets/blob/master/datasets/Excess%20Mortality%20Data%20%E2%80%93%20OWID%20(2021)/README.md)
 
+_Run it:_
 
+```
+python -m cowidev.excess_mortality etl
+```
+
+## YouGov
+> 📁 Find it at [`cowidev.yougov`](src/cowidev/yougov/)
+
+_Run it:_
+
+```
+python -m cowidev.yougov
+```
 
 ## Others
 > 📁 Find them at [`scripts/`](scripts/)

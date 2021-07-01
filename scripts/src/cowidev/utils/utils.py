@@ -1,5 +1,7 @@
 import os
-from datetime import datetime
+import pytz
+import ntpath
+from datetime import datetime, timedelta
 
 
 def get_project_dir(err: bool = False):
@@ -15,3 +17,17 @@ def export_timestamp(timestamp_filename: str):
     timestamp_filename = os.path.join(get_project_dir(), "public", "data", "internal", "timestamp", timestamp_filename)
     with open(timestamp_filename, "w") as timestamp_file:
         timestamp_file.write(datetime.utcnow().replace(microsecond=0).isoformat())
+
+
+def time_str_grapher():
+    return (
+        (datetime.now() - timedelta(minutes=10))
+        .astimezone(pytz.timezone('Europe/London'))
+        .strftime("%-d %B %Y, %H:%M")
+    )
+
+def get_filename(filepath: str, remove_extension: bool = True):
+    filename = ntpath.basename(filepath)
+    if remove_extension:
+        return filename.split(".")[0]
+    return filename

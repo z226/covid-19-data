@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 import requests
 import pandas as pd
@@ -59,6 +60,7 @@ class VariantsETL:
         df = (
             self.json_to_df(data)
             .pipe(self.pipe_edit_columns)
+            .pipe(self.pipe_date)
             .pipe(self.pipe_check_variants)
             .pipe(self.pipe_filter_locations)
             .pipe(self.pipe_variant_others)
@@ -93,6 +95,12 @@ class VariantsETL:
         )
         df = df.rename(columns=self.column_rename)
         return df
+
+    def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        dt = pd.to_datetime(df.date, format="%Y-%m-%d")
+        return df.assign(
+            date=dt + timedelta(days=14),
+        )
 
     def pipe_check_variants(self, df: pd.DataFrame) -> pd.DataFrame:
         variants_missing = set(df.variant).difference(self.variants_mapping.values())

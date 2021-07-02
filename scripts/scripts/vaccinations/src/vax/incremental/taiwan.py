@@ -58,8 +58,29 @@ class Taiwan:
     def _parse_stats(self, df: pd.DataFrame) -> int:
         if df.shape[1] != 4 or df.iloc[0,0] != "廠牌" or df.iloc[0,1] != "劑次" or not (df.iloc[-1,0] == "總計" or df.iloc[-2,0] == "總計"):
             raise ValueError(f"Table 1: format has changed!")
-        num_dose1 = clean_count(df.iloc[-3, 3])
-        num_dose2 = clean_count(df.iloc[-1, 3])
+
+        # We expect that the total of dose1/dose2 are in the last few
+        # rows, but there might be a few row/column shifting from time
+        # to time -- evidently depend on who build this pdf. Since we
+        # can no longer expect that certaion postion means certain
+        # number, we therefore look for leader cells that looks like "
+        # 第 1劑" or "第 2劑" in the last 3 rows (where the grand
+        # totals should be) then assumes the 2nd numbers to their
+        # right to be the accumulated sum.
+
+        dose2_row = df.iloc[-1].dropna()
+        if dose2_row[0] ==  "第 2劑":
+            num_dose2 = clean_count(dose2_row[2])
+
+        for r in [-2,-3]:
+            dose1_row = df.iloc[r].dropna()
+            if dose1_row[0] == "第 1劑":
+                num_dose1 = clean_count(dose1_row[2])
+                break
+            elif dose1_row[1] == "第 1劑":
+                num_dose1 = clean_count(dose1_row[3])
+                break
+
         return {
             "total_vaccinations": (num_dose1 + num_dose2),
             "people_vaccinated": num_dose1,

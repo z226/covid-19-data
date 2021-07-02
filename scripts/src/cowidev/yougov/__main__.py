@@ -329,14 +329,18 @@ def _create_composite_cols(df):
             f"Entities not found: {yougov_entities_not_found}"
         )
         
+        will_cols = [
+            "willingness_covid_vaccinate_this_week",
+            "unwillingness_covid_vaccinate_this_week",
+            "uncertain_covid_vaccinate_this_week",
+        ]
         df_temp = pd.merge(
-            df[[
-                'entity', 
-                'date_internal_use', 
-                'willingness_covid_vaccinate_this_week', 
-                'unwillingness_covid_vaccinate_this_week',
-                'uncertain_covid_vaccinate_this_week'
-            ]], 
+            df[
+                [
+                    'entity', 
+                    'date_internal_use', 
+                ] + will_cols
+            ], 
             df_vac[[
                 'entity',
                 'date',
@@ -347,6 +351,7 @@ def _create_composite_cols(df):
             how='inner',
             validate='1:1',
         )
+        df_temp.dropna(subset=will_cols, inplace=True)
         df_temp[var_name] = df_temp[var_name].round(2)
 
         # converts willingness to get vaccinated variables to a percentage of the

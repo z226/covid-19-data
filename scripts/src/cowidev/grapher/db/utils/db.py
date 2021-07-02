@@ -5,10 +5,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-@property
-def connection():
-    # Connect to the database
-    pymysql.connect(
+# Connect to the database
+connection = pymysql.connect(
         db=os.getenv('DB_NAME'),
         host=os.getenv('DB_HOST'),
         port=int(os.getenv('DB_PORT')),

@@ -15,14 +15,10 @@ from datetime import datetime, timezone
 
 load_dotenv()
 
-CURRENT_DIR = os.path.dirname(__file__)
+from cowidev.grapher.db.utils.db import connection
+from cowidev.grapher.db.utils.db_utils import DBUtils
+from cowidev.grapher.db.utils.slack_client import send_success
 
-sys.path.append(CURRENT_DIR)
-from db import connection
-from db_utils import DBUtils
-from slack_client import send_success
-
-sys.path.append(os.path.join(CURRENT_DIR, ".."))
 
 # ID of user who imports the data
 USER_ID = 46

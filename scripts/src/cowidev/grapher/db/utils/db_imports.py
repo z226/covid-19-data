@@ -43,7 +43,7 @@ tz_local = datetime.now(tz_utc).astimezone().tzinfo
 
 def import_dataset(dataset_name, namespace, csv_path, default_variable_display, source_name, slack_notifications=True):
     print(dataset_name.upper())
-    with connection as c:
+    with connection() as c:
         db = DBUtils(c)
 
         # Check whether the database is up to date, by checking the

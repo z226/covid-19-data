@@ -120,7 +120,7 @@ class YouGov:
                 "Not applicable - I have already contracted Coronavirus (COVID-19)",
                 "Not applicable - I have already contracted Coronavirus"
             ],
-            extension=extension,
+            compression=extension,
         )
 
     def pipeline_csv(self, df: pd.DataFrame):

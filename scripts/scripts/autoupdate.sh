@@ -185,7 +185,7 @@ run_python 'import hosp; hosp.update_db()'
 # Google Mobility
 
 hour=$(date +%H)
-if [ $hour == 15 ] ; then
+if [ $hour == 16 ] ; then
 
   # Download CSV
   python -m cowidev.gmobility etl

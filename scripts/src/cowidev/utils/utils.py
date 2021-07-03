@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 def get_project_dir(err: bool = False):
     project_dir = os.environ.get("OWID_COVID_PROJECT_DIR")
     if project_dir is None: # err and
-        pass
         raise ValueError(
             "Please have ${OWID_COVID_PROJECT_DIR}."
         )

@@ -185,7 +185,7 @@ run_python 'import hosp; hosp.update_db()'
 # Google Mobility
 
 hour=$(date +%H)
-if [ $hour == 16 ] ; then
+if [ $hour == 15 ] ; then
 
   # Download CSV
   python -m cowidev.gmobility etl
@@ -210,7 +210,7 @@ python -m cowidev.gmobility grapher-db
 # Variants
 # If there are any unstaged changes in the repo, then one of
 # the CSVs has changed, and we need to run the update script.
-if [ $hour == 22 ] ; then
+if [ $hour == 20 ] ; then
   echo "Generating CoVariants dataset..."
   python -m cowidev.variants etl
   python -m cowidev.variants grapher-file

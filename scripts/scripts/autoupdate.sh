@@ -210,7 +210,7 @@ python -m cowidev.gmobility grapher-db
 # Variants
 # If there are any unstaged changes in the repo, then one of
 # the CSVs has changed, and we need to run the update script.
-if [ $hour == 20 ] ; then
+if [ $hour == 22 ] ; then
   echo "Generating CoVariants dataset..."
   python -m cowidev.variants etl
   python -m cowidev.variants grapher-file

@@ -7,6 +7,8 @@ import unicodedata
 
 from bs4 import BeautifulSoup
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 VAX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -87,6 +89,22 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
         "html.parser",
         from_encoding=from_encoding
     )
+
+
+def sel_options():
+    op = Options()
+    op.add_argument("--disable-notifications")
+    op.add_experimental_option("prefs",{
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True 
+    })
+    op.add_argument("--headless")
+    return op
+
+
+def get_driver():
+    return webdriver.Chrome(options=sel_options())
 
 
 def url_request_broken(url):

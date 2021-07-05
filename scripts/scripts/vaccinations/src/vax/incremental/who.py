@@ -34,7 +34,7 @@ COUNTRIES = {
     "Honduras": "Honduras",
     "Iran (Islamic Republic of)": "Iran",
     "Iraq": "Iraq",
-    "Ireland": "Ireland",
+    # "Ireland": "Ireland",
     "Jamaica": "Jamaica",
     "Lesotho": "Lesotho",
     "Liberia": "Liberia",

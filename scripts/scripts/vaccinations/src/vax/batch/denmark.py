@@ -21,6 +21,7 @@ class Denmark:
             "AstraZeneca Covid-19 vaccine": "Oxford/AstraZeneca",
             "Janssen COVID-19 vaccine": "Johnson&Johnson",
             "Moderna Covid-19 Vaccine": "Moderna",
+            "Moderna/Spikevax Covid-19 Vacc.": "Moderna",
             "Pfizer BioNTech Covid-19 vacc": "Pfizer/BioNTech",
         }
         self.regions_accepted = {
@@ -115,6 +116,8 @@ class Denmark:
         df.loc[mask, "total_vaccinations"] = (
             df.loc[mask, "people_vaccinated"] + df.loc[mask, "people_fully_vaccinated"].fillna(0)
         )
+        # Uncomment to backfill total_vaccinations
+        # df = df.pipe(self.pipe_total_vax_bfill, n_days=38)
         return df
 
     def pipe_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -155,6 +158,29 @@ class Denmark:
         df = self.read()
         df.pipe(self.pipeline).to_csv(paths.tmp_vax_out("Denmark"), index=False)
 
+    def pipe_total_vax_bfill(self, df: pd.DataFrame, n_days: int) -> pd.DataFrame:
+        soup = get_soup(self.source_url_ref)
+        links = self._get_zip_links(soup)
+        links = links[:n_days]
+        df = self._backfill_total_vaccinations(df, links)
+        return df
+
+    def _get_zip_links(self, soup):
+        links = [x.a.get("href") for x in soup.find_all("h5")]
+        return links
+        
+    def _get_total_vax(self, url):
+        with tempfile.TemporaryDirectory() as tf:
+            self._download_data(url, tf)
+            df = self._parse_data(tf)
+            total_vaccinations_latest = self._parse_total_vaccinations(tf)
+        return total_vaccinations_latest, df.Vaccinedato.max()
+
+    def _backfill_total_vaccinations(self, df: pd.DataFrame, links: list):
+        for link in links:
+            total_vaccinations_latest, date = self._get_total_vax(link)
+            df.loc[df["date"]==date, "total_vaccinations"] = total_vaccinations_latest
+        return df
 
 def main(paths):
     Denmark().export(paths)

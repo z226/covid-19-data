@@ -6,7 +6,6 @@ import pandas as pd
 
 VACCINES_ACCEPTED = [
     "Abdala",
-    "BBIBP-CorV",
     "CanSino",
     "Covaxin",
     "EpiVacCorona",

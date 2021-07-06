@@ -39,7 +39,7 @@ class UnitedArabEmirates:
     def _estimate_population(self, elem, total_vaccinations) -> pd.Series:
         regex = r"([\d\.]+) per 100 people"
         share_total = self._parse_relative_metric(elem, "percentage", regex)
-        return round(total_vaccinations/share_total)
+        return total_vaccinations / share_total
 
     def _parse_people_vaccinated(self, elem, population) -> pd.Series:
         regex = r"Percentage of population who received one dose \(of COVID-19 vaccine\)\s{1,2}([\d\.]+)%"
@@ -59,7 +59,7 @@ class UnitedArabEmirates:
     def _parse_date(self, driver) -> pd.Series:
         text_date = driver.find_element_by_class_name("full_data_set").text
         regex_date = r"Time period: 29 January 2020 - (\d{2} [a-zA-Z]+ 202\d)"
-        return extract_clean_date(text_date, regex_date, "%d %B %Y")
+        return extract_clean_date(text_date, regex_date, "%d %B %Y", lang="en")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, 'location', self.location)

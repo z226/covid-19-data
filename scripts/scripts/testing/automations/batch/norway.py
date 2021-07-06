@@ -35,6 +35,7 @@ def get_data() -> pd.DataFrame:
     df['Negative'] = df['Negative'].astype(int)
     df['Positive'] = df['Positive'].astype(int)
     df['Daily change in cumulative total'] = df['Negative'] + df['Positive']
+    df = df[df['Daily change in cumulative total'] != 0]
     return df
 
 def sanity_checks(df: pd.DataFrame) -> None:

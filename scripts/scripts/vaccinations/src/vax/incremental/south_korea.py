@@ -30,9 +30,9 @@ def parse_data(source: str) -> pd.Series:
     html_table = str(soup.find_all("table")[2])
     df = pd.read_html(html_table, header=0)[0]
 
-    assert len(df) <= 7, "New rows in the vaccine table!"
+    assert len(df) == 8, "Wrong number of rows in the vaccine table"
 
-    astrazeneca = df.loc[df["백신"] == "아스트라제네카", "누적 접종(C)"].values.astype(int)
+    astrazeneca = df.loc[df["백신"] == "아스트라제네카2)", "누적 접종(C)"].dropna().values.astype(int)
     pfizer = df.loc[df["백신"] == "화이자", "누적 접종(C)"].values.astype(int)
     moderna = df.loc[df["백신"] == "모더나", "누적 접종(C)"].values.astype(int)
     johnson = df.loc[df["백신"] == "얀센2)", "누적 접종(C)"].values.astype(int)

@@ -53,7 +53,7 @@ class Colombia:
     def _parse_date(self, worksheet):
         nrow_date = 43
         if worksheet.at(nrow_date, 1) == "Fecha de corte:":
-            return clean_date(worksheet.at(nrow_date, 2), "%d/%m/%Y")
+            return str(pd.to_datetime(worksheet.at(nrow_date, 2), dayfirst=False).date())
         else:
             raise ValueError("Date is not where it is expected be! Check worksheet")
 

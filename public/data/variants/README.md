@@ -9,11 +9,11 @@ The data is sourced from GISAID, via https://CoVariants.org, and is available as
 
 | Column field        | Description                                                                  |
 |---------------------|------------------------------------------------------------------------------|
-| `location`            | Name of the country (or region within a country)                             |
-| `date`                | Date of the observation                                                      |
+| `location`            | Name of the country (or region within a country).                            |
+| `date`                | Date of the observation.                                                     |
 | `variant`             | Variant name. We use the [WHO label](https://www.who.int/en/activities/tracking-SARS-CoV-2-variants/#Naming-SARS-CoV-2-variants) for Variants of Concern (VoC) and Variants of Interest (VoI), and Pango Lineage for the others. Details on variants included can be found [here](https://covariants.org/variants). |
-| `num_sequences`       | Number of samples that fall into the category `variant` |
-| `perc_sequences`      | Percentage of the sequenced samples that fall into the category `variant` |
+| `num_sequences`       | Number of sequenced samples that fall into the category `variant`. |
+| `perc_sequences`      | Percentage of the sequenced samples that fall into the category `variant`. |
 | `num_sequences_total` | Total number of samples sequenced in the last two weeks. |
 
 #### Special `variant` values

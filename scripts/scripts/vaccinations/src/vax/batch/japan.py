@@ -10,8 +10,9 @@ from vax.utils.files import export_metadata
 class Japan:
     def __init__(self):
         self.source_url_1 = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
-        self.source_url_2_health = "https://www.kantei.go.jp/jp/content/IRYO-vaccination_data3.xlsx"
-        self.source_url_2_general = "https://www.kantei.go.jp/jp/content/KOREI-vaccination_data3.xlsx"
+        self.source_url_2 = "https://www.kantei.go.jp/jp/content/vaccination_data.xlsx"
+        self.source_sheet_name_health = "医療従事者等"
+        self.source_sheet_name_general = "一般接種"
         self.source_url_2_ref = "https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html"
         self.location = "Japan"
         self.vaccine_mapping = {
@@ -70,12 +71,14 @@ class Japan:
 
     def read_2(self):
         df_health = self._parse_data_2(
-            source=self.source_url_2_health,
+            source=self.source_url_2,
+            sheet_name=self.source_sheet_name_health,
             header=[2, 3],
             date_col="集計日"
         )
         df_general = self._parse_data_2(
-            source=self.source_url_2_general,
+            source=self.source_url_2,
+            sheet_name=self.source_sheet_name_general,
             header=[2, 3, 4],
             date_col="接種日",
             extra_levels=["すべて"]
@@ -88,8 +91,8 @@ class Japan:
             .reset_index(drop=True)
         )
 
-    def _parse_data_2(self, source: str, header: list, date_col: str, extra_levels: list = None) -> pd.DataFrame:
-        doses_1, doses_2 = self._parse_data_2_doses(source, header, date_col, extra_levels)
+    def _parse_data_2(self, source: str, sheet_name: str, header: list, date_col: str, extra_levels: list = None) -> pd.DataFrame:
+        doses_1, doses_2 = self._parse_data_2_doses(source, sheet_name, header, date_col, extra_levels)
         doses_1 = doses_1.stack().reset_index().rename(columns={
             date_col: "date",
             "level_1": "vaccine",
@@ -103,9 +106,9 @@ class Japan:
         df = doses_1.merge(doses_2, on=["date", "vaccine"])
         return df
 
-    def _parse_data_2_doses(self, source: str, header: list, date_col: str, extra_levels: list = None) -> pd.DataFrame:
+    def _parse_data_2_doses(self, source: str, sheet_name: str, header: list, date_col: str, extra_levels: list = None) -> pd.DataFrame:
         # Read general
-        df = pd.read_excel(source, header=header)
+        df = pd.read_excel(source, sheet_name=sheet_name, header=header)
         df = df.dropna(axis=1, how='all')
         # Clean column names
         df = clean_df_columns_multiindex(df)

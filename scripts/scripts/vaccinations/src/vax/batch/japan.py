@@ -10,7 +10,7 @@ from vax.utils.files import export_metadata
 class Japan:
     def __init__(self):
         self.source_url_1 = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
-        self.source_url_2 = "https://www.kantei.go.jp/jp/content/vaccination_data.xlsx"
+        self.source_url_2 = "https://www.kantei.go.jp/jp/content/vaccination_data5.xlsx"
         self.source_sheet_name_health = "医療従事者等"
         self.source_sheet_name_general = "一般接種"
         self.source_url_2_ref = "https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html"

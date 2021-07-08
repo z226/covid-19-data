@@ -7,10 +7,11 @@ pipeline:
     countries:
     njobs: -2
     skip_countries:
+      - Gabon
       - North Macedonia
+      - Northern Cyprus
       - Philippines
       - South Africa
-      - Gabon
   process-data:
     skip_complete:
       - Pitcairn

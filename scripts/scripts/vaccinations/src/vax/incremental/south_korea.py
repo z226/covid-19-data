@@ -27,7 +27,7 @@ def find_last_report(soup) -> str:
 def parse_data(source: str) -> pd.Series:
 
     soup = get_soup(source)
-    html_table = str(soup.find_all("table")[3])
+    html_table = str(soup.find_all("table")[2])
     df = pd.read_html(html_table, header=0)[0]
 
     assert len(df) == 8, "Wrong number of rows in the vaccine table"

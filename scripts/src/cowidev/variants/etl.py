@@ -1,11 +1,10 @@
 import os
-from datetime import timedelta
+from datetime import timedelta, date
 
 import requests
 import pandas as pd
 
 from cowidev.utils.utils import get_project_dir
-
 
 class VariantsETL:
     def __init__(self) -> None:
@@ -102,8 +101,10 @@ class VariantsETL:
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
         dt = pd.to_datetime(df.date, format="%Y-%m-%d")
+        dt = dt + timedelta(days=14)
+        dt = dt.apply(lambda x: min(x, date.today()).strftime("%Y-%m-%d"))
         return df.assign(
-            date=dt + timedelta(days=14),
+            date=dt,
         )
 
     def pipe_check_variants(self, df: pd.DataFrame) -> pd.DataFrame:

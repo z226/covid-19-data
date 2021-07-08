@@ -2,6 +2,8 @@ import datetime
 
 import pandas as pd
 
+from vax.utils.utils import make_monotonic
+
 
 class Sweden(object):
 
@@ -34,17 +36,12 @@ class Sweden(object):
     def enrich_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(vaccine="Oxford/AstraZeneca, Pfizer/BioNTech")
 
-    def exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
-        # The data contains an error that creates a negative change in the people_vaccinated series
-        df = df[df.date.astype(str) != "2021-06-13"]
-        return df
-
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
             .pipe(self.enrich_vaccine)
             .pipe(self.enrich_columns)
-            .pipe(self.exclude_data_points)
+            .pipe(make_monotonic)
         )
 
     def _week_to_date(self, row: int):

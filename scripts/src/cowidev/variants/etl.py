@@ -17,7 +17,9 @@ class VariantsETL:
             '20A/S:439K': {'rename': 'B.1.258', 'who': False},
             '20A/S:98F': {'rename': 'B.1.221', 'who': False},
             '20B/S:1122L': {'rename': 'B.1.1.302', 'who': False},
+            '20A/S:126A': {'rename': 'B.1.620', 'who': False},
             '20B/S:626S': {'rename': 'B.1.1.277', 'who': False},
+            '20B/S:732A': {'rename': 'B.1.1.519', 'who': False},
             '20C/S:80Y': {'rename': 'B.1.367', 'who': False},
             '20E (EU1)': {'rename': 'B.1.177', 'who': False},
             '20H (Beta, V2)': {'rename': 'Beta', 'who': True},
@@ -28,6 +30,8 @@ class VariantsETL:
             '21C (Epsilon)': {'rename': 'Epsilon', 'who': True},
             '21D (Eta)': {'rename': 'Eta', 'who': True},
             '21F (Iota)': {'rename': 'Iota', 'who': True},
+            '21G (Lambda)': {'rename': 'Lambda', 'who': True},
+            '21H': {'rename': 'B.1.621', 'who': False},
             'S:677H.Robin1': {'rename': 'S:677H.Robin1', 'who': False},
             'S:677P.Pelican': {'rename': 'S:677P.Pelican', 'who': False}
         }

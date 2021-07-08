@@ -62,7 +62,7 @@ def get_metric(metric, region):
 
     # Relabel as 'International'
     df.loc[df["Country/Region"].isin([
-        "Diamond Princess", "MS Zaandam", "Summer Olympics 2020",
+        "Diamond Princess", "MS Zaandam",
     ]), "Country/Region"] = "International"
 
     # Relabel Hong Kong to its own time series

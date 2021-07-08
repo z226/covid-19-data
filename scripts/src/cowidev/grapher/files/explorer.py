@@ -5,8 +5,26 @@ import pandas as pd
 
 
 class Exploriser:
-    def __init__(self) -> None:
-        pass
+    def __init__(
+        self, location: str = "location", date: str = "date", pivot_column: str = None, pivot_values: str = None
+    ) -> None:
+        self.location = location
+        self.date = date
+        self.pivot_column = pivot_column
+        self.pivot_values = pivot_values
+
+    def pipe_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
+        if self.pivot_column is not None and self.pivot_values is not None:
+            return (
+                df
+                .pivot(
+                    index=[self.location, self.date],
+                    columns=self.pivot_column,
+                    values=self.pivot_values,
+                )
+                .reset_index()
+            )
+        return df
 
     def pipe_nan_to_none(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.where(
@@ -21,6 +39,7 @@ class Exploriser:
         df = pd.read_csv(input_path)
         df = (
             df
+            .pipe(self.pipe_pivot)
             .pipe(self.pipe_nan_to_none)
             .pipe(self.pipe_to_dict)
         )

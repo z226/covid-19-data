@@ -10,7 +10,10 @@ def run_grapheriser(input_path: str, output_path: str):
 
 
 def run_explorerizer(input_path: str, output_path: str):
-    Exploriser().run(input_path, output_path)
+    Exploriser(
+        pivot_column="variant",
+        pivot_values="perc_sequences",
+    ).run(input_path, output_path)
 
 
 def run_db_updater(input_path: str):

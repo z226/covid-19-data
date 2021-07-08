@@ -50,6 +50,8 @@ If you are interested in the individual files that make up the complete dataset,
   - [`covid-testing-latest-data-source-details.csv`](https://github.com/owid/covid-19-data/blob/master/public/data/testing/covid-testing-latest-data-source-details.csv) includes, for each country in our testing dataset, the latest figures and a detailed description of how the country’s data is collected;
 - [`excess_mortality`](https://github.com/owid/covid-19-data/tree/master/public/data/excess_mortality): data on excess mortality during the pandemic, sourced from [the Human Mortality Database](https://www.mortality.org/) and [the UK Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/articles/comparisonsofallcausemortalitybetweeneuropeancountriesandregions/januarytojune2020);
 - [`vaccinations`](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations): data from various official sources, related to COVID-19 vaccinations in each country;
+- [`variants`](https://github.com/owid/covid-19-data/tree/master/public/data/variants): data related to COVID-19
+  sequenced samples, classified into different variant groups;
 - [`who`](https://github.com/owid/covid-19-data/tree/master/public/data/who): data from the World Health Organization, related to confirmed cases and deaths—_we have stopped using and updating this data since 18 March 2020_;
 - [`ecdc`](https://github.com/owid/covid-19-data/tree/master/public/data/ecdc): data from the European Centre for Disease Prevention and Control, related to confirmed cases and deaths—_we have stopped using and updating this data since 30 November 2020_.
 - [`internal`](https://github.com/owid/covid-19-data/tree/master/public/data/internal): data extracts intended for internal use at _Our World in Data_. They may change or be deleted without notice so we discourage using them.
@@ -85,7 +87,7 @@ If you are interested in the individual files that make up the complete dataset,
 - On 26 January 2021, we added 4 variables on people vaccinated & people fully vaccinated to our complete dataset.
 - On 4 February 2021, we added rows for Africa, Asia, Europe, European Union, North America, Oceania, and South America to our complete dataset. The `iso_code` column for these rows starts with `OWID_`.
 - On 5 March 2021, due to [the COVID Tracking Project's announcement](https://covidtracking.com/analysis-updates/covid-tracking-project-end-march-7) that their data collection effort would stop in March 2021, we transitioned to the [Department of Health & Human Services](https://healthdata.gov/dataset/covid-19-reported-patient-impact-and-hospital-capacity-state-timeseries) as our source for data on hospitalizations and ICU admissions in the United States.
-
+- On 1 July 2021, [variants dataset](variants/covid-variants.csv) was added from CoVariants.org.
 
 ## Data alterations
 

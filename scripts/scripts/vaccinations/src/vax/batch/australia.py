@@ -1,5 +1,7 @@
 import pandas as pd
 
+from vax.utils.utils import make_monotonic
+
 
 class Australia:
 
@@ -59,6 +61,7 @@ class Australia:
             .pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_metadata)
+            .pipe(make_monotonic)
             .sort_values("date")
         )
 

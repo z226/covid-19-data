@@ -22,7 +22,7 @@ def read(source: str) -> pd.Series:
 
     data = {
         "total_vaccinations": total_vaccinations,
-        "people_vaccinated": people_vaccinated,
+        #"people_vaccinated": people_vaccinated,
         "people_fully_vaccinated": people_fully_vaccinated,
         "date": date,
         "source_url": source,
@@ -53,7 +53,7 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
-        people_vaccinated=data["people_vaccinated"],
+        #people_vaccinated=data["people_vaccinated"],
         people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],

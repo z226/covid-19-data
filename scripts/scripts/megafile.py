@@ -65,6 +65,10 @@ def get_jhu():
             .rename(columns={"value": jhu_var, "variable": "location"})
             .dropna()
         )
+
+        # Exclude entities from megafile
+        tmp = tmp[tmp.location != "2020 Summer Olympics athletes & staff"]
+
         if jhu_var[:7] == "weekly_":
             tmp[jhu_var] = tmp[jhu_var].div(7).round(3)
             tmp = tmp.rename(errors="ignore", columns={

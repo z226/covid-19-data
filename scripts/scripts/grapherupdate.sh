@@ -22,4 +22,4 @@ git pull
 
 # Run Grapher updates
 export OWID_COVID_PROJECT_DIR=${ROOT_DIR}
-cowidev-grapher
+cowidev-grapher-db

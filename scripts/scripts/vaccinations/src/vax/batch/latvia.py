@@ -9,6 +9,7 @@ vaccine_mapping = {
     "COMIRNATY": "Pfizer/BioNTech",
     "COVID-19 Vaccine Moderna": "Moderna",
     "Moderna COVID-19 vaccine": "Moderna",
+    "Spikevax": "Moderna",
     "Vaxzevria": "Oxford/AstraZeneca",
     "COVID-19 Vaccine Janssen": "Johnson&Johnson",
 }

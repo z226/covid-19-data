@@ -1,6 +1,4 @@
 import os
-import sys
-import pytz
 import json
 import datetime
 import requests
@@ -8,6 +6,8 @@ import requests
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
+
+from cowidev.utils.utils import get_project_dir
 
 
 DEBUG = False
@@ -28,10 +28,10 @@ FREQ = 'M'
 ZERO_DAY = "2020-01-21"
 
 # File paths
-CURRENT_DIR = os.path.dirname(__file__)
-sys.path.append(CURRENT_DIR)
-INPUT_PATH = os.path.join(CURRENT_DIR, "../input/yougov")
-OUTPUT_PATH = os.path.join(CURRENT_DIR, "../grapher")
+PROJECT_DIR = get_project_dir()
+
+INPUT_PATH = os.path.join(PROJECT_DIR, "scripts", "input", "yougov")
+OUTPUT_PATH = os.path.join(PROJECT_DIR, "scripts", "grapher")
 MAPPING_PATH = os.path.join(INPUT_PATH, "mapping.csv")
 MAPPING_VALUES_PATH = os.path.join(INPUT_PATH, 'mapped_values.json')
 
@@ -98,7 +98,7 @@ class YouGov:
         for ext in extensions:
             url = self._get_source_url_country(country, ext)
             if requests.get(url).ok:
-                df = self._read_country_from_web(url)
+                df = self._read_country_from_web(url, ext)
         if df is None:
             raise ValueError(f"No file found for {country}")
         # Parse date field
@@ -106,8 +106,12 @@ class YouGov:
         df.columns = df.columns.str.lower()
         return df
 
-    def _read_country_from_web(self, source_url_country):
+    def _read_country_from_web(self, source_url_country, extension):
         """Given URL, reads individual country data."""
+        if extension == "csv":
+            extension = None
+        elif extension != "zip":
+            raise ValueError("Invalid extension. Accepted are 'csv' and 'zip'.")
         return pd.read_csv(
             source_url_country,
             low_memory=False,
@@ -115,7 +119,8 @@ class YouGov:
                 "", "Not sure", " ", "Prefer not to say", "Don't know", 98, "Don't Know",
                 "Not applicable - I have already contracted Coronavirus (COVID-19)",
                 "Not applicable - I have already contracted Coronavirus"
-            ]
+            ],
+            compression=extension,
         )
 
     def pipeline_csv(self, df: pd.DataFrame):
@@ -324,14 +329,18 @@ def _create_composite_cols(df):
             f"Entities not found: {yougov_entities_not_found}"
         )
         
+        will_cols = [
+            "willingness_covid_vaccinate_this_week",
+            "unwillingness_covid_vaccinate_this_week",
+            "uncertain_covid_vaccinate_this_week",
+        ]
         df_temp = pd.merge(
-            df[[
-                'entity', 
-                'date_internal_use', 
-                'willingness_covid_vaccinate_this_week', 
-                'unwillingness_covid_vaccinate_this_week',
-                'uncertain_covid_vaccinate_this_week'
-            ]], 
+            df[
+                [
+                    'entity', 
+                    'date_internal_use', 
+                ] + will_cols
+            ], 
             df_vac[[
                 'entity',
                 'date',
@@ -342,6 +351,7 @@ def _create_composite_cols(df):
             how='inner',
             validate='1:1',
         )
+        df_temp.dropna(subset=will_cols, inplace=True)
         df_temp[var_name] = df_temp[var_name].round(2)
 
         # converts willingness to get vaccinated variables to a percentage of the

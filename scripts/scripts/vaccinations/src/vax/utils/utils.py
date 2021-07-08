@@ -7,6 +7,8 @@ import unicodedata
 
 from bs4 import BeautifulSoup
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 VAX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -89,6 +91,22 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
     )
 
 
+def sel_options():
+    op = Options()
+    op.add_argument("--disable-notifications")
+    op.add_experimental_option("prefs",{
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True 
+    })
+    op.add_argument("--headless")
+    return op
+
+
+def get_driver():
+    return webdriver.Chrome(options=sel_options())
+
+
 def url_request_broken(url):
     url_base, url_params = url.split('query?')
     x = filter(lambda x: x[0] != 'where', [p.split('=') for p in url_params.split('&')])
@@ -121,4 +139,17 @@ def clean_df_columns_multiindex(df):
     for col in df.columns:
         columns_new.append([clean_column_name(c) for c in col])
     df.columns = pd.MultiIndex.from_tuples(columns_new)
+    return df
+
+
+def make_monotonic(df: pd.DataFrame) -> pd.DataFrame:
+    # Forces vaccination time series to become monotonic.
+    # The algorithm assumes that the most recent values are the correct ones,
+    # and therefore removes previous higher values.
+    df = df.sort_values("date")
+    metrics = ("total_vaccinations", "people_vaccinated", "people_fully_vaccinated")
+    for metric in metrics:
+        while not df[metric].ffill().fillna(0).is_monotonic:
+            diff = (df[metric].ffill().shift(-1) - df[metric].ffill())
+            df = df[(diff >= 0) | (diff.isna())]
     return df

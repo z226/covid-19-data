@@ -15,6 +15,8 @@ def main(paths):
     df = df.rename(columns={
         "Reportdt": "date",
         "Total_Vaccinations": "total_vaccinations",
+        "FirstDose": "people_vaccinated",
+        "SecondDose": "people_fully_vaccinated",
     })
 
     df["date"] = pd.to_datetime(df.date, unit="ms").dt.date.astype(str)

@@ -123,6 +123,11 @@ class Jersey:
         df[["age_group_min", "age_group_max"]] = df.age_group.str.split("-", expand=True)
         return df
 
+    def pipe_metrics_scale_100(self, df: pd.DataFrame) -> pd.DataFrame:
+        column_metrics = ["people_vaccinated_per_hundred", "people_fully_vaccinated_per_hundred"]
+        df[column_metrics] = (df[column_metrics] * 100).round(2)
+        return df
+
     def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
@@ -131,9 +136,12 @@ class Jersey:
             .pipe(self.pipe_age_rename_columns)
             .pipe(self.pipe_age_minmax_values)
             .pipe(self.pipe_enrich_columns)
+            .pipe(self.pipe_metrics_scale_100)
             .sort_values(["date", "age_group_min"])
-            [["location", "date", "age_group_min", "age_group_max", "people_vaccinated_per_hundred",
-            "people_fully_vaccinated_per_hundred"]]
+            [[
+                "location", "date", "age_group_min", "age_group_max", "people_vaccinated_per_hundred",
+                "people_fully_vaccinated_per_hundred"
+            ]]
         )
 
     def to_csv(self, paths):

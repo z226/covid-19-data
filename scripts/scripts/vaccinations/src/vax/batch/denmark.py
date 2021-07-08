@@ -62,12 +62,17 @@ class Denmark:
         df_fully = pd.read_csv(
             os.path.join(path, "Vaccine_DB", filename),
             encoding="iso-8859-1",
-            usecols=["Vaccinedato", "geo", metric_name]
+            usecols=["Vaccinedato", "geo", metric_name],
+            sep=";"
         )
         return df_fully[df_fully.geo=="Nationalt"].drop(columns=["geo"])
 
     def _parse_total_vaccinations(self, path):
-        df = pd.read_csv(os.path.join(path, "Vaccine_DB", "Vaccinationstyper_regioner.csv"), encoding="iso-8859-1")
+        df = pd.read_csv(
+            os.path.join(path, "Vaccine_DB", "Vaccinationstyper_regioner.csv"),
+            encoding="iso-8859-1",
+            sep=";"
+        )
         # Check 1/2
         self._check_df_vax_1(df)
         # Rename columns

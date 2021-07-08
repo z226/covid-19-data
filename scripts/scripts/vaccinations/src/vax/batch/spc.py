@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 
 from vax.utils.files import load_data
+from vax.utils.utils import make_monotonic
 
 
 metrics_mapping = {
@@ -17,6 +18,7 @@ country_mapping = {
     "FJ": "Fiji",
     "NC": "New Caledonia",
     "NR": "Nauru",
+    "NU": "Niue",
     "PF": "French Polynesia",
     "PN": "Pitcairn",
     "SB": "Solomon Islands",
@@ -123,6 +125,8 @@ class SPC:
             df = df.pipe(self.pipe_merge_legacy, country)
         # Drop duplicates
         df = df.pipe(self.pipe_drop_duplicates)
+        # Make monotonic
+        df = df.pipe(make_monotonic)
         # Add vaccine info
         df = df.pipe(self.pipe_vacine, country)
         return df

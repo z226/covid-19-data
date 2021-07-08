@@ -88,6 +88,8 @@ class UnitedKingdom:
     def pipe_exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
         # The data contains an error that creates a negative change
         df = df[(df.location != "Northern Ireland") | (df.date != "2021-02-20")]
+        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-27")]
+        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-28")]
         df = df[(df.location != "England") | (df.date != "2021-01-09")]
         df = df[(df.location != "Scotland") | (df.date != "2021-01-09")]
         return df

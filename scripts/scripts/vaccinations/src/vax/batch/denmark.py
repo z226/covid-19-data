@@ -10,6 +10,10 @@ from vax.utils.checks import VACCINES_ONE_DOSE
 from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date_series
 
+
+SEPARATOR = ","
+
+
 class Denmark:
 
     def __init__(self):
@@ -59,19 +63,19 @@ class Denmark:
         return df.sort_values("Vaccinedato")
 
     def _load_df_metric(self, path, filename: str, metric_name: str):
-        df_fully = pd.read_csv(
+        df = pd.read_csv(
             os.path.join(path, "Vaccine_DB", filename),
             encoding="iso-8859-1",
             usecols=["Vaccinedato", "geo", metric_name],
-            sep=";"
+            sep=SEPARATOR
         )
-        return df_fully[df_fully.geo=="Nationalt"].drop(columns=["geo"])
+        return df[df.geo=="Nationalt"].drop(columns=["geo"])
 
     def _parse_total_vaccinations(self, path):
         df = pd.read_csv(
             os.path.join(path, "Vaccine_DB", "Vaccinationstyper_regioner.csv"),
             encoding="iso-8859-1",
-            sep=";"
+            sep=SEPARATOR
         )
         # Check 1/2
         self._check_df_vax_1(df)

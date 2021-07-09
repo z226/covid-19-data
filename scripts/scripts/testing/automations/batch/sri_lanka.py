@@ -41,7 +41,7 @@ def get_data() -> pd.DataFrame:
     assert res.ok
     json_data = json.loads(res.text)
     df = pd.DataFrame(json_data['data']['daily_pcr_testing_data'])
-    df = df.rename(columns={'count': 'Daily change in cumulative total', 'date': 'Date'})
+    df = df.rename(columns={'pcr_count': 'Daily change in cumulative total', 'date': 'Date'})
     df['Daily change in cumulative total'] = df['Daily change in cumulative total'].astype(int)
     df = df[df['Daily change in cumulative total'] > 0]
     assert json_data['data']['total_pcr_testing_count'] == df['Daily change in cumulative total'].sum(), 'Sum of daily changes does not equal cumulative total.'

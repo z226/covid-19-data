@@ -80,7 +80,7 @@ def get_data() -> pd.DataFrame:
     # df[df['Date'].duplicated(keep=False)]  # prints out rows with duplicate YYYY-MM-DD value
     df.sort_values(['Date', SERIES_TYPE], inplace=True)
     df.drop_duplicates(subset=['Date'], keep='last', inplace=True)
-    df = df[df['Date'] != '2020-03-18']
+    df = df[-df['Date'].isin(['2020-03-18', '2021-07-04'])]
     df = df[['Date', SERIES_TYPE]]
     if len(hardcoded_data) > 0:
         # removes rows from df that are hardcoded

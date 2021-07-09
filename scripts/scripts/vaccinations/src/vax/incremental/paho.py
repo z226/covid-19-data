@@ -87,7 +87,7 @@ class PAHO:
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True 
         })
-        op.add_argument("--headless")
+        # op.add_argument("--headless")
         return op
 
     def _set_download_settings(self, driver):
@@ -116,15 +116,21 @@ class PAHO:
         time.sleep(5)
 
     def _parse_date(self, driver):
+        print(1)
         driver.find_element_by_id("tabZoneId87").click()
         time.sleep(1)
+        print(2)
         driver.find_element_by_id("download-ToolbarButton").click()
         time.sleep(2)
+        print(3)
         driver.find_element_by_xpath(f"//button[contains(text(),'Data')]").click()
         time.sleep(2)
+        print(4)
         window_after = driver.window_handles[1]
         driver.switch_to.window(window_after)
+        time.sleep(2)
         date_str = driver.find_element_by_tag_name("tbody").text
+        print(6)
         return clean_date(date_str, "%m/%d/%Y")
 
     def _get_downloaded_filename(self):

@@ -1,47 +1,51 @@
 import pandas as pd
 
-from utils.utils import read_xlsx_from_url
-from utils.dates import clean_date_series
+from vax.utils.utils import read_xlsx_from_url, clean_df_columns_multiindex
+from vax.utils.dates import clean_date_series
 
 
 class South_korea:
     def __init__(self):
         self.location = "South Korea"
         self.source_url = "https://ncv.kdca.go.kr/boardDownload.es?bid=0037&list_no=443&seq=1"
+        self.source_url_ref = "https://ncv.kdca.go.kr/"
 
     def read(self):
-        df = read_xlsx_from_url(self.source_url)
+        df = read_xlsx_from_url(self.source_url, header=[4, 5])
+        df = clean_df_columns_multiindex(df)
+        return df
+
+    def pipe_check_format(self, df: pd.DataFrame) -> pd.DataFrame:
+        if df.shape[1] != 9:
+            raise ValueError("Number of columns has changed!")
+        columns_lv0 = {'모더나 누적', '아스트라제네카 누적', '얀센 누적', '일자', '전체 누적', '화이자 누적'}
+        columns_lv1 = {'', '1차', '1차(완료)', '완료', '완료\n(AZ-PF교차미포함)', '완료\n(AZ-PF교차포함)'}
+        columns_lv0_wrong = df.columns.levels[0].difference(columns_lv0)
+        columns_lv1_wrong = df.columns.levels[1].difference(columns_lv1)
+        if columns_lv0_wrong.any():
+            raise ValueError(f"Unknown columns in level 0: {columns_lv0_wrong}")
+        if columns_lv1_wrong.any():
+            raise ValueError(f"Unknown columns in level 1: {columns_lv1_wrong}")
         return df
 
     def pipe_extract(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.iloc[:,[0,1,2,7]]
-
-    def pipe_drop(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.drop([0,1,2,3,4,5],axis=0)
-
-    def pipe_drop_JJ_vac_column(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.iloc[:,[0,1,2,4]]
-
-    def pipe_rename_column(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df
-            .rename(columns={
-            "Unnamed: 0": "date",
-            "Unnamed: 1": "people_vaccinated",
-            "Unnamed: 2": "people_fully_vaccinated",
-            "Unnamed: 7": "J&J_vaccinated",
-            })
-        )
+        return pd.DataFrame({
+            "date": df.loc[:, "일자"],
+            "people_vaccinated": df.loc[:, ("전체 누적", "1차")],
+            "people_fully_vaccinated": df.loc[:, ("전체 누적", "완료")],
+            "single_shots": df.loc[:, ("얀센 누적", "1차(완료)")],
+        })
 
     def pipe_source(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(source_url=self.source_url)
+        return df.assign(source_url=self.source_url_ref)
 
     def pipe_location(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(location=self.location)
 
-    def pipe_sum(self, df: pd.DataFrame) -> pd.DataFrame:
-        df['total_vaccinations'] = df['people_vaccinated'] + df['people_fully_vaccinated'] - df['J&J_vaccinated']
-        return df
+    def pipe_total_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.assign(
+            total_vaccinations=df['people_vaccinated'] + df['people_fully_vaccinated'] - df['single_shots']
+        )
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(date=clean_date_series(df.date, "%Y-%m-%d"))
@@ -61,11 +65,9 @@ class South_korea:
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
             df
+            .pipe(self.pipe_check_format)
             .pipe(self.pipe_extract)
-            .pipe(self.pipe_rename_column)
-            .pipe(self.pipe_drop)
-            .pipe(self.pipe_sum)
-            .pipe(self.pipe_drop_JJ_vac_column)
+            .pipe(self.pipe_total_vaccinations)
             .pipe(self.pipe_date)
             .pipe(self.pipe_source)
             .pipe(self.pipe_location)
@@ -74,6 +76,7 @@ class South_korea:
                 "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated",
                 "people_fully_vaccinated",
             ]]
+            .sort_values("date")
         )
 
     def export(self, paths):

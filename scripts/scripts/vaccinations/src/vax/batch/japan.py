@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import re
+import requests
 import pandas as pd
 
 from vax.utils.utils import get_soup, clean_df_columns_multiindex
@@ -10,15 +12,25 @@ from vax.utils.files import export_metadata
 class Japan:
     def __init__(self):
         self.source_url_1 = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
-        self.source_url_2 = "https://www.kantei.go.jp/jp/content/vaccination_data5.xlsx"
+        self._base_url_2 = "https://www.kantei.go.jp/"
         self.source_sheet_name_health = "医療従事者等"
         self.source_sheet_name_general = "一般接種"
-        self.source_url_2_ref = "https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html"
         self.location = "Japan"
         self.vaccine_mapping = {
             "ファイザー社": "Pfizer/BioNTech",
             "武田/モデルナ社": "Moderna",
         }
+
+    @property
+    def source_url_2(self):
+        response = requests.get(self.source_url_2_ref)
+        response.encoding = 'utf-8'
+        source_2_path = re.search('日別の実績.*?href="(.*?\\.xlsx)"', response.text).group(1)
+        return self._base_url_2 + source_2_path
+
+    @property
+    def source_url_2_ref(self):
+        return self._base_url_2 + "jp/headline/kansensho/vaccine.html"
 
     def read(self):
         df_1 = self.read_1().pipe(self.pipeline_1)

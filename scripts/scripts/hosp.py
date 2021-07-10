@@ -221,18 +221,18 @@ def add_algeria(df):
 
     print("Downloading Algeria data…")
     url = "https://raw.githubusercontent.com/yasserkaddour/covid19-icu-data-algeria/main/algeria-covid19-icu-data.csv"
-    dz = pd.read_csv(url, usecols=["date", "in_icu"])
+    algeria = pd.read_csv(url, usecols=["date", "in_icu"])
 
-    dz = dz.melt("date", ["in_icu"], "indicator")
-    dz.loc[:, "indicator"] = dz["indicator"].replace({
+    algeria = algeria.melt("date", ["in_icu"], "indicator")
+    algeria.loc[:, "indicator"] = algeria["indicator"].replace({
         "in_icu": "Daily ICU occupancy"
     })
 
-    dz.loc[:, "entity"] = "Algeria"
-    dz.loc[:, "iso_code"] = "DZA"
-    dz.loc[:, "population"] = 43851043
+    algeria.loc[:, "entity"] = "Algeria"
+    algeria.loc[:, "iso_code"] = "DZA"
+    algeria.loc[:, "population"] = 43851043
 
-    return pd.concat([df, dz])
+    return pd.concat([df, algeria])
 
 
 def add_countries(df):

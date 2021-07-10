@@ -28,6 +28,7 @@ def main(paths):
     assert set(df["fornitore"].unique()) == set(vaccine_mapping.keys())
     df = df.replace(vaccine_mapping)
     df["total_vaccinations"] = df["prima_dose"] + df["seconda_dose"] + df["pregressa_infezione"]
+    df["people_vaccinated"] = df["prima_dose"] + df["pregressa_infezione"]
     df = df.rename(columns={
         "data_somministrazione": "date",
         "fornitore": "vaccine",
@@ -53,7 +54,6 @@ def main(paths):
 
     # Vaccination data
     df = df.rename(columns={
-        "prima_dose": "people_vaccinated",
         "seconda_dose": "people_fully_vaccinated",
     })
     df.loc[df.vaccine.isin(one_dose_vaccines), "people_fully_vaccinated"] = df.people_vaccinated

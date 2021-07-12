@@ -3,6 +3,7 @@ import re
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.dates import localdate
 from vax.utils.utils import get_soup
 
 
@@ -18,7 +19,7 @@ def read(source: str) -> pd.Series:
     )
     total_vaccinations = people_vaccinated + people_fully_vaccinated
 
-    date = soup.find(class_="main_foot").find("span").text.replace("Last updated: ", "")
+    date = localdate("Asia/Dhaka")
 
     return pd.Series(data={
         "total_vaccinations": total_vaccinations,

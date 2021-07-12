@@ -77,6 +77,7 @@ class South_korea:
                 "people_fully_vaccinated",
             ]]
             .sort_values("date")
+            .drop_duplicates()
         )
 
     def export(self, paths):

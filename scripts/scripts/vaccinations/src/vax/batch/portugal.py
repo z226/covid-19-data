@@ -1,5 +1,7 @@
 import pandas as pd
 
+from vax.utils.utils import make_monotonic
+
 
 def read(source_url: str) -> pd.DataFrame:
     return pd.read_csv(source_url, usecols=[
@@ -44,11 +46,6 @@ def enrich_columns(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def exclude_rows(df: pd.DataFrame) -> pd.DataFrame:
-    # Wrong data on 2021-03-29 prevents the series from increasing monotonically
-    return df[df.date != "2021-03-29"]
-
-
 def sanity_checks(df: pd.DataFrame) -> pd.DataFrame:
     assert all(df.total_vaccinations.fillna(0) >= df.people_vaccinated.fillna(0))
     return df
@@ -63,7 +60,7 @@ def pipeline(df: pd.DataFrame) -> pd.DataFrame:
         .pipe(enrich_vaccine_name)
         .pipe(enrich_columns)
         .pipe(sanity_checks)
-        .pipe(exclude_rows)
+        .pipe(make_monotonic)
         .sort_values("date")
     )
 

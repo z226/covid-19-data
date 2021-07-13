@@ -21,7 +21,7 @@ class Colombia:
         return df
 
     def _parse_data(self, worksheet):
-        if worksheet.nrows != 44:
+        if worksheet.nrows != 45:
             raise ValueError("Sheet format changed!")
         total_vaccinations = self._parse_total_vaccinations(worksheet)
         people_fully_vaccinated = self._parse_people_fully_vaccinated(worksheet)
@@ -36,22 +36,28 @@ class Colombia:
         })
 
     def _parse_total_vaccinations(self, worksheet):
-        nrow_doses_1 = 15
-        if worksheet.at(nrow_doses_1, 13) == "Total dosis aplicadas":
-            return worksheet.at(nrow_doses_1, 14)
+        nrow_total_doses = 23
+        if "Total dosis aplicadas al" in worksheet.at(nrow_total_doses, 13):
+            return worksheet.at(nrow_total_doses, 14)
+        else:
+            raise ValueError("Sheet format changed!")
 
     def _parse_people_fully_vaccinated(self, worksheet):
-        nrow_doses_1 = 32
-        if worksheet.at(nrow_doses_1, 13) == "Esquemas completos con segundas dosis y dosis única":
-            return worksheet.at(nrow_doses_1, 14)
+        nrow_fully_vaccinated = 40
+        if worksheet.at(nrow_fully_vaccinated, 13) == "Esquemas completos con segundas dosis y dosis única":
+            return worksheet.at(nrow_fully_vaccinated, 14)
+        else:
+            raise ValueError("Sheet format changed!")
 
     def _parse_unique_doses(self, worksheet):
-        nrow_doses_unique = 29
-        if worksheet.at(nrow_doses_unique, 13) == "Total dosis únicas acumuladas":
+        nrow_doses_unique = 38
+        if worksheet.at(nrow_doses_unique, 13) == "Total únicas dosis acumuladas":
             return worksheet.at(nrow_doses_unique, 14)
+        else:
+            raise ValueError("Sheet format changed!")
 
     def _parse_date(self, worksheet):
-        nrow_date = 43
+        nrow_date = 44
         if worksheet.at(nrow_date, 1) == "Fecha de corte:":
             date_raw = worksheet.at(nrow_date, 2)
             date_str = clean_date(date_raw, "%d/%m/%Y")

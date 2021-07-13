@@ -20,20 +20,15 @@ class Bolivia:
 
     def parse_metrics(self) -> tuple:
         soup = get_soup(self.source_url)
-        elems = soup.find_all(class_="vacunados")
+        elems = soup.find(class_="vacunometro-cifras").find_all("td")
         if len(elems) != 2:
             raise ValueError(
                 "Something changed in source layout. More than two elemnts with class='vacunados' were found."
             )
-        for elem in elems:
-            _ = elem.find_all("span")
-            if _[0].text == "1ra Dosis":
-                dose_1 = _[1].text
-            elif _[0].text == "2da Dosis":
-                dose_2 = _[1].text
-            else:
-                raise ValueError("Something changed in source layout. Name different than '1ra Dosis' or '2da Dosis'")
-        return clean_count(dose_1), clean_count(dose_2)
+        values = [clean_count(elem.text) for elem in elems]
+        dose_1 = max(values)
+        dose_2 = min(values)
+        return dose_1, dose_2
     
     def get_date(self):
         return localdate("America/La_Paz")

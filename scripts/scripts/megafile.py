@@ -304,8 +304,6 @@ def dict_to_compact_json(d: dict):
     """
     Encodes a Python dict into valid, minified JSON.
     """
-    for k,v in d.items():
-        d[k] = [x if pd.notnull(x) else None for x in v]
     return json.dumps(
         d,
         # Use separators without any trailing whitespace to minimize file size.
@@ -356,6 +354,8 @@ def df_to_columnar_json(complete_dataset, output_path):
     # Replace NaNs with None in order to be serializable to JSON.
     # JSON doesn't support NaNs, but it does have null which is represented as None in Python.
     columnar_dict = complete_dataset.to_dict(orient="list")
+    for k,v in columnar_dict.items():
+        columnar_dict[k] = [x if pd.notnull(x) else None for x in v]
     with open(output_path, "w") as file:
         file.write(dict_to_compact_json(columnar_dict))
 

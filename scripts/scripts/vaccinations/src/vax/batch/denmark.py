@@ -11,7 +11,7 @@ from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date_series
 
 
-SEPARATOR = ","
+SEPARATOR = ";"
 
 
 class Denmark:

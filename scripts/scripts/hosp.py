@@ -253,9 +253,9 @@ def add_algeria(df):
     algeria = pd.read_csv(url, usecols=["date", "in_icu"])
 
     algeria = algeria.melt("date", ["in_icu"], "indicator")
-    algeria.loc[:, "indicator"] = algeria["indicator"].replace({
-        "in_icu": "Daily ICU occupancy"
-    })
+    algeria.loc[:, "indicator"] = algeria["indicator"].replace(
+        {"in_icu": "Daily ICU occupancy"}
+    )
 
     algeria.loc[:, "entity"] = "Algeria"
     algeria.loc[:, "iso_code"] = "DZA"

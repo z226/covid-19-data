@@ -6,7 +6,6 @@ import pandas as pd
 
 VACCINES_ACCEPTED = [
     "Abdala",
-    "BBIBP-CorV",
     "CanSino",
     "Covaxin",
     "EpiVacCorona",
@@ -100,7 +99,7 @@ class CountryChecker:
     def check_date(self):
         if self.df.date.isnull().any():
             raise ValueError(f"{self.location} -- Invalid dates! NaN values found.")
-        if (self.df.date.min() < datetime(2020, 12, 1)) or (self.df.date.max() > datetime.now().date()):
+        if (self.df.date.min() < datetime(2020, 12, 1)) or (self.df.date.max().date() > datetime.now().date()):
             raise ValueError(
                 f"{self.location} -- Invalid dates! Check {self.df.date.min()} and/or {self.df.date.max()}"
             )

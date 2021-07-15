@@ -34,6 +34,7 @@ class Norway:
 
             driver.get(self.source_url)
             element = driver.find_element_by_class_name("highcharts-exporting-group")
+            time.sleep(2)
             self._scroll_till_element_middle(driver, element)
             element.click()
             time.sleep(2)

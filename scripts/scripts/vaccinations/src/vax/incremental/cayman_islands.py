@@ -19,7 +19,7 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
     regex_1 = (
         r"([\d,]+) C(ovid|OVID)-19 vaccinations has been given in total in the Cayman Islands"
     )
-    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations (?:had|have) been given in total in the Cayman Islands"
+    regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations given in total in the Cayman Islands"
     total_vaccinations = clean_count(re.search(regex_1, soup.text).group(1))
 
     # regex_2 = (

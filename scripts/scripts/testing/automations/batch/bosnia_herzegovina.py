@@ -70,7 +70,7 @@ class BosniaHerzegovina:
         return df
         
     def to_csv(self):
-        output_path = f"automated_sheets_new/{self.location}.csv"
+        output_path = f"automated_sheets/{self.location}.csv"
         df = self.read().pipe(self.pipeline)
         df.to_csv(
             output_path,

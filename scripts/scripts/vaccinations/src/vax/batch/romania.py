@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 
 from vax.utils.files import export_metadata
+from vax.utils.utils import make_monotonic
 
 
 class Romania:
@@ -118,6 +119,7 @@ class Romania:
             .pipe(self.pipe_people_vaccinated)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_select_output_columns)
+            .pipe(make_monotonic)
         )
 
     def pipe_manufacturer_melt(self, df: pd.DataFrame) -> pd.DataFrame:

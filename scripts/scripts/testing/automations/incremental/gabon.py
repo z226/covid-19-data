@@ -31,7 +31,7 @@ def main():
         existing = pd.read_csv(output_file)
         if count > existing["Cumulative total"].max() and date_str > existing["Date"].max():
             df = pd.concat([df, existing]).sort_values('Date', ascending=False).drop_duplicates()
-    df.to_csv(output_file, index=False)
+            df.to_csv(output_file, index=False)
 
 
 if __name__=="__main__":

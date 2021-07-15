@@ -104,7 +104,7 @@ class PAHO:
         time.sleep(1)
         # Click on Crosstab
         driver.find_element_by_xpath(f"//button[contains(text(),'{option}')]").click()
-        time.sleep(2)
+        time.sleep(3)
         # Select RDT Overview option
         driver.find_element_by_xpath(f"//span[contains(text(),'{filename}')]").click()
         time.sleep(2)
@@ -121,9 +121,10 @@ class PAHO:
         driver.find_element_by_id("download-ToolbarButton").click()
         time.sleep(2)
         driver.find_element_by_xpath(f"//button[contains(text(),'Data')]").click()
-        time.sleep(2)
+        time.sleep(4)
         window_after = driver.window_handles[1]
         driver.switch_to.window(window_after)
+        time.sleep(2)
         date_str = driver.find_element_by_tag_name("tbody").text
         return clean_date(date_str, "%m/%d/%Y")
 

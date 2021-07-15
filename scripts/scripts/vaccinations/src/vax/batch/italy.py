@@ -17,11 +17,23 @@ def main(paths):
         "https://raw.githubusercontent.com/italia/covid19-opendata-vaccini/master/dati/"
         "somministrazioni-vaccini-latest.csv"
     )
-    df = pd.read_csv(url, usecols=["data_somministrazione", "fornitore", "fascia_anagrafica", "prima_dose", "seconda_dose"])
+    df = pd.read_csv(url, usecols=[
+        "data_somministrazione",
+        "fornitore",
+        "fascia_anagrafica",
+        "prima_dose",
+        "seconda_dose",
+        "pregressa_infezione",
+    ])
     assert set(df["fornitore"].unique()) == set(vaccine_mapping.keys())
     df = df.replace(vaccine_mapping)
-    df["total_vaccinations"] = df["prima_dose"] + df["seconda_dose"]
-    df = df.rename(columns={"data_somministrazione": "date", "fornitore": "vaccine", "fascia_anagrafica": "age_group"})
+    df["total_vaccinations"] = df["prima_dose"] + df["seconda_dose"] + df["pregressa_infezione"]
+    df["people_vaccinated"] = df["prima_dose"] + df["pregressa_infezione"]
+    df = df.rename(columns={
+        "data_somministrazione": "date",
+        "fornitore": "vaccine",
+        "fascia_anagrafica": "age_group"
+    })
     # df_age_group = df.copy()
 
     # Data by manufacturer
@@ -42,7 +54,6 @@ def main(paths):
 
     # Vaccination data
     df = df.rename(columns={
-        "prima_dose": "people_vaccinated",
         "seconda_dose": "people_fully_vaccinated",
     })
     df.loc[df.vaccine.isin(one_dose_vaccines), "people_fully_vaccinated"] = df.people_vaccinated

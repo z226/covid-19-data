@@ -1,5 +1,6 @@
 import os
 import requests
+from glob import glob
 import tempfile
 import re
 from urllib.error import HTTPError
@@ -7,6 +8,8 @@ import unicodedata
 
 from bs4 import BeautifulSoup
 import pandas as pd
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 VAX_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -89,6 +92,46 @@ def get_soup(source: str, headers: dict = None, verify: bool = True, from_encodi
     )
 
 
+def sel_options(headless: bool = True):
+    op = Options()
+    op.add_argument("--disable-notifications")
+    op.add_experimental_option("prefs",{
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True 
+    })
+    if headless:
+        op.add_argument("--headless")
+    return op
+
+
+def get_driver(headless: bool = True):
+    return webdriver.Chrome(options=sel_options(headless=headless))
+
+
+def set_download_settings(driver, folder_name: str = None):
+    if folder_name is None:
+        folder_name = "/tmp"
+    driver.command_executor._commands["send_command"] = ("POST", "/session/$sessionId/chromium/send_command")
+    params = {
+        "cmd": "Page.setDownloadBehavior",
+        "params": {"behavior": "allow", "downloadPath": folder_name}
+    }
+    _ = driver.execute("send_command", params)
+
+
+def get_latest_file(path, extension):
+    files = glob(os.path.join(path, f"*.{extension}"))
+    return max(files, key=os.path.getctime)
+
+
+def scroll_till_element(driver, element):
+    desired_y = (element.size['height'] / 2) + element.location['y']
+    current_y = (driver.execute_script('return window.innerHeight') / 2) + driver.execute_script('return window.pageYOffset')
+    scroll_y_by = desired_y - current_y
+    driver.execute_script("window.scrollBy(0, arguments[0]);", scroll_y_by)
+
+
 def url_request_broken(url):
     url_base, url_params = url.split('query?')
     x = filter(lambda x: x[0] != 'where', [p.split('=') for p in url_params.split('&')])
@@ -121,4 +164,17 @@ def clean_df_columns_multiindex(df):
     for col in df.columns:
         columns_new.append([clean_column_name(c) for c in col])
     df.columns = pd.MultiIndex.from_tuples(columns_new)
+    return df
+
+
+def make_monotonic(df: pd.DataFrame) -> pd.DataFrame:
+    # Forces vaccination time series to become monotonic.
+    # The algorithm assumes that the most recent values are the correct ones,
+    # and therefore removes previous higher values.
+    df = df.sort_values("date")
+    metrics = ("total_vaccinations", "people_vaccinated", "people_fully_vaccinated")
+    for metric in metrics:
+        while not df[metric].ffill().fillna(0).is_monotonic:
+            diff = (df[metric].ffill().shift(-1) - df[metric].ffill())
+            df = df[(diff >= 0) | (diff.isna())]
     return df

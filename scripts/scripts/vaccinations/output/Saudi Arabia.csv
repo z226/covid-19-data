@@ -1,4 +1,4 @@
-date,total_vaccinations,Elderly,FirstDose,SecondDose,location,vaccine,source_url
+date,total_vaccinations,Elderly,people_vaccinated,people_fully_vaccinated,location,vaccine,source_url
 2021-01-06,137862.0,,,,Saudi Arabia,Pfizer/BioNTech,https://covid19.moh.gov.sa/
 2021-01-09,178338.0,,,,Saudi Arabia,Pfizer/BioNTech,https://covid19.moh.gov.sa/
 2021-01-16,295530.0,,,,Saudi Arabia,Pfizer/BioNTech,https://covid19.moh.gov.sa/
@@ -134,4 +134,15 @@ date,total_vaccinations,Elderly,FirstDose,SecondDose,location,vaccine,source_url
 2021-07-01,18019069.0,1354967.0,16419217.0,1599852.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
 2021-07-02,18198743.0,1360270.0,16516737.0,1682006.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
 2021-07-03,18320428.0,1363435.0,16604577.0,1715851.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
-2021-07-04,18349268.0,1364602.0,16625314.0,1723954.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-04,18460462.0,1372870.0,16705096.0,1755366.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-05,18699493.0,1380507.0,16872207.0,1827286.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-06,18892398.0,1384559.0,16987146.0,1905252.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-07,19064998.0,1388788.0,17088207.0,1976791.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-08,19262679.0,1392063.0,17198807.0,2063872.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-09,19396996.0,1393607.0,17271835.0,2125161.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-10,19586965.0,1396027.0,17384949.0,2202016.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-11,19825792.0,1398453.0,17518976.0,2306816.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-12,20227729.0,1402487.0,17753002.0,2474727.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-13,20597120.0,1405788.0,17946562.0,2650558.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-14,21094827.0,1409645.0,18186896.0,2907931.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/
+2021-07-15,21189424.0,1410296.0,18231654.0,2957770.0,Saudi Arabia,"Oxford/AstraZeneca, Pfizer/BioNTech",https://covid19.moh.gov.sa/

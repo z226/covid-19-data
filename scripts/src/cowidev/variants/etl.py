@@ -1,23 +1,27 @@
 import os
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import requests
 import pandas as pd
 
 from cowidev.utils.utils import get_project_dir
 
-
 class VariantsETL:
     def __init__(self) -> None:
         self.source_url = (
             "https://raw.githubusercontent.com/hodcroftlab/covariants/master/web/data/perCountryData.json"
+        )
+        self.source_url_date = (
+            "https://github.com/hodcroftlab/covariants/raw/master/web/data/update.json"
         )
         self.variants_details = {
             '20A.EU2': {'rename': 'B.1.160', 'who': False},
             '20A/S:439K': {'rename': 'B.1.258', 'who': False},
             '20A/S:98F': {'rename': 'B.1.221', 'who': False},
             '20B/S:1122L': {'rename': 'B.1.1.302', 'who': False},
+            '20A/S:126A': {'rename': 'B.1.620', 'who': False},
             '20B/S:626S': {'rename': 'B.1.1.277', 'who': False},
+            '20B/S:732A': {'rename': 'B.1.1.519', 'who': False},
             '20C/S:80Y': {'rename': 'B.1.367', 'who': False},
             '20E (EU1)': {'rename': 'B.1.177', 'who': False},
             '20H (Beta, V2)': {'rename': 'Beta', 'who': True},
@@ -28,6 +32,8 @@ class VariantsETL:
             '21C (Epsilon)': {'rename': 'Epsilon', 'who': True},
             '21D (Eta)': {'rename': 'Eta', 'who': True},
             '21F (Iota)': {'rename': 'Iota', 'who': True},
+            '21G (Lambda)': {'rename': 'Lambda', 'who': True},
+            '21H': {'rename': 'B.1.621', 'who': False},
             'S:677H.Robin1': {'rename': 'S:677H.Robin1', 'who': False},
             'S:677P.Pelican': {'rename': 'S:677P.Pelican', 'who': False}
         }
@@ -55,6 +61,15 @@ class VariantsETL:
         data = requests.get(self.source_url).json()
         data = list(filter(lambda x: x["region"] == "World", data["regions"]))[0]["distributions"]
         return data
+
+    @property
+    def _parse_last_update_date(self):
+        field_name = "lastUpdated"
+        date_json = requests.get(self.source_url_date).json()
+        if field_name in date_json:
+            date_raw = date_json[field_name]
+            return datetime.fromisoformat(date_raw).date()
+        raise ValueError(f"{field_name} field not found!")
 
     def transform(self, data: dict) -> pd.DataFrame:
         df = (
@@ -98,8 +113,11 @@ class VariantsETL:
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:
         dt = pd.to_datetime(df.date, format="%Y-%m-%d")
+        dt = dt + timedelta(days=14)
+        last_update = self._parse_last_update_date
+        dt = dt.apply(lambda x: min(x, last_update).strftime("%Y-%m-%d"))
         return df.assign(
-            date=dt + timedelta(days=14),
+            date=dt,
         )
 
     def pipe_check_variants(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -117,10 +135,23 @@ class VariantsETL:
 
     def pipe_variant_others(self, df: pd.DataFrame) -> pd.DataFrame:
         df_a = df[["date", "location", "num_sequences_total"]].drop_duplicates()
-        df_b = df.groupby(["date", "location"], as_index=False).agg({"num_sequences": sum}).rename(columns={"num_sequences": "all_seq"})
+        df_b = (
+            df
+            .groupby(
+                ["date", "location"],
+                as_index=False
+            )
+            .agg({"num_sequences": sum})
+            .rename(columns={"num_sequences": "all_seq"})
+        )
         df_c = df_a.merge(df_b, on=["date", "location"])
         df_c = df_c.assign(others=df_c["num_sequences_total"] - df_c["all_seq"])
-        df_c = df_c.melt(id_vars=["location", "date", "num_sequences_total"], value_vars="num_sequences_others", var_name="variant", value_name="num_sequences")
+        df_c = df_c.melt(
+            id_vars=["location", "date", "num_sequences_total"],
+            value_vars="num_sequences_others",
+            var_name="variant",
+            value_name="num_sequences"
+        )
         df = pd.concat([df, df_c])
         return df
 

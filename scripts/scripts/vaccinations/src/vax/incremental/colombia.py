@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
@@ -21,41 +23,26 @@ class Colombia:
         return df
 
     def _parse_data(self, worksheet):
-        if worksheet.nrows != 44:
-            raise ValueError("Sheet format changed!")
-        total_vaccinations = self._parse_total_vaccinations(worksheet)
-        people_fully_vaccinated = self._parse_people_fully_vaccinated(worksheet)
-        unique_doses = self._parse_unique_doses(worksheet)
+        
+        for row in worksheet.values():
+            for value in row:
+                if "Total dosis aplicadas al " in str(value):
+                    total_vaccinations = row[-1]
+                    date_raw = re.search(r"[\d-]{10}$", value).group(0)
+                    date_str = clean_date(date_raw, "%d-%m-%Y")
+                elif value == "Esquemas completos segundas + únicas dosis":
+                    people_fully_vaccinated = row[-1]
+                elif value == "Total únicas dosis acumuladas":
+                    unique_doses = row[-1]
+
         if total_vaccinations is None or people_fully_vaccinated is None:
-            return None
+            raise ValueError("Date is not where it is expected be! Check worksheet")
         return pd.Series({
-            "date": self._parse_date(worksheet),
+            "date": date_str,
             "total_vaccinations": total_vaccinations,
             "people_fully_vaccinated": people_fully_vaccinated,
             "people_vaccinated": total_vaccinations - people_fully_vaccinated + unique_doses,
         })
-
-    def _parse_total_vaccinations(self, worksheet):
-        nrow_doses_1 = 15
-        if worksheet.at(nrow_doses_1, 13) == "Total dosis aplicadas":
-            return worksheet.at(nrow_doses_1, 14)
-
-    def _parse_people_fully_vaccinated(self, worksheet):
-        nrow_doses_1 = 32
-        if worksheet.at(nrow_doses_1, 13) == "Esquemas completos con segundas dosis y dosis única":
-            return worksheet.at(nrow_doses_1, 14)
-
-    def _parse_unique_doses(self, worksheet):
-        nrow_doses_unique = 29
-        if worksheet.at(nrow_doses_unique, 13) == "Total dosis únicas acumuladas":
-            return worksheet.at(nrow_doses_unique, 14)
-
-    def _parse_date(self, worksheet):
-        nrow_date = 43
-        if worksheet.at(nrow_date, 1) == "Fecha de corte:":
-            return clean_date(worksheet.at(nrow_date, 2), "%d/%m/%Y")
-        else:
-            raise ValueError("Date is not where it is expected be! Check worksheet")
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", "Colombia")

@@ -246,11 +246,30 @@ def add_israel(df):
     return pd.concat([df, israel])
 
 
+def add_algeria(df):
+
+    print("Downloading Algeria data…")
+    url = "https://raw.githubusercontent.com/yasserkaddour/covid19-icu-data-algeria/main/algeria-covid19-icu-data.csv"
+    algeria = pd.read_csv(url, usecols=["date", "in_icu"])
+
+    algeria = algeria.melt("date", ["in_icu"], "indicator")
+    algeria.loc[:, "indicator"] = algeria["indicator"].replace(
+        {"in_icu": "Daily ICU occupancy"}
+    )
+
+    algeria.loc[:, "entity"] = "Algeria"
+    algeria.loc[:, "iso_code"] = "DZA"
+    algeria.loc[:, "population"] = 43851043
+
+    return pd.concat([df, algeria])
+
+
 def add_countries(df):
     df = add_united_states(df)
     df = add_canada(df)
     df = add_uk(df)
     df = add_israel(df)
+    df = add_algeria(df)
     return df
 
 

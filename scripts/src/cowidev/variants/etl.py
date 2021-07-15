@@ -48,6 +48,7 @@ class VariantsETL:
         self.columns_out = [
             "location", "date", "variant", "num_sequences", "perc_sequences", "num_sequences_total"
         ]
+        self.num_sequences_total_threshold = 30
 
     @property
     def variants_mapping(self):
@@ -74,6 +75,7 @@ class VariantsETL:
     def transform(self, data: dict) -> pd.DataFrame:
         df = (
             self.json_to_df(data)
+            .pipe(self.pipe_filter_by_num_sequences)
             .pipe(self.pipe_edit_columns)
             .pipe(self.pipe_date)
             .pipe(self.pipe_check_variants)
@@ -100,6 +102,9 @@ class VariantsETL:
             value_name="num_sequences"
         )
         return df
+
+    def pipe_filter_by_num_sequences(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[df.total_sequences >= self.num_sequences_total_threshold]
 
     def pipe_edit_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         # Modify/add columns

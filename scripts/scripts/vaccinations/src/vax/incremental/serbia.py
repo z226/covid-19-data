@@ -16,11 +16,10 @@ class Serbia:
         self.regex = {
             "metrics": r"Обе дозе вакцине примило је ([\d.]+) особа. Укупно вакцинација: ([\d.]+) доза",
             "date": r"ажурирано .*",
-            "total_vaccinations": r"Укупан број датих доза: ([\d.]+)",
-            "people_vaccinated": (
-                r"Укупан број грађана који су примили прву дозу и оних којих су примили обе дозе: ([\d.]+)"
-            ),
-            "people_fully_vaccinated": r"Укупан број грађана који су примили обе дозе: ([\d.]+)",
+            "total_vaccinations": r"Укупан број (?:датих )?доза: ([\d.]+)",
+            "citizen": r"Држављанин РС – прва доза ([\d.]+), друга доза ([\d.]+)",
+            "resident": r"Страни држављанин са боравком у РС – прва доза ([\d.]+), друга доза ([\d.]+)",
+            "foreign": r"Страни држављанин без боравка у РС – прва доза ([\d.]+), друга доза ([\d.]+)",
         }
 
     def read(self) -> pd.Series:
@@ -38,11 +37,30 @@ class Serbia:
         total_vaccinations = clean_count(
             re.search(self.regex["total_vaccinations"], soup.text).group(1)
         )
-        people_vaccinated = clean_count(
-            re.search(self.regex["people_vaccinated"], soup.text).group(1)
+        # Citizenships
+        people_vaccinated_cit = clean_count(
+            re.search(self.regex["citizen"], soup.text).group(1)
         )
-        people_fully_vaccinated = clean_count(
-            re.search(self.regex["people_fully_vaccinated"], soup.text).group(1)
+        people_fully_vaccinated_cit = clean_count(
+            re.search(self.regex["citizen"], soup.text).group(2)
+        )
+        # Residenship
+        people_vaccinated_res = clean_count(
+            re.search(self.regex["resident"], soup.text).group(1)
+        )
+        people_fully_vaccinated_res = clean_count(
+            re.search(self.regex["resident"], soup.text).group(2)
+        )
+        # Foreigners
+        people_vaccinated_for = clean_count(
+            re.search(self.regex["foreign"], soup.text).group(1)
+        )
+        people_fully_vaccinated_for = clean_count(
+            re.search(self.regex["foreign"], soup.text).group(2)
+        )
+        people_vaccinated = people_vaccinated_cit + people_vaccinated_res + people_vaccinated_for
+        people_fully_vaccinated = (
+            people_fully_vaccinated_cit + people_fully_vaccinated_res + people_fully_vaccinated_for
         )
         return total_vaccinations, people_vaccinated, people_fully_vaccinated
 

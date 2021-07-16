@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-from vax.utils.utils import get_soup, download_file_from_url
+from vax.utils.utils import get_driver, download_file_from_url
 from vax.utils.files import export_metadata
 
 class Switzerland:
@@ -19,10 +19,12 @@ class Switzerland:
         return df, df_manufacturer
 
     def _parse_file_url(self) -> str:
-        soup = get_soup(self.source_url)
-        for elem in soup.find_all("a", class_="footer__nav__link"):
-            if "sources-csv" in elem.get("href"):
-                return "https://www.covid19.admin.ch" + elem.get("href")
+        with get_driver() as driver:
+            driver.get(self.source_url)
+            elems = driver.find_elements_by_class_name("footer__nav__link")
+            for elem in elems:
+                if "Data as .csv file" == elem.text:
+                    return elem.get_attribute("href")
         raise Exception("No CSV link found in footer.")
 
     def _parse_data(self, url):

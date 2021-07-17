@@ -7,7 +7,6 @@ from vax.utils.dates import clean_date
 
 
 class Colombia:
-
     def __init__(self, gsheets_api) -> None:
         self.location = "Colombia"
         self.source_url = "https://docs.google.com/spreadsheets/d/1eblBeozGn1soDGXbOIicwyEDkUqNMzzpJoAKw84TTA4"
@@ -23,7 +22,7 @@ class Colombia:
         return df
 
     def _parse_data(self, worksheet):
-        
+
         for row in worksheet.values():
             for value in row:
                 if "Total dosis aplicadas al " in str(value):
@@ -37,28 +36,31 @@ class Colombia:
 
         if total_vaccinations is None or people_fully_vaccinated is None:
             raise ValueError("Date is not where it is expected be! Check worksheet")
-        return pd.Series({
-            "date": date_str,
-            "total_vaccinations": total_vaccinations,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "people_vaccinated": total_vaccinations - people_fully_vaccinated + unique_doses,
-        })
+        return pd.Series(
+            {
+                "date": date_str,
+                "total_vaccinations": total_vaccinations,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "people_vaccinated": total_vaccinations
+                - people_fully_vaccinated
+                + unique_doses,
+            }
+        )
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", "Colombia")
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac")
+        return enrich_data(
+            ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac"
+        )
 
     def pipe_source(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "source_url", self.source_url)
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_source)
+            ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
         )
 
     def to_csv(self, paths):
@@ -73,7 +75,7 @@ class Colombia:
                 people_fully_vaccinated=data["people_fully_vaccinated"],
                 date=data["date"],
                 source_url=data["source_url"],
-                vaccine=data["vaccine"]
+                vaccine=data["vaccine"],
             )
         else:
             print("skipped")

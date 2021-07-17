@@ -20,11 +20,13 @@ class Zambia:
 
     def read(self):
         data = requests.get(self.source_url).json()["features"][0]["attributes"]
-        return pd.Series({
-            "total_vaccinations": data["Vaccine_total"],
-            "people_fully_vaccinated": data["Vaccine_total_last24"],
-            "date": clean_date(datetime.fromtimestamp(data["Date"]/1000)),
-        })
+        return pd.Series(
+            {
+                "total_vaccinations": data["Vaccine_total"],
+                "people_fully_vaccinated": data["Vaccine_total_last24"],
+                "date": clean_date(datetime.fromtimestamp(data["Date"] / 1000)),
+            }
+        )
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)
@@ -36,12 +38,13 @@ class Zambia:
         return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Sinopharm/Beijing")
 
     def pipe_people_vaccinated(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "people_vaccinated", ds.total_vaccinations-ds.people_fully_vaccinated)
+        return enrich_data(
+            ds, "people_vaccinated", ds.total_vaccinations - ds.people_fully_vaccinated
+        )
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_location)
+            ds.pipe(self.pipe_location)
             .pipe(self.pipe_source)
             .pipe(self.pipe_vaccine)
             .pipe(self.pipe_people_vaccinated)
@@ -57,7 +60,7 @@ class Zambia:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

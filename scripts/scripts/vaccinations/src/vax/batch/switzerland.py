@@ -7,8 +7,8 @@ import pandas as pd
 from vax.utils.utils import get_driver, download_file_from_url
 from vax.utils.files import export_metadata
 
-class Switzerland:
 
+class Switzerland:
     def __init__(self):
         self.location = "Switzerland"
         self.source_url = "https://www.covid19.admin.ch/en/epidemiologic/vacc-doses"
@@ -31,20 +31,20 @@ class Switzerland:
         with tempfile.TemporaryDirectory(dir=".") as temp_dir:
             zip_path = os.path.join(temp_dir, "file.zip")
             download_file_from_url(url, zip_path)
-            with ZipFile(zip_path, 'r') as zipObj:
+            with ZipFile(zip_path, "r") as zipObj:
                 # Extract all the contents of zip file in current directory
                 zipObj.extractall(temp_dir)
             doses = pd.read_csv(
                 os.path.join(temp_dir, "data/COVID19VaccDosesAdministered.csv"),
-                usecols=["geoRegion", "date", "sumTotal", "type"]
+                usecols=["geoRegion", "date", "sumTotal", "type"],
             )
             people = pd.read_csv(
                 os.path.join(temp_dir, "data/COVID19VaccPersons.csv"),
-                usecols=["geoRegion", "date", "sumTotal", "type"]
+                usecols=["geoRegion", "date", "sumTotal", "type"],
             )
             manufacturer = pd.read_csv(
                 os.path.join(temp_dir, "data/COVID19AdministeredDoses_vaccine.csv"),
-                usecols=["date", "geoRegion", "vaccine", "sumTotal"]
+                usecols=["date", "geoRegion", "vaccine", "sumTotal"],
             )
             return pd.concat([doses, people], ignore_index=True), manufacturer
 
@@ -59,19 +59,18 @@ class Switzerland:
         )
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns={
-            "geoRegion": "location",
-            "COVID19FullyVaccPersons": "people_fully_vaccinated",
-            "COVID19VaccDosesAdministered": "total_vaccinations",
-            "COVID19AtLeastOneDosePersons": "people_vaccinated",
-        })
+        return df.rename(
+            columns={
+                "geoRegion": "location",
+                "COVID19FullyVaccPersons": "people_fully_vaccinated",
+                "COVID19VaccDosesAdministered": "total_vaccinations",
+                "COVID19AtLeastOneDosePersons": "people_vaccinated",
+            }
+        )
 
     def pipe_translate_country_code(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
-            location=df.location.replace({
-                "CH": "Switzerland",
-                "FL": "Liechtenstein"
-            })
+            location=df.location.replace({"CH": "Switzerland", "FL": "Liechtenstein"})
         )
 
     def pipe_source(self, df: pd.DataFrame, country_code: str) -> pd.DataFrame:
@@ -89,17 +88,22 @@ class Switzerland:
 
     def pipeline(self, df: pd.DataFrame, country_code: str) -> pd.DataFrame:
         return (
-            df
-            .pipe(self.pipe_filter_country, country_code)
+            df.pipe(self.pipe_filter_country, country_code)
             .pipe(self.pipe_pivot)
             .pipe(self.pipe_rename_columns)
             .pipe(self.pipe_translate_country_code)
             .pipe(self.pipe_source, country_code)
-            .pipe(self.pipe_vaccine)
-            [[
-                "location", "date", "vaccine", "source_url", "total_vaccinations", "people_vaccinated",
-                "people_fully_vaccinated",
-            ]]
+            .pipe(self.pipe_vaccine)[
+                [
+                    "location",
+                    "date",
+                    "vaccine",
+                    "source_url",
+                    "total_vaccinations",
+                    "people_vaccinated",
+                    "people_fully_vaccinated",
+                ]
+            ]
         )
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -109,8 +113,7 @@ class Switzerland:
         }
         assert set(df["vaccine"].unique()) == set(vaccine_mapping.keys())
         return (
-            df
-            .rename(columns={"sumTotal": "total_vaccinations"})
+            df.rename(columns={"sumTotal": "total_vaccinations"})
             .drop(columns="geoRegion")
             .assign(location="Switzerland")
             .replace(vaccine_mapping)
@@ -120,25 +123,20 @@ class Switzerland:
         vaccine_data, manufacturer_data = self.read()
 
         vaccine_data.pipe(self.pipeline, country_code="CH").to_csv(
-            paths.tmp_vax_out("Switzerland"),
-            index=False
+            paths.tmp_vax_out("Switzerland"), index=False
         )
 
         vaccine_data.pipe(self.pipeline, country_code="FL").to_csv(
-            paths.tmp_vax_out("Liechtenstein"),
-            index=False
+            paths.tmp_vax_out("Liechtenstein"), index=False
         )
 
         df_man = manufacturer_data.pipe(self.pipeline_manufacturer)
-        df_man.to_csv(
-            paths.tmp_vax_out_man("Switzerland"),
-            index=False
-        )
+        df_man.to_csv(paths.tmp_vax_out_man("Switzerland"), index=False)
         export_metadata(
             df_man,
             "Federal Office of Public Health",
             self.source_url,
-            paths.tmp_vax_metadata_man
+            paths.tmp_vax_metadata_man,
         )
 
 

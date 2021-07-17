@@ -9,7 +9,6 @@ from vax.utils.dates import clean_date
 
 
 class Serbia:
-
     def __init__(self):
         self.location = "Serbia"
         self.source_url = "https://vakcinacija.gov.rs/"
@@ -24,14 +23,20 @@ class Serbia:
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url)
-        total_vaccinations, people_vaccinated, people_fully_vaccinated = self._parse_metrics(soup)
-        return pd.Series({
-            "total_vaccinations": total_vaccinations,
-            "people_vaccinated": people_vaccinated,
-            "people_fully_vaccinated": people_fully_vaccinated,
-            "source_url": self.source_url,
-            "date": self._parse_date(soup)
-        })
+        (
+            total_vaccinations,
+            people_vaccinated,
+            people_fully_vaccinated,
+        ) = self._parse_metrics(soup)
+        return pd.Series(
+            {
+                "total_vaccinations": total_vaccinations,
+                "people_vaccinated": people_vaccinated,
+                "people_fully_vaccinated": people_fully_vaccinated,
+                "source_url": self.source_url,
+                "date": self._parse_date(soup),
+            }
+        )
 
     def _parse_metrics(self, soup: BeautifulSoup):
         total_vaccinations = clean_count(
@@ -58,9 +63,13 @@ class Serbia:
         people_fully_vaccinated_for = clean_count(
             re.search(self.regex["foreign"], soup.text).group(2)
         )
-        people_vaccinated = people_vaccinated_cit + people_vaccinated_res + people_vaccinated_for
+        people_vaccinated = (
+            people_vaccinated_cit + people_vaccinated_res + people_vaccinated_for
+        )
         people_fully_vaccinated = (
-            people_fully_vaccinated_cit + people_fully_vaccinated_res + people_fully_vaccinated_for
+            people_fully_vaccinated_cit
+            + people_fully_vaccinated_res
+            + people_fully_vaccinated_for
         )
         return total_vaccinations, people_vaccinated, people_fully_vaccinated
 
@@ -89,13 +98,15 @@ class Serbia:
         return enrich_data(ds, "location", self.location)
 
     def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
-        return enrich_data(ds, "vaccine", "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V")
+        return enrich_data(
+            ds,
+            "vaccine",
+            "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
+        )
 
     def pipeline(self, ds: pd.Series) -> pd.Series:
         return (
-            ds
-            .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_location)
+            ds.pipe(self.pipe_vaccine).pipe(self.pipe_location)
             # .pipe(self.pipe_metrics)
         )
 
@@ -109,7 +120,7 @@ class Serbia:
             people_fully_vaccinated=data["people_fully_vaccinated"],
             date=data["date"],
             source_url=data["source_url"],
-            vaccine=data["vaccine"]
+            vaccine=data["vaccine"],
         )
 
 

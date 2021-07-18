@@ -13,7 +13,7 @@ class Serbia:
         self.location = "Serbia"
         self.source_url = "https://vakcinacija.gov.rs/"
         self.regex = {
-            "metrics": r"Обе дозе вакцине примило је ([\d.]+) особа. Укупно вакцинација: ([\d.]+) доза",
+            "metrics": r"Број доза: ([\d.]+) – прва доза ([\d.]+), друга доза ([\d.]+)",
             "date": r"ажурирано .*",
             "total_vaccinations": r"Укупан број (?:датих )?доза: ([\d.]+)",
             "citizen": r"Држављанин РС – прва доза ([\d.]+), друга доза ([\d.]+)",
@@ -38,7 +38,7 @@ class Serbia:
             }
         )
 
-    def _parse_metrics(self, soup: BeautifulSoup):
+    def _parse_metrics_old(self, soup: BeautifulSoup):
         total_vaccinations = clean_count(
             re.search(self.regex["total_vaccinations"], soup.text).group(1)
         )
@@ -73,11 +73,12 @@ class Serbia:
         )
         return total_vaccinations, people_vaccinated, people_fully_vaccinated
 
-    def _parse_metrics_old(self, soup: BeautifulSoup):
+    def _parse_metrics(self, soup: BeautifulSoup):
         match = re.search(self.regex["metrics"], soup.text)
-        total_vaccinations = clean_count(match.group(2))
-        people_fully_vaccinated = clean_count(match.group(1))
-        return total_vaccinations, people_fully_vaccinated
+        total_vaccinations = clean_count(match.group(1))
+        people_vaccinated = clean_count(match.group(2))
+        people_fully_vaccinated = clean_count(match.group(3))
+        return total_vaccinations, people_vaccinated, people_fully_vaccinated
 
     def _parse_date(self, soup: BeautifulSoup) -> str:
         elems = soup.find_all("p")

@@ -503,6 +503,10 @@ class DatasetGenerator:
         return df
 
     def pipe_manufacturer_pivot(self, df: pd.DataFrame) -> pd.DataFrame:
+        x = df.groupby(["location", "date", "vaccine"]).count().sort_values("total_vaccinations")
+        mask = x.total_vaccinations != 1
+        if mask.sum() != 0:
+            raise ValueError(f"Check entries {x[mask]}")
         return df.pivot(
             index=["location", "date"], columns="vaccine", values="total_vaccinations"
         ).reset_index()

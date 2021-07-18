@@ -15,8 +15,6 @@ def read(source: str) -> pd.Series:
 
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
-    a = 1 + 2
-    b = 1
     regex_1 = r"([\d,]+) C(ovid|OVID)-19 vaccinations has been given in total in the Cayman Islands"
     regex_1 = (
         r"([\d,]+) C(ovid|OVID)-19 vaccinations given in total in the Cayman Islands"

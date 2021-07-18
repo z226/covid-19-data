@@ -114,6 +114,7 @@ class Switzerland:
         assert set(df["vaccine"].unique()) == set(vaccine_mapping.keys())
         return (
             df.rename(columns={"sumTotal": "total_vaccinations"})
+            [df.geoRegion == "CH"]
             .drop(columns="geoRegion")
             .assign(location="Switzerland")
             .replace(vaccine_mapping)

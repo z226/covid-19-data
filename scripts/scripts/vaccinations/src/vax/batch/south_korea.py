@@ -11,6 +11,12 @@ class South_korea:
             "https://ncv.kdca.go.kr/boardDownload.es?bid=0037&list_no=443&seq=1"
         )
         self.source_url_ref = "https://ncv.kdca.go.kr/"
+        self.vaccines_mapping = {
+            "모더나 누적": "Moderna",
+            "아스트라제네카 누적": "Oxford/AstraZeneca",
+            "화이자 누적": "Pfizer/BioNTech",
+            "얀센 누적": "Johnson&Johnson"
+        }
 
     def read(self):
         df = read_xlsx_from_url(self.source_url, header=[4, 5])
@@ -18,7 +24,7 @@ class South_korea:
         return df
 
     def pipe_check_format(self, df: pd.DataFrame) -> pd.DataFrame:
-        if df.shape[1] != 9:
+        if df.shape[1] != 10:
             raise ValueError("Number of columns has changed!")
         columns_lv0 = {"모더나 누적", "아스트라제네카 누적", "얀센 누적", "일자", "전체 누적", "화이자 누적"}
         columns_lv1 = {"", "1차", "1차(완료)", "완료", "완료\n(AZ-PF교차미포함)", "완료\n(AZ-PF교차포함)"}
@@ -36,7 +42,7 @@ class South_korea:
                 "date": df.loc[:, "일자"],
                 "people_vaccinated": df.loc[:, ("전체 누적", "1차")],
                 "people_fully_vaccinated": df.loc[:, ("전체 누적", "완료")],
-                "single_shots": df.loc[:, ("얀센 누적", "1차(완료)")],
+                "janssen": df.loc[:, ("얀센 누적", "1차(완료)")],
             }
         )
 
@@ -50,7 +56,7 @@ class South_korea:
         return df.assign(
             total_vaccinations=df["people_vaccinated"]
             + df["people_fully_vaccinated"]
-            - df["single_shots"]
+            - df["janssen"]
         )
 
     def pipe_date(self, df: pd.DataFrame) -> pd.DataFrame:

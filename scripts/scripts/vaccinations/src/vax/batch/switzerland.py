@@ -68,6 +68,12 @@ class Switzerland:
             }
         )
 
+    def pipe_fix_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
+        df.loc[
+            df.total_vaccinations < df.people_vaccinated, "total_vaccinations"
+        ] = df.people_vaccinated
+        return df
+
     def pipe_translate_country_code(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
             location=df.location.replace({"CH": "Switzerland", "FL": "Liechtenstein"})
@@ -91,6 +97,7 @@ class Switzerland:
             df.pipe(self.pipe_filter_country, country_code)
             .pipe(self.pipe_pivot)
             .pipe(self.pipe_rename_columns)
+            .pipe(self.pipe_fix_metrics)
             .pipe(self.pipe_translate_country_code)
             .pipe(self.pipe_source, country_code)
             .pipe(self.pipe_vaccine)[

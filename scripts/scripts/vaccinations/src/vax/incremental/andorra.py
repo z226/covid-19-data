@@ -20,7 +20,7 @@ class Andorra:
     def parse_data(self, soup):
         regex = (
             r"s’han administrat un total de ([\d\.]+) vacunes, ([\d\.]+) persones (?:han rebut|tenen) una dosi del "
-            r"vaccí,? i ([\d\.]+) (persones )?(en )?tenen les dues"
+            r"vaccí,?.* i ([\d\.]+) (persones )?(en )?tenen les dues"
         )
         match = re.search(regex, soup.text)
         # Metrics

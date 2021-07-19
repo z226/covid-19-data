@@ -39,7 +39,7 @@ class Switzerland:
                 usecols=["geoRegion", "date", "sumTotal", "type"],
             )
             people = pd.read_csv(
-                os.path.join(temp_dir, "data/COVID19VaccPersons.csv"),
+                os.path.join(temp_dir, "data/COVID19VaccPersons_v2.csv"),
                 usecols=["geoRegion", "date", "sumTotal", "type"],
             )
             manufacturer = pd.read_csv(
@@ -113,8 +113,7 @@ class Switzerland:
         }
         assert set(df["vaccine"].unique()) == set(vaccine_mapping.keys())
         return (
-            df.rename(columns={"sumTotal": "total_vaccinations"})
-            [df.geoRegion == "CH"]
+            df.rename(columns={"sumTotal": "total_vaccinations"})[df.geoRegion == "CH"]
             .drop(columns="geoRegion")
             .assign(location="Switzerland")
             .replace(vaccine_mapping)

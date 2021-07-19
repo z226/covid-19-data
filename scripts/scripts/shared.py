@@ -324,7 +324,7 @@ def inject_cfr(df):
     shifted_cases = (
         df.sort_values("date")
         .groupby("location")["new_cases_7_day_avg_right"]
-        .shift(13)
+        .shift(20)
     )
     df["cfr_short_term"] = (
         df["new_deaths_7_day_avg_right"]
@@ -334,6 +334,7 @@ def inject_cfr(df):
         .mul(100)
         .round(3)
     )
+    df.loc[df.date.astype(str) < "2020-06-01", "cfr_short_term"] = pd.NA
 
     return df
 

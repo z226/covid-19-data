@@ -16,6 +16,7 @@ vaccines_mapping = {
     "Sinopharm Vaccine": "Sinopharm/Beijing",
     "Sputnik V": "Sputnik V",
     "Pfizer": "Pfizer/BioNTech",
+    "Moderna": "Moderna",
 }
 
 regex_mapping = {
@@ -23,8 +24,8 @@ regex_mapping = {
     "Sinopharm Vaccine": r"(Sinopharm Vaccine) +1st\sDose (\d+) 2nd Dose (\d+)",
     "Sputnik V": r"(Sputnik V) +1st\sDose (\d+) 2nd Dose (\d+)",
     "Pfizer": r"(Pfizer) +(\d+)",
+    "Moderna": r"(Moderna) +(\d+)",
 }
-
 
 class SriLanka:
     def __init__(self):

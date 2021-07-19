@@ -36,7 +36,7 @@ class Sweden(object):
         return df.assign(location=self.location, source_url=self.source_url)
 
     def enrich_vaccine(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(vaccine="Oxford/AstraZeneca, Pfizer/BioNTech")
+        return df.assign(vaccine="Moderna, Oxford/AstraZeneca, Pfizer/BioNTech")
 
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         return (

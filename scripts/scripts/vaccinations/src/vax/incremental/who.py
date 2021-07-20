@@ -15,7 +15,6 @@ COUNTRIES = {
     "Afghanistan": "Afghanistan",
     "Angola": "Angola",
     "Anguilla": "Anguilla",
-    "Armenia": "Armenia",
     "Belarus": "Belarus",
     "Benin": "Benin",
     "Bhutan": "Bhutan",

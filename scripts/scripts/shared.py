@@ -403,7 +403,7 @@ def inject_rolling_avg(df):
     for col, spec in rolling_avg_spec.items():
         df[col] = df[spec["col"]].astype("float")
         df[col] = (
-            df.groupby("location", as_index=False)[col]
+            df.groupby("location")[col]
             .rolling(
                 window=spec["window"],
                 min_periods=spec["min_periods"],

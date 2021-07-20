@@ -27,7 +27,7 @@ class EquatorialGuinea:
         return pd.Series(data)
 
     def parse_vaccinated(self, soup):
-        regex = r"De los ([\d\.]+) vacunados un total de ([\d\.]+) \(([\d\.]+)%\) ya han recibido la 2ª dosis"
+        regex = r"De los ([\d\.]+) vacunados un total de ([\d\.]+) \(([\d\.,]+)%\) ya han recibido la 2ª dosis"
         match = re.search(regex, soup.text)
         people_vaccinated = match.group(1)
         people_fully_vaccinated = match.group(2)

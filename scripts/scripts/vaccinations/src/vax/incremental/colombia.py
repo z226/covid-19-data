@@ -27,12 +27,18 @@ class Colombia:
             for value in row:
                 if "Total dosis aplicadas al " in str(value):
                     total_vaccinations = row[-1]
+                    if type(total_vaccinations) != int:
+                        total_vaccinations = clean_count(total_vaccinations)
                     date_raw = re.search(r"[\d-]{10}$", value).group(0)
                     date_str = clean_date(date_raw, "%d-%m-%Y")
                 elif value == "Esquemas completos segundas + únicas dosis":
                     people_fully_vaccinated = row[-1]
+                    if type(people_fully_vaccinated) != int:
+                        people_fully_vaccinated = clean_count(people_fully_vaccinated)
                 elif value == "Total únicas dosis acumuladas":
                     unique_doses = row[-1]
+                    if type(unique_doses) != int:
+                        unique_doses = clean_count(unique_doses)
 
         if total_vaccinations is None or people_fully_vaccinated is None:
             raise ValueError("Date is not where it is expected be! Check worksheet")

@@ -1,6 +1,7 @@
 import pandas as pd
 
 from vax.utils.pipeline import enrich_total_vaccinations
+from vax.utils.utils import make_monotonic
 from uk_covid19 import Cov19API
 
 
@@ -89,15 +90,6 @@ class UnitedKingdom:
 
         return df.assign(vaccine=df.date.apply(_enrich_vaccine))
 
-    def pipe_exclude_data_points(self, df: pd.DataFrame) -> pd.DataFrame:
-        # The data contains an error that creates a negative change
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-02-20")]
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-27")]
-        df = df[(df.location != "Northern Ireland") | (df.date != "2021-04-28")]
-        df = df[(df.location != "England") | (df.date != "2021-01-09")]
-        df = df[(df.location != "Scotland") | (df.date != "2021-01-09")]
-        return df
-
     def pipe_select_output_cols(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[
             [
@@ -117,7 +109,6 @@ class UnitedKingdom:
             .pipe(self.pipe_aggregate_first_date)
             .pipe(self.pipe_source_url)
             .pipe(self.pipe_vaccine)
-            .pipe(self.pipe_exclude_data_points)
             .pipe(self.pipe_select_output_cols)
             .sort_values(by=["location", "date"])
         )
@@ -128,7 +119,7 @@ class UnitedKingdom:
     def to_csv(self, paths):
         df = self.read().pipe(self.pipeline)
         for location in set(df.location):
-            df.pipe(self._filter_location, location).to_csv(
+            df.pipe(self._filter_location, location).pipe(make_monotonic).to_csv(
                 paths.tmp_vax_out(location), index=False
             )
 

@@ -10,7 +10,7 @@ from vax.utils.files import export_metadata
 
 vaccine_mapping = {
     "Comirnaty": "Pfizer/BioNTech",
-    "COVID-19 Vaccine Moderna": "Moderna",
+    "Spikevax": "Moderna",
     "VAXZEVRIA": "Oxford/AstraZeneca",
     "COVID-19 Vaccine Janssen": "Johnson&Johnson",
 }

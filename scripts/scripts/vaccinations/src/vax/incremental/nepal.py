@@ -60,7 +60,7 @@ class Nepal:
         return datetime(year, month, day).strftime("%Y-%m-%d")
 
     def _parse_metrics(self, pdf_text: str):
-        regex = r"1st Dose\s+\|\s+2nd Dose (\d+) (\d+)"
+        regex = r"1st Dose\s+\|\s+Fully Vaccinated (\d+) (\d+)"
         data = re.search(regex, pdf_text)
         people_vaccinated = clean_count(data.group(1))
         people_fully_vaccinated = clean_count(data.group(2))

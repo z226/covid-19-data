@@ -337,7 +337,7 @@ def inject_cfr(df):
     df.loc[
         (df.cfr_short_term < 0)
         | (df.cfr_short_term > 10)
-        | (df.date.astype(str) < "2020-06-01"),
+        | (df.date.astype(str) < "2020-09-01"),
         "cfr_short_term",
     ] = pd.NA
 

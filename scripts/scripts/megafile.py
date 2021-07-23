@@ -12,6 +12,7 @@ from datetime import datetime, date, timedelta
 from functools import reduce
 import yaml
 
+import numpy as np
 import pandas as pd
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -462,6 +463,7 @@ internal_files_columns = {
         "new_deaths_per_million",
         "new_deaths_smoothed_per_million",
         "cfr",
+        "cfr_short_term",
     ],
     "vaccinations": [
         "location",
@@ -594,6 +596,25 @@ def create_internal(df):
     # Insert CFR column to avoid calculating it on the client, and enable
     # splitting up into cases & deaths columns.
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)
+
+    # Insert short-term CFR
+    shifted_cases = (
+        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(9)
+    )
+    df["cfr_short_term"] = (
+        df["new_deaths_smoothed"]
+        .div(shifted_cases)
+        .replace(np.inf, np.nan)
+        .replace(-np.inf, np.nan)
+        .mul(100)
+        .round(4)
+    )
+    df.loc[
+        (df.cfr_short_term < 0)
+        | (df.cfr_short_term > 10)
+        | (df.date.astype(str) < "2020-09-01"),
+        "cfr_short_term",
+    ] = pd.NA
 
     for name, columns in internal_files_columns.items():
         output_path = os.path.join(dir_path, f"megafile--{name}.json")

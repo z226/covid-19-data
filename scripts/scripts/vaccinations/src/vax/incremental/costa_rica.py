@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
+from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import clean_date
 
 
@@ -24,13 +24,12 @@ def read(source: str) -> pd.Series:
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
-    total_vaccinations = int(soup.find_all(class_="counter")[0].text)
-    people_vaccinated = int(soup.find_all(class_="counter")[1].text)
-    people_fully_vaccinated = int(soup.find_all(class_="counter")[2].text)
-    assert total_vaccinations >= people_vaccinated
+    people_vaccinated = clean_count(soup.find_all(class_="counter")[1].text)
+    people_fully_vaccinated = clean_count(soup.find_all(class_="counter")[2].text)
     assert people_vaccinated >= people_fully_vaccinated
+    total_vaccinations = people_vaccinated + people_fully_vaccinated
 
-    date = soup.find(class_="fuente").text
+    date = soup.find(class_="actualiza").text
     date = re.search(r"\d{2}-\d{2}-\d{4}", date).group(0)
     date = clean_date(date, "%d-%m-%Y")
 

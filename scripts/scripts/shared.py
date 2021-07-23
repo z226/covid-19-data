@@ -322,9 +322,7 @@ def inject_cfr(df):
     df["cfr_100_cases"] = df.apply(_apply_row_cfr_100, axis=1)
 
     shifted_cases = (
-        df.sort_values("date")
-        .groupby("location")["new_cases_7_day_avg_right"]
-        .shift(20)
+        df.sort_values("date").groupby("location")["new_cases_7_day_avg_right"].shift(9)
     )
     df["cfr_short_term"] = (
         df["new_deaths_7_day_avg_right"]

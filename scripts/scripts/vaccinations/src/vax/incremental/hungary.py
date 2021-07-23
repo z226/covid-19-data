@@ -14,7 +14,7 @@ class Hungary:
         self.location = "Hungary"
         self._num_max_pages = 10
         self.regex = {
-            "title": r"\d+ [millió]+ \d+ [ezer]+ a beoltott, \d+ az új fertőzött, elhunyt \d+ beteg",
+            "title": r"\d+ [millió]+ \d+ [ezer]+ a beoltott, \d+ az új fertőzött",
             "metrics": (
                 r"(?:A|a) beoltottak száma ([\d ]+)\s{1,2}(?:fő)?(?:, )?(?:közülük )?([\d ]+) fő már a második "
                 r"oltását is megkapta."

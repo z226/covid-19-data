@@ -112,6 +112,9 @@ class PAHO:
         # Choose CSV
         driver.find_element_by_xpath("//div[contains(text(),'CSV')]").click()
         time.sleep(2)
+        # Select RDT Overview option
+        driver.find_element_by_xpath(f"//span[contains(text(),'{filename}')]").click()
+        time.sleep(2)
         # Download
         driver.find_element_by_xpath("//button[contains(text(),'Download')]").click()
         time.sleep(5)

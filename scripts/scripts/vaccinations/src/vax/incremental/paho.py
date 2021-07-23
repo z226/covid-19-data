@@ -21,6 +21,7 @@ COUNTRIES = {
     "Bermuda": "Bermuda",
     "Bahamas": "Bahamas",
     "Dominica": "Dominica",
+    "Honduras": "Honduras",
     "Jamaica": "Jamaica",
     "Venezuela": "Venezuela",
 }

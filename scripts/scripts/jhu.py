@@ -47,6 +47,7 @@ DATASET_NAME = "COVID-19 - Johns Hopkins University"
 LARGE_DATA_CORRECTIONS = [
     ("Turkey", "2020-12-10", "cases"),
     ("France", "2021-05-20", "cases"),
+    ("Ecuador", "2021-07-20", "deaths"),
 ]
 
 

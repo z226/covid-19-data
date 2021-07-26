@@ -598,8 +598,9 @@ def create_internal(df):
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)
 
     # Insert short-term CFR
+    cfr_day_shift = 10  # We compute number of deaths divided by number of cases `cfr_day_shift` days before.
     shifted_cases = (
-        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(9)
+        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(cfr_day_shift)
     )
     df["cfr_short_term"] = (
         df["new_deaths_smoothed"]

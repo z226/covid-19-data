@@ -624,7 +624,7 @@ def create_internal(df):
     df["people_partly_vaccinated"] = (
         dfg.people_vaccinated.ffill() - dfg.people_fully_vaccinated.ffill().fillna(0)).apply(lambda x: max(x, 0)
     )
-    df["people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"]
+    df["people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"] * 100
 
     # Export
     for name, columns in internal_files_columns.items():

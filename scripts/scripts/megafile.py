@@ -478,6 +478,8 @@ internal_files_columns = {
         "people_fully_vaccinated_per_hundred",
         "new_vaccinations_smoothed_per_million",
         "population",
+        "people_partly_vaccinated",
+        "people_partly_vaccinated_per_hundred",
     ],
     "hospital-admissions": [
         "location",
@@ -616,7 +618,15 @@ def create_internal(df):
         | (df.date.astype(str) < "2020-09-01"),
         "cfr_short_term",
     ] = pd.NA
+    
+    # Add partly vaccinated
+    dfg = df.groupby("location")
+    df["people_partly_vaccinated"] = (
+        dfg.people_vaccinated.ffill() - dfg.people_fully_vaccinated.ffill().fillna(0)).apply(lambda x: max(x, 0)
+    )
+    df["people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"]
 
+    # Export
     for name, columns in internal_files_columns.items():
         output_path = os.path.join(dir_path, f"megafile--{name}.json")
         value_columns = list(set(columns) - set(non_value_columns))

@@ -549,7 +549,7 @@ class AnnotatorInternal:
     """
 
     def __init__(self, config: dict):
-        self.config = config
+        self._config = config
 
     @classmethod
     def from_yaml(cls, path):
@@ -558,8 +558,80 @@ class AnnotatorInternal:
         return cls(dix)
 
     @property
+    def config(self):
+        for stream in self._config.keys():
+            self._config[stream] = sorted(self._config[stream], key=lambda x: x["date"])
+        return self._config
+
+    @property
     def streams(self):
-        return list(self.config.keys())
+        return list(self._config.keys())
+
+    def config_nested_to_flat(self, config):
+        """Convert class attribute config to a flattened dataframe.
+
+        Each row in the dataframe contains [stream, annotation_text, location, date]. Essentially, what gets flattened
+        is the `location` field, which originally contains a list of locations.
+
+        Args:
+            config (dict): Dictionary with original class config.
+
+        Returns:
+            pd.DataFrame: Table with config in a flatten version.
+        """
+        data_flat = []
+        for stream, config_ in config.items():
+            for d in config_:
+                for loc in d["location"]:
+                    data_flat.append({
+                        "stream": stream,
+                        "annotation_text": d["annotation_text"],
+                        "date": d["date"],
+                        "location": loc,
+                    })
+        return pd.DataFrame(data_flat)
+
+    def config_flat_to_nested(self, df_config):
+        """Converts flattened config dataframe to class instance format.
+
+        Args:
+            df_config (pd.DataFrame): Flattened config.
+
+        Returns:
+            dict: Dictionary with original data.
+        """
+        config_nested = {}
+        streams = df_config.stream.unique()
+        for stream in streams:
+            df_ = df_config[df_config.stream==stream]
+            rec = df_.groupby(["annotation_text", "date"]).location.apply(list).reset_index().to_dict(orient="records")
+            config_nested[stream] = rec
+        return config_nested
+
+    def _remove_config_duplicates(self):
+        df_config = self.config_nested_to_flat(self._config)
+        df_config = df_config.drop_duplicates()
+        return self.config_flat_to_nested(df_config)
+
+    def insert_annotation(self, stream: str, annotation: dict):
+        # Checks
+        if "annotation_text" not in annotation or "location" not in annotation or "date" not in annotation:
+            raise ValueError("annotation dictionary must contain fields `annotation_text`, `location` and `date`")
+        if not (
+            isinstance(annotation["annotation_text"], str) and
+            isinstance(annotation["location"], list) and
+            isinstance(annotation["annotation_text"], str)
+        ):
+            raise ValueError(
+                f"Check `annotation` field types. `annotation_text` (str), `location` (list) and `date` (str)"
+            )
+        # Add annotation
+        self._config[stream].append(annotation)
+        # Remove duplicates
+        self._config = self._remove_config_duplicates()
+
+    def to_yaml(self):
+        pass
 
     def add_annotations(self, df: pd.DataFrame, stream: str) -> pd.DataFrame:
         if stream in self.streams:
@@ -585,6 +657,21 @@ class AnnotatorInternal:
         return df
 
 
+def add_annotations_countries_100_percentage(df, annotator):
+    threshold_perc = 95
+    locations_exc = df[df.people_vaccinated_per_hundred >= threshold_perc].groupby("location").date.min().to_dict()
+    for loc, dt in locations_exc.items():
+        annotator.insert_annotation(
+            "vaccinations",
+            {
+                "annotation_text": "Exceeds 100% due to vaccination of non-residents",
+                "location": [loc],
+                "date": dt
+            }
+        )
+    return annotator
+
+
 def create_internal(df):
 
     dir_path = os.path.join(DATA_DIR, "internal")
@@ -600,6 +687,10 @@ def create_internal(df):
 
     # Copy df
     df = df.copy()
+
+    # Add new annotations for countries having >100% per-capita metric values (runtime, not stored in ANNOTATIONS_PATH)
+    annotator = add_annotations_countries_100_percentage(df, annotator)
+
     # Insert CFR column to avoid calculating it on the client, and enable
     # splitting up into cases & deaths columns.
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)

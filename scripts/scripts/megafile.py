@@ -658,8 +658,8 @@ class AnnotatorInternal:
 
 
 def add_annotations_countries_100_percentage(df, annotator):
-    threshold_perc = 95
-    locations_exc = df[df.people_vaccinated_per_hundred >= threshold_perc].groupby("location").date.min().to_dict()
+    threshold_perc = 100
+    locations_exc = df[df.people_vaccinated_per_hundred > threshold_perc].groupby("location").date.min().to_dict()
     for loc, dt in locations_exc.items():
         annotator.insert_annotation(
             "vaccinations",

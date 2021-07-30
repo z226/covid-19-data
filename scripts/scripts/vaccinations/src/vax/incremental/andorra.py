@@ -1,17 +1,16 @@
-from datetime import datetime
 import re
 
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.utils import get_soup
-from vax.utils.dates import clean_date
+from vax.utils.dates import extract_clean_date
 
 
 class Andorra:
-    def __init__(self, source_url: str, location: str):
-        self.source_url = source_url
-        self.location = location
+    def __init__(self):
+        self.source_url = "https://covid19.govern.ad"
+        self.location = "Andorra"
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url, verify=False)
@@ -19,8 +18,8 @@ class Andorra:
 
     def parse_data(self, soup):
         regex = (
-            r"s’han administrat un total de ([\d\.]+) vacunes, ([\d\.]+) persones (?:han rebut|tenen) una dosi del "
-            r"vaccí,?.* i ([\d\.]+) (persones )?(en )?tenen les dues"
+            r"s’han administrat un total de ([\d\.]+) vacunes(?:,|:) ([\d\.]+) persones (?:han rebut|tenen) una dosi "
+            r"del vaccí,?.* i ([\d\.]+) (persones )?(en )?tenen les dues dosis"
         )
         match = re.search(regex, soup.text)
         # Metrics
@@ -38,8 +37,14 @@ class Andorra:
         )
 
     def parse_date(self, soup):
-        h4 = soup.find("h4", text=re.compile(r"Actualització \d{1,2}.\d{1,2}.\d{4}"))
-        return clean_date(h4.text, "Actualització %d.%m.%Y")
+        date_str = extract_clean_date(
+            soup.text,
+            r"Actualització (\d{1,2} de [a-zA-Z]+)",
+            "%d de %B",
+            replace_year=2021,
+            lang="ca"
+        )
+        return date_str
 
     def pipe_location(self, ds: pd.Series) -> pd.Series:
         return enrich_data(ds, "location", self.location)
@@ -55,7 +60,7 @@ class Andorra:
             ds.pipe(self.pipe_location).pipe(self.pipe_vaccine).pipe(self.pipe_source)
         )
 
-    def to_csv(self, paths):
+    def export(self, paths):
         """Generalized."""
         data = self.read().pipe(self.pipeline)
         increment(
@@ -71,10 +76,7 @@ class Andorra:
 
 
 def main(paths):
-    Andorra(
-        source_url="https://www.govern.ad/covid19_newsletter/",
-        location="Andorra",
-    ).to_csv(paths)
+    Andorra().export(paths)
 
 
 if __name__ == "__main__":

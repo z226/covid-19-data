@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from contextlib import contextmanager
 import locale
+
 import threading
 from sys import platform
 import pytz
@@ -60,6 +61,7 @@ def extract_clean_date(
     loc: str = "",
     minus_days: int = 0,
     unicode_norm: bool = True,
+    replace_year=None,
 ):
     """Export clean date from raw text using RegEx.
 
@@ -86,6 +88,7 @@ def extract_clean_date(
                                 `locale.windows_locale` in windows. Defaults to "" (system default).
         minus_days (int, optional): Number of days to subtract. Defaults to 0.
         unicode_norm (bool, optional): [description]. Defaults to True.
+        replace_year (str): Replace the year with this one.
     """
     if unicode_norm:
         text = unicodedata.normalize("NFKC", text)
@@ -93,8 +96,26 @@ def extract_clean_date(
     date_str = clean_date(
         date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days
     )
+    if replace_year is not None:
+        date_str = _replace_date_fields(date_str, {"year": replace_year})
     return date_str
 
+
+def _replace_date_fields(date_raw: str, replace_fields: dict = {}, date_format: str = DATE_FORMAT):
+    """Replace date field.
+
+    Args:
+        date_raw (str): Date raw in standard format %Y-%m-%d.
+        replace_fields (dict, optional): Fields to replace. Format should be: dict(field, value), e.g. {year: "2021"}.
+        date_format (str, optional): Date format of `date_raw`. Defaults to DATE_FORMAT.
+
+    Returns:
+        str: Modified date, in standard format %Y-%m-%d.
+
+    """
+    dt = datetime.strptime(date_raw, date_format)
+    dt = dt.replace(**replace_fields)
+    return dt.strftime(DATE_FORMAT)
 
 def localdatenow(tz=None):
     if tz is None:

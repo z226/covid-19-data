@@ -673,7 +673,6 @@ def add_annotations_countries_100_percentage(df, annotator):
 
 
 def create_internal(df):
-
     dir_path = os.path.join(DATA_DIR, "internal")
     # Ensure internal/ dir is created
     os.makedirs(dir_path, exist_ok=True)
@@ -690,7 +689,6 @@ def create_internal(df):
 
     # Add new annotations for countries having >100% per-capita metric values (runtime, not stored in ANNOTATIONS_PATH)
     annotator = add_annotations_countries_100_percentage(df, annotator)
-
     # Insert CFR column to avoid calculating it on the client, and enable
     # splitting up into cases & deaths columns.
     df["cfr"] = (df["total_deaths"] * 100 / df["total_cases"]).round(3)
@@ -708,13 +706,14 @@ def create_internal(df):
         .mul(100)
         .round(4)
     )
+
     df.loc[
         (df.cfr_short_term < 0)
         | (df.cfr_short_term > 10)
         | (df.date.astype(str) < "2020-09-01"),
         "cfr_short_term",
     ] = pd.NA
-    
+
     # Add partly vaccinated
     df_a = df[df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
     for filename in country_vax_data_partly:
@@ -796,6 +795,9 @@ def generate_megafile():
         .sort_values(["location", "date"])
     )
 
+    # Remove today's datapoint
+    all_covid = all_covid[all_covid["date"] < str(date.today())]
+
     # Add ISO codes
     print("Adding ISO codes…")
     iso_codes = pd.read_csv(os.path.join(INPUT_DIR, "iso/iso3166_1_alpha_3_codes.csv"))
@@ -855,6 +857,7 @@ def generate_megafile():
     create_latest(all_covid)
 
     print("Writing to CSV…")
+
     all_covid.to_csv(os.path.join(DATA_DIR, "owid-covid-data.csv"), index=False)
 
     print("Writing to XLSX…")
@@ -870,6 +873,7 @@ def generate_megafile():
     )
 
     print("Creating internal files…")
+
     create_internal(all_covid)
 
     # Store the last updated time

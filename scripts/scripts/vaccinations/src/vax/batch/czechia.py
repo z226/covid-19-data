@@ -136,7 +136,7 @@ def aggregate_by_date(df: pd.DataFrame) -> pd.DataFrame:
 
 def check_first_date(df: pd.DataFrame) -> pd.DataFrame:
     first_date = df.date.min()
-    expected = "2020-12-13"
+    expected = "2020-12-23"
     if first_date != expected:
         raise ValueError(
             "Expected the first date to be {}, encountered {}.".format(

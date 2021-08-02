@@ -134,18 +134,6 @@ def aggregate_by_date(df: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def check_first_date(df: pd.DataFrame) -> pd.DataFrame:
-    first_date = df.date.min()
-    expected = "2020-12-13"
-    if first_date != expected:
-        raise ValueError(
-            "Expected the first date to be {}, encountered {}.".format(
-                expected, first_date
-            )
-        )
-    return df
-
-
 def translate_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df.rename(columns={"datum": "date"})
 
@@ -177,7 +165,6 @@ def global_pipeline(df: pd.DataFrame) -> pd.DataFrame:
         .pipe(format_date)
         .pipe(enrich_cumulated_sums)
         .pipe(enrich_metadata)
-        .pipe(check_first_date)
     )
 
 

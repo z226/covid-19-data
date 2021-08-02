@@ -11,18 +11,15 @@ from vax.utils.dates import clean_date
 
 class Cuba:
     def __init__(self):
-        self.source_url = (
-            "https://salud.msp.gob.cu/actualizacion-de-la-vacunacion-en-el-marco-de-los-estudios-de"
-            "-los-candidatos-vacunales-cubanos-y-la-intervencion-sanitaria/"
-        )
+        self.source_url = "https://salud.msp.gob.cu/actualizacion-de-la-vacunacion-en-el-marco-de-los-estudios-de-los-candidatos-vacunales-cubanos-y-la-intervencion-sanitaria/"
         self.location = "Cuba"
         self.regex = {
             "title": (
                 r"Al cierre del (\d{1,2} de [a-z]+) se acumulan en el país ([\d ]+) dosis administradas"
             ),
             "data": (
-                r"([\d ]+) personas han recibido al menos una dosis de uno de los candidatos vacunales cubanos\. De "
-                r"ellas ya tienen segunda dosis ([\d ]+) personas y tercera dosis ([\d ]+) personas\."
+                r"([\d ]+) personas han recibido al menos una dosis de uno de los candidatos vacunales cubanos.*De "
+                r"ellas ya tienen segunda dosis ([\d ]+) personas y tercera dosis ([\d ]+) personas"
             ),
         }
 

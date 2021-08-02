@@ -486,6 +486,14 @@ internal_files_columns = {
         "people_partly_vaccinated",
         "people_partly_vaccinated_per_hundred",
     ],
+    "vaccinations-bydose": [
+        "location",
+        "date",
+        "people_fully_vaccinated",
+        "people_fully_vaccinated_per_hundred",
+        "people_partly_vaccinated",
+        "people_partly_vaccinated_per_hundred",
+    ],
     "hospital-admissions": [
         "location",
         "date",
@@ -722,10 +730,7 @@ def create_internal(df):
         x = pd.read_csv(filename, usecols=["location", "date", "people_partly_vaccinated"])
         df_a = df_a.merge(x, on=["location", "date"], how="outer")
     df_b = df[~df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
-    dfg = df_b.groupby("location")
-    df_b.loc[:, "people_partly_vaccinated"] = (
-        dfg.people_vaccinated.ffill() - dfg.people_fully_vaccinated.ffill().fillna(0)).apply(lambda x: max(x, 0)
-    )
+    df_b.loc[:, "people_partly_vaccinated"] = df_b.people_vaccinated - df_b.people_fully_vaccinated
     df = pd.concat([df_a, df_b], ignore_index=True).sort_values(["location", "date"])
     df.loc[:, "people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"] * 100
 

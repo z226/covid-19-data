@@ -27,6 +27,7 @@ regex_mapping = {
     "Moderna": r"(Moderna) (\d+)",
 }
 
+
 class SriLanka:
     def __init__(self):
         self.source_url = "https://www.epid.gov.lk/web/index.php?option=com_content&view=article&id=225&lang=en"
@@ -90,7 +91,7 @@ class SriLanka:
             r"COVID-19 Vaccination (.*) District"  # Country(/Region)? Cumulative Cases"
         )
         vax_info = re.search(regex, text).group(1).strip().replace("No", "")
-        vax_info = re.sub('\s+', ' ', vax_info)
+        vax_info = re.sub("\s+", " ", vax_info)
         # Sentence to DataFrame
         allresults = []
         for vaccine_regex in regex_mapping.values():

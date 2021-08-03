@@ -58,7 +58,7 @@ def main():
     uk["Units"] = "tests performed"
     uk["Notes"] = pd.NA
 
-    uk.to_csv("United Kingdom.csv", index=False)
+    uk.to_csv("automated_sheets/United Kingdom.csv", index=False)
 
 
 if __name__ == "__main__":

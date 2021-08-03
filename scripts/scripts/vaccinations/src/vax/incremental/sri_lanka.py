@@ -20,11 +20,11 @@ vaccines_mapping = {
 }
 
 regex_mapping = {
-    "Covishield Vaccine": r"(Covishield Vaccine) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
-    "Sinopharm Vaccine": r"(Sinopharm Vaccine) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
-    "Sputnik V": r"(Sputnik V) +1st\s(?:D|d)ose (\d+) 2nd (?:D|d)ose (\d+)",
-    "Pfizer": r"(Pfizer) +(\d+)",
-    "Moderna": r"(Moderna) +(\d+)",
+    "Covishield Vaccine": r"(Covishield Vaccine) 1st Dose (\d+) 2nd Dose (\d+)",
+    "Sinopharm Vaccine": r"(Sinopharm Vaccine) 1st Dose (\d+) 2nd Dose (\d+)",
+    "Sputnik V": r"(Sputnik V) 1st Dose (\d+) 2nd Dose (\d+)",
+    "Pfizer": r"(Pfizer) 1st Dose (\d+) 2nd Dose (\d+)",
+    "Moderna": r"(Moderna) (\d+)",
 }
 
 class SriLanka:
@@ -90,10 +90,11 @@ class SriLanka:
             r"COVID-19 Vaccination (.*) District"  # Country(/Region)? Cumulative Cases"
         )
         vax_info = re.search(regex, text).group(1).strip().replace("No", "")
+        vax_info = re.sub('\s+', ' ', vax_info)
         # Sentence to DataFrame
         allresults = []
         for vaccine_regex in regex_mapping.values():
-            results = re.findall(vaccine_regex, vax_info)
+            results = re.findall(vaccine_regex, vax_info, re.IGNORECASE)
             allresults.append(results)
         flat_ls = list(itertools.chain(*allresults))
         df = pd.DataFrame(flat_ls, columns=["vaccine", "doses_1", "doses_2"]).replace(

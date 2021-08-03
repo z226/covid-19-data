@@ -67,7 +67,7 @@ def parse_infogram_date(infogram_data: dict) -> str:
     x = _get_infogram_value(
         infogram_data, "525b6366-cc8a-4646-b67a-5c9bfca66e22", join_text=True
     )
-    dt = clean_date(x, "RESUMEN DE VACUNACIÓN DIARIA %d-%b-%y", "es")
+    dt = clean_date(x, "RESUMEN DE VACUNACIÓN%d-%b-%y ", "es")
     return dt
 
 

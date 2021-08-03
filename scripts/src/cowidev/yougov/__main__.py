@@ -271,17 +271,19 @@ def _standardize_entities(df):
 
 def _aggregate(df):
     s_period = df["date"].dt.to_period(FREQ)
-    df.loc[:, "date_end"] = s_period.dt.end_time.dt.date
+    df.loc[:, "date_mid"] = (
+        s_period.dt.start_time + (s_period.dt.end_time - s_period.dt.start_time) / 2
+    ).dt.date
     today = datetime.datetime.utcnow().date()
-    if df["date_end"].max() > today:
-        df.loc[:, "date_end"] = df["date_end"].replace({df["date_end"].max(): today})
+    if df["date_mid"].max() > today:
+        df.loc[:, "date_mid"] = df["date_mid"].replace({df["date_mid"].max(): today})
 
     questions = [q for q in MAPPING.code_name.tolist() if q in df.columns]
 
     # computes the mean for each country-date-question observation
     # (returned in long format)
     df_means = (
-        df.groupby(["entity", "date_end"])[questions]
+        df.groupby(["entity", "date_mid"])[questions]
         .mean()
         .rename_axis("question", axis=1)
         .stack()
@@ -292,7 +294,7 @@ def _aggregate(df):
     # counts the number of non-NaN responses for each country-date-question
     # observation (returned in long format)
     df_counts = (
-        df.groupby(["entity", "date_end"])[questions]
+        df.groupby(["entity", "date_mid"])[questions]
         .apply(lambda gp: gp.notnull().sum())
         .rename_axis("question", axis=1)
         .stack()
@@ -325,7 +327,7 @@ def _aggregate(df):
             col = lvl0
         new_columns.append(col)
     df_agg.columns = new_columns
-    df_agg.rename(columns={"date_end": "date"}, inplace=True)
+    df_agg.rename(columns={"date_mid": "date"}, inplace=True)
 
     # constructs date variable for internal Grapher usage.
     df_agg.loc[:, "date_internal_use"] = (

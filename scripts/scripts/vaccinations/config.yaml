@@ -10,7 +10,6 @@ pipeline:
       - Gabon
       - North Macedonia
       - Northern Cyprus
-      - Philippines
       - South Africa
   process-data:
     skip_complete:

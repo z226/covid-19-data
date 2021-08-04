@@ -65,6 +65,7 @@ COUNTRIES = {
     "Tajikistan": "Tajikistan",
     "Timor-Leste": "Timor",
     "Togo": "Togo",
+    "Tunisia": "Tunisia",
     "Turkmenistan": "Turkmenistan",
     "Turks and Caicos Islands": "Turks and Caicos Islands",
     "Yemen": "Yemen",

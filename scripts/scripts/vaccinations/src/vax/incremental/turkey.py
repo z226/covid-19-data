@@ -44,7 +44,7 @@ def parse_people_vaccinated(soup: BeautifulSoup) -> int:
 
 
 def format_date(ds: pd.Series) -> pd.Series:
-    date = localdate("Asia/Istanbul")
+    date = localdate("Asia/Istanbul", hour_limit=8)
     return enrich_data(ds, "date", date)
 
 

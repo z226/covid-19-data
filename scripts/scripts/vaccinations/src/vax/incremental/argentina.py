@@ -20,11 +20,12 @@ def read(source: str) -> pd.Series:
             "COVISHIELD ChAdOx1nCoV COVID 19",
             "Sinopharm Vacuna SARSCOV 2 inactivada",
             "Sputnik V COVID19 Instituto Gamaleya",
+            "Moderna ARNm",
         )
     )
     assert set(df.vacuna_nombre) == known_vaccines, "New vaccine found!"
 
-    return df.drop(columns="vacuna_nombre").sum(level=0, axis=1).sum()
+    return df.drop(columns="vacuna_nombre").sum()
 
 
 def translate_index(ds: pd.Series) -> pd.Series:
@@ -52,7 +53,7 @@ def enrich_location(ds: pd.Series) -> pd.Series:
 
 def enrich_vaccine(ds: pd.Series) -> pd.Series:
     return enrich_data(
-        ds, "vaccine", "Oxford/AstraZeneca, Sinopharm/Beijing, Sputnik V"
+        ds, "vaccine", "Moderna, Oxford/AstraZeneca, Sinopharm/Beijing, Sputnik V"
     )
 
 

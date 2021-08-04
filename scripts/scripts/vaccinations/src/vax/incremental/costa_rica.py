@@ -5,33 +5,25 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 from vax.utils.incremental import enrich_data, increment, clean_count
+from vax.utils.utils import get_soup
 from vax.utils.dates import clean_date
 
 
 def read(source: str) -> pd.Series:
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:86.0) Gecko/20100101 Firefox/86.0",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Upgrade-Insecure-Requests": "1",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-    }
-    soup = BeautifulSoup(requests.get(source, headers=headers).content, "html.parser")
+    soup = get_soup(source)
     return parse_data(soup)
 
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
-    people_vaccinated = clean_count(soup.find_all(class_="counter")[1].text)
-    people_fully_vaccinated = clean_count(soup.find_all(class_="counter")[2].text)
+    people_vaccinated = clean_count(soup.find_all(class_="counter")[2].text)
+    people_fully_vaccinated = clean_count(soup.find_all(class_="counter")[3].text)
     assert people_vaccinated >= people_fully_vaccinated
     total_vaccinations = people_vaccinated + people_fully_vaccinated
 
     date = soup.find(class_="actualiza").text
-    date = re.search(r"\d{2}-\d{2}-\d{4}", date).group(0)
-    date = clean_date(date, "%d-%m-%Y")
+    date = re.search(r"\d{2}/\d{2}/\d{4}", date).group(0)
+    date = clean_date(date, "%d/%m/%Y")
 
     data = {
         "total_vaccinations": total_vaccinations,

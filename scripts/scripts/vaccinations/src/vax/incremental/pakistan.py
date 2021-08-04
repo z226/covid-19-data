@@ -11,20 +11,17 @@ def read(source: str) -> pd.Series:
     soup = get_soup(source)
 
     counters = soup.find_all(class_="counter")
-    people_partly_vaccinated = clean_count(counters[0].text)
-    people_fully_vaccinated = clean_count(counters[1].text)
+    people_vaccinated = clean_count(counters[0].text)
     total_vaccinations = clean_count(counters[2].text)
-    # people_vaccinated = people_partly_vaccinated + people_fully_vaccinated
 
     date = soup.find("span", id="last-update").text
     date = re.search(r"\d+.*202\d", date).group(0)
-    date = str(pd.to_datetime(date).date())
+    date = str((pd.to_datetime(date) - pd.Timedelta(days=1)).date())
 
     data = {
         "total_vaccinations": total_vaccinations,
-        "people_partly_vaccinated": people_partly_vaccinated,
-        # "people_vaccinated": people_vaccinated,
-        "people_fully_vaccinated": people_fully_vaccinated,
+        "people_vaccinated": people_vaccinated,
+        # "people_fully_vaccinated": people_fully_vaccinated,
         "date": date,
         "source_url": source,
     }
@@ -54,9 +51,9 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
-        # people_vaccinated=data["people_vaccinated"],
-        people_partly_vaccinated=data["people_partly_vaccinated"],
-        people_fully_vaccinated=data["people_fully_vaccinated"],
+        people_vaccinated=data["people_vaccinated"],
+        # people_partly_vaccinated=data["people_partly_vaccinated"],
+        # people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

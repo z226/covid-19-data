@@ -52,7 +52,6 @@ COUNTRIES = {
     "Niger": "Niger",
     "Nigeria": "Nigeria",
     "Oman": "Oman",
-    "Papua New Guinea": "Papua New Guinea",
     "Rwanda": "Rwanda",
     "Sao Tome and Principe": "Sao Tome and Principe",
     "Senegal": "Senegal",

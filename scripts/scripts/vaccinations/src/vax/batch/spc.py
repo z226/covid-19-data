@@ -20,6 +20,7 @@ country_mapping = {
     "NR": "Nauru",
     "NU": "Niue",
     "PF": "French Polynesia",
+    "PG": "Papua New Guinea",
     "PN": "Pitcairn",
     "SB": "Solomon Islands",
     "TO": "Tonga",

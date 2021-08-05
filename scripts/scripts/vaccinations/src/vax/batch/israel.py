@@ -26,6 +26,7 @@ def rename_columns(df: pd.DataFrame) -> pd.DataFrame:
             "Day_Date": "date",
             "vaccinated_cum": "people_vaccinated",
             "vaccinated_seconde_dose_cum": "people_fully_vaccinated",
+            "vaccinated_third_dose_cum": "total_boosters",
         }
     )
 
@@ -46,6 +47,14 @@ def select_distinct(df: pd.DataFrame) -> pd.DataFrame:
 
 def enrich_source(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(source_url="https://datadashboard.health.gov.il/COVID-19/general")
+
+
+def add_total_vaccinations(df: pd.DataFrame) -> pd.DataFrame:
+    return df.assign(
+        total_vaccinations=df.people_vaccinated
+        + df.people_fully_vaccinated
+        + df.total_boosters
+    )
 
 
 def enrich_location(df: pd.DataFrame) -> pd.DataFrame:
@@ -76,6 +85,7 @@ def select_output_columns(df: pd.DataFrame) -> pd.DataFrame:
             "total_vaccinations",
             "people_vaccinated",
             "people_fully_vaccinated",
+            "total_boosters",
             "location",
             "source_url",
             "vaccine",
@@ -95,7 +105,7 @@ def pre_process(df: pd.DataFrame) -> pd.DataFrame:
 
 def enrich(df: pd.DataFrame) -> pd.DataFrame:
     return (
-        df.pipe(enrich_total_vaccinations)
+        df.pipe(add_total_vaccinations)
         .pipe(enrich_location)
         .pipe(enrich_source)
         .pipe(enrich_vaccine)

@@ -20,14 +20,17 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 INPUT_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "input"))
 GRAPHER_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "grapher"))
 DATA_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "public", "data"))
-DATA_VAX_COUNTRIES_DIR = os.path.abspath(os.path.join(DATA_DIR, "vaccinations", "country_data"))
+DATA_VAX_COUNTRIES_DIR = os.path.abspath(
+    os.path.join(DATA_DIR, "vaccinations", "country_data")
+)
 TIMESTAMP_DIR = os.path.abspath(os.path.join(DATA_DIR, "internal", "timestamp"))
 ANNOTATIONS_PATH = os.path.abspath(
     os.path.join(CURRENT_DIR, "annotations_internal.yaml")
 )
 COUNTRIES_WITH_PARTLY_VAX_METRIC = ["Pakistan"]
 country_vax_data_partly = [
-    os.path.join(DATA_VAX_COUNTRIES_DIR, f"{country}.csv") for country in COUNTRIES_WITH_PARTLY_VAX_METRIC
+    os.path.join(DATA_VAX_COUNTRIES_DIR, f"{country}.csv")
+    for country in COUNTRIES_WITH_PARTLY_VAX_METRIC
 ]
 # FOR README generation
 VACCINATIONS_CSV = os.path.join(DATA_DIR, "vaccinations", "vaccinations.csv")
@@ -35,7 +38,9 @@ TESTING_CSV = os.path.join(DATA_DIR, "testing", "covid-testing-all-observations.
 CASES_CSV = os.path.join(DATA_DIR, "jhu", "total_cases.csv")
 DEATHS_CSV = os.path.join(DATA_DIR, "jhu", "total_deaths.csv")
 HOSP_CSV = os.path.join(GRAPHER_DIR, "COVID-2019 - Hospital & ICU.csv")
-REPR_CSV = "https://github.com/crondonm/TrackingR/raw/main/Estimates-Database/database.csv"
+REPR_CSV = (
+    "https://github.com/crondonm/TrackingR/raw/main/Estimates-Database/database.csv"
+)
 POL_CSV = os.path.join(INPUT_DIR, "bsg", "latest.csv")
 CODEBOOK_CSV = os.path.join(DATA_DIR, "owid-covid-codebook.csv")
 README_TMP = os.path.join(CURRENT_DIR, "README.md.template")
@@ -624,12 +629,14 @@ class AnnotatorInternal:
         for stream, config_ in config.items():
             for d in config_:
                 for loc in d["location"]:
-                    data_flat.append({
-                        "stream": stream,
-                        "annotation_text": d["annotation_text"],
-                        "date": d["date"],
-                        "location": loc,
-                    })
+                    data_flat.append(
+                        {
+                            "stream": stream,
+                            "annotation_text": d["annotation_text"],
+                            "date": d["date"],
+                            "location": loc,
+                        }
+                    )
         return pd.DataFrame(data_flat)
 
     def config_flat_to_nested(self, df_config):
@@ -644,8 +651,13 @@ class AnnotatorInternal:
         config_nested = {}
         streams = df_config.stream.unique()
         for stream in streams:
-            df_ = df_config[df_config.stream==stream]
-            rec = df_.groupby(["annotation_text", "date"]).location.apply(list).reset_index().to_dict(orient="records")
+            df_ = df_config[df_config.stream == stream]
+            rec = (
+                df_.groupby(["annotation_text", "date"])
+                .location.apply(list)
+                .reset_index()
+                .to_dict(orient="records")
+            )
             config_nested[stream] = rec
         return config_nested
 
@@ -656,12 +668,18 @@ class AnnotatorInternal:
 
     def insert_annotation(self, stream: str, annotation: dict):
         # Checks
-        if "annotation_text" not in annotation or "location" not in annotation or "date" not in annotation:
-            raise ValueError("annotation dictionary must contain fields `annotation_text`, `location` and `date`")
+        if (
+            "annotation_text" not in annotation
+            or "location" not in annotation
+            or "date" not in annotation
+        ):
+            raise ValueError(
+                "annotation dictionary must contain fields `annotation_text`, `location` and `date`"
+            )
         if not (
-            isinstance(annotation["annotation_text"], str) and
-            isinstance(annotation["location"], list) and
             isinstance(annotation["annotation_text"], str)
+            and isinstance(annotation["location"], list)
+            and isinstance(annotation["annotation_text"], str)
         ):
             raise ValueError(
                 f"Check `annotation` field types. `annotation_text` (str), `location` (list) and `date` (str)"
@@ -700,15 +718,20 @@ class AnnotatorInternal:
 
 def add_annotations_countries_100_percentage(df, annotator):
     threshold_perc = 100
-    locations_exc = df[df.people_vaccinated_per_hundred > threshold_perc].groupby("location").date.min().to_dict()
+    locations_exc = (
+        df[df.people_vaccinated_per_hundred > threshold_perc]
+        .groupby("location")
+        .date.min()
+        .to_dict()
+    )
     for loc, dt in locations_exc.items():
         annotator.insert_annotation(
             "vaccinations",
             {
                 "annotation_text": "Exceeds 100% due to vaccination of non-residents",
                 "location": [loc],
-                "date": dt
-            }
+                "date": dt,
+            },
         )
     return annotator
 
@@ -737,7 +760,9 @@ def create_internal(df):
     # Insert short-term CFR
     cfr_day_shift = 10  # We compute number of deaths divided by number of cases `cfr_day_shift` days before.
     shifted_cases = (
-        df.sort_values("date").groupby("location")["new_cases_smoothed"].shift(cfr_day_shift)
+        df.sort_values("date")
+        .groupby("location")["new_cases_smoothed"]
+        .shift(cfr_day_shift)
     )
     df["cfr_short_term"] = (
         df["new_deaths_smoothed"]
@@ -760,18 +785,26 @@ def create_internal(df):
     for filename in country_vax_data_partly:
         if not os.path.isfile(filename):
             raise ValueError(f"Invalid file path! {filename}")
-        x = pd.read_csv(filename, usecols=["location", "date", "people_partly_vaccinated"])
+        x = pd.read_csv(
+            filename, usecols=["location", "date", "people_partly_vaccinated"]
+        )
         df_a = df_a.merge(x, on=["location", "date"], how="outer")
     df_b = df[~df.location.isin(COUNTRIES_WITH_PARTLY_VAX_METRIC)]
-    df_b.loc[:, "people_partly_vaccinated"] = df_b.people_vaccinated - df_b.people_fully_vaccinated
+    df_b.loc[:, "people_partly_vaccinated"] = (
+        df_b.people_vaccinated - df_b.people_fully_vaccinated
+    )
     df = pd.concat([df_a, df_b], ignore_index=True).sort_values(["location", "date"])
-    df.loc[:, "people_partly_vaccinated_per_hundred"] = df["people_partly_vaccinated"]/df["population"] * 100
+    df.loc[:, "people_partly_vaccinated_per_hundred"] = (
+        df["people_partly_vaccinated"] / df["population"] * 100
+    )
 
     # Export
     for name, config in internal_files_columns.items():
         output_path = os.path.join(dir_path, f"megafile--{name}.json")
         value_columns = list(set(config["columns"]) - set(non_value_columns))
-        df_output = df[config["columns"]].dropna(subset=value_columns, how=config["dropna"])
+        df_output = df[config["columns"]].dropna(
+            subset=value_columns, how=config["dropna"]
+        )
         df_output = annotator.add_annotations(df_output, name)
         df_to_columnar_json(df_output, output_path)
 
@@ -941,10 +974,14 @@ def export_timestamp(timestamp_filename):
 def get_excluded_locations():
     df = pd.read_csv(VACCINATIONS_CSV)
     codes = [code for code in df["iso_code"].unique() if "OWID_" in code]
-    EXCLUDE_LOCATIONS = set(df[df.iso_code.isin(codes)].location.unique().tolist() + ["2020 Summer Olympics athletes & staff"])
+    EXCLUDE_LOCATIONS = set(
+        df[df.iso_code.isin(codes)].location.unique().tolist()
+        + ["2020 Summer Olympics athletes & staff"]
+    )
     EXCLUDE_LOCATIONS.remove("Kosovo")
     EXCLUDE_ISOS = df[df.location.isin(EXCLUDE_LOCATIONS)].iso_code.unique()
     return EXCLUDE_LOCATIONS, EXCLUDE_ISOS
+
 
 EXCLUDE_LOCATIONS, EXCLUDE_ISOS = get_excluded_locations()
 
@@ -952,20 +989,28 @@ EXCLUDE_LOCATIONS, EXCLUDE_ISOS = get_excluded_locations()
 def get_num_countries_by_iso(iso_code_colname, csv_filepath=None, df=None):
     if df is None:
         df = pd.read_csv(csv_filepath)
-    codes = [code for code in df[iso_code_colname].dropna().unique() if code not in EXCLUDE_ISOS]
+    codes = [
+        code
+        for code in df[iso_code_colname].dropna().unique()
+        if code not in EXCLUDE_ISOS
+    ]
     return len(codes)
 
 
 def get_num_countries_by_location(csv_filepath, location_colname, low_memory=True):
     df = pd.read_csv(csv_filepath, low_memory=low_memory)
-    locations = [loc for loc in df[location_colname].dropna().unique() if loc not in EXCLUDE_LOCATIONS]
+    locations = [
+        loc
+        for loc in df[location_colname].dropna().unique()
+        if loc not in EXCLUDE_LOCATIONS
+    ]
     return len(locations)
 
 
 def get_num_countries_jhu(csv_filepath):
     df = pd.read_csv(csv_filepath)
     columns = df.columns
-    return len(columns[~columns.isin(EXCLUDE_LOCATIONS)])-1
+    return len(columns[~columns.isin(EXCLUDE_LOCATIONS)]) - 1
 
 
 def load_macro_df():
@@ -988,7 +1033,9 @@ def load_macro_df():
     }
     dfs = []
     for var, file in macro_variables.items():
-        dfs.append(pd.read_csv(os.path.join(INPUT_DIR, file), usecols=["iso_code", var]))
+        dfs.append(
+            pd.read_csv(os.path.join(INPUT_DIR, file), usecols=["iso_code", var])
+        )
     df = pd.concat(dfs)
     return df
 
@@ -998,9 +1045,11 @@ def get_variable_section():
     df = pd.read_csv(CODEBOOK_CSV).rename(columns={"description": "Description"})
     df = df.assign(Variable=df.column.apply(lambda x: f"`{x}`"))
     variable_description = []
-    categories = list(filter(lambda x: x != "Others", sorted(df.category.unique()))) + ["Others"]
+    categories = list(filter(lambda x: x != "Others", sorted(df.category.unique()))) + [
+        "Others"
+    ]
     for cat in categories:
-        df_ = df[df.category==cat]
+        df_ = df[df.category == cat]
         table = df_[["Variable", "Description"]].to_markdown(index=False)
         variable_description.append(template.format(title=cat, table=table))
     return variable_description
@@ -1008,11 +1057,17 @@ def get_variable_section():
 
 def get_placeholder():
     placeholders = {
-        "num_countries_vaccinations": get_num_countries_by_iso(csv_filepath=VACCINATIONS_CSV, iso_code_colname="iso_code"),
-        "num_countries_testing": get_num_countries_by_iso(csv_filepath=TESTING_CSV, iso_code_colname="ISO code"),
+        "num_countries_vaccinations": get_num_countries_by_iso(
+            csv_filepath=VACCINATIONS_CSV, iso_code_colname="iso_code"
+        ),
+        "num_countries_testing": get_num_countries_by_iso(
+            csv_filepath=TESTING_CSV, iso_code_colname="ISO code"
+        ),
         "num_countries_cases": get_num_countries_jhu(csv_filepath=CASES_CSV),
         "num_countries_deaths": get_num_countries_jhu(csv_filepath=DEATHS_CSV),
-        "num_countries_hospital": get_num_countries_by_location(csv_filepath=HOSP_CSV, location_colname="Country"),
+        "num_countries_hospital": get_num_countries_by_location(
+            csv_filepath=HOSP_CSV, location_colname="Country"
+        ),
         "num_countries_reproduction": get_num_countries_by_location(
             csv_filepath=REPR_CSV, location_colname="Country/Region"
         ),
@@ -1021,7 +1076,9 @@ def get_placeholder():
             location_colname="CountryName",
             low_memory=False,
         ),
-        "num_countries_others": get_num_countries_by_iso(df=load_macro_df(), iso_code_colname="iso_code"),
+        "num_countries_others": get_num_countries_by_iso(
+            df=load_macro_df(), iso_code_colname="iso_code"
+        ),
         "variable_description": "\n".join(get_variable_section()),
     }
     return placeholders

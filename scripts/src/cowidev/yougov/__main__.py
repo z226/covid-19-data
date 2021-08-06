@@ -271,12 +271,14 @@ def _standardize_entities(df):
 
 def _aggregate(df):
     s_period = df["date"].dt.to_period(FREQ)
-if FREQ == 'M':
-    df.loc[:, "date_mid"] = s_period.dt.start_time.dt.date + datetime.timedelta(days=14)
-else:
-    df.loc[:, "date_mid"] = (
-        s_period.dt.start_time + (s_period.dt.end_time - s_period.dt.start_time) / 2
-    ).dt.date
+    if FREQ == "M":
+        df.loc[:, "date_mid"] = s_period.dt.start_time.dt.date + datetime.timedelta(
+            days=14
+        )
+    else:
+        df.loc[:, "date_mid"] = (
+            s_period.dt.start_time + (s_period.dt.end_time - s_period.dt.start_time) / 2
+        ).dt.date
     today = datetime.datetime.utcnow().date()
     if df["date_mid"].max() > today:
         df.loc[:, "date_mid"] = df["date_mid"].replace({df["date_mid"].max(): today})

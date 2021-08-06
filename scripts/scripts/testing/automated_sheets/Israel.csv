@@ -40,7 +40,7 @@ Date,Daily change in cumulative total,Country,Units,Source label,Source URL,Note
 2020-03-29,7566,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-03-30,7100,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-03-31,7989,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2020-04-01,9008,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2020-04-01,9009,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-04-02,10228,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-04-03,10331,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-04-04,6355,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
@@ -305,7 +305,7 @@ Date,Daily change in cumulative total,Country,Units,Source label,Source URL,Note
 2020-12-19,62141,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-12-20,71714,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-12-21,93005,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2020-12-22,94363,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2020-12-22,94365,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-12-23,97770,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-12-24,99019,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2020-12-25,86515,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
@@ -339,7 +339,7 @@ Date,Daily change in cumulative total,Country,Units,Source label,Source URL,Note
 2021-01-22,86036,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-01-23,31000,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-01-24,54458,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-01-25,91654,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-01-25,91655,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-01-26,83592,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-01-27,86103,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-01-28,78521,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
@@ -425,7 +425,7 @@ Date,Daily change in cumulative total,Country,Units,Source label,Source URL,Note
 2021-04-18,33945,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-04-19,46073,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-04-20,46359,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-04-21,41281,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-04-21,41280,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-04-22,31618,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-04-23,35245,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-04-24,8762,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
@@ -524,9 +524,12 @@ Date,Daily change in cumulative total,Country,Units,Source label,Source URL,Note
 2021-07-26,102846,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-07-27,106072,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
 2021-07-28,102790,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-07-29,101794,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-07-30,111135,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-07-31,73892,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-08-01,80705,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-08-02,113723,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
-2021-08-03,37398,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-07-29,101795,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-07-30,111138,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-07-31,73893,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-01,80706,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-02,113863,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-03,110654,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-04,117342,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-05,116040,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only
+2021-08-06,32561,Israel,tests performed,Israel Ministry of Health,https://datadashboardapi.health.gov.il/api/queries/testResultsPerDate,,PCR only

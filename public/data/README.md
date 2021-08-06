@@ -9,12 +9,12 @@ Our complete COVID-19 dataset is a collection of the COVID-19 data maintained by
 |-----------------------------|-----------------------------------------------------------|---------|-----------|
 | Vaccinations                | Official data collated by the Our World in Data team      | Daily   | 214       |
 | Tests & positivity          | Official data collated by the Our World in Data team      | Weekly  | 136       |
-| Hospital & ICU              | Official data collated by the Our World in Data team      | Weekly  | 35        |
+| Hospital & ICU              | Official data collated by the Our World in Data team      | Weekly  | 34        |
 | Confirmed cases             | JHU CSSE COVID-19 Data                                    | Daily   | 194        |
 | Confirmed deaths            | JHU CSSE COVID-19 Data                                    | Daily   | 194       |
 | Reproduction rate           | Arroyo-Marioli F, Bullano F, Kucinskas S, Rondón-Moreno C | Daily   | 184        |
 | Policy responses            | Oxford COVID-19 Government Response Tracker               | Daily   | 186        |
-| Other variables of interest | International organizations (UN, World Bank, OECD, IHME…) | Fixed   | 218       |
+| Other variables of interest | International organizations (UN, World Bank, OECD, IHME…) | Fixed   | 240       |
 
 A [specific section of this repository](https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations) is also dedicated to **vaccinations**, with a lighter dataset containing only vaccination data.
 

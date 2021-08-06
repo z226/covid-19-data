@@ -16,8 +16,8 @@ def read(source: str) -> pd.Series:
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
-    people_vaccinated = clean_count(soup.find_all(class_="counter")[2].text)
-    people_fully_vaccinated = clean_count(soup.find_all(class_="counter")[3].text)
+    people_vaccinated = clean_count(soup.find_all(class_="counter")[3].text)
+    people_fully_vaccinated = clean_count(soup.find_all(class_="counter")[4].text)
     assert people_vaccinated >= people_fully_vaccinated
     total_vaccinations = people_vaccinated + people_fully_vaccinated
 

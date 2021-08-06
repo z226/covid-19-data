@@ -1023,7 +1023,6 @@ def get_placeholder():
         ),
         "num_countries_others": get_num_countries_by_iso(df=load_macro_df(), iso_code_colname="iso_code"),
         "variable_description": "\n".join(get_variable_section()),
-        
     }
     return placeholders
 

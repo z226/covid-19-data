@@ -12,7 +12,7 @@ from vax.utils.dates import clean_date
 class Singapore:
     def __init__(self) -> None:
         self.location = "Singapore"
-        self.source_url = "https://www.moh.gov.sg/covid-19"
+        self.source_url = "https://www.moh.gov.sg/covid-19/vaccination"
 
     def read(self) -> pd.Series:
         soup = get_soup(self.source_url)

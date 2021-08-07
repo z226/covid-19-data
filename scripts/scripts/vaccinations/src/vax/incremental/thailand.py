@@ -22,7 +22,7 @@ class Thailand:
         self.location = "Thailand"
         self.source_url = "https://ddc.moph.go.th/dcd/pagecontent.php?page=643&dept=dcd"
         self.regex_date = r"\s?ข้อมูล ณ วันที่ (\d{1,2}) (.*) (\d{4})"
-        self.regex_vax = r"เข็มที่ 1 \(รำย\) เข็มที่ 2 \(รำย\) รวม \(โดส\) ([\d,]+) ([\d,]+) ([\d,]+)"
+        self.regex_vax = r"เข็มที่ 1 \(รำย\) เข็มที่ 2 \(รำย\) เข็มที่ 3 \(รำย\) รวม \(โดส\) ([\d,]+) ([\d,]+) ([\d,]+) ([\d,]+)"
 
     def read(self, last_update: str) -> pd.DataFrame:
         yearly_report_page = get_soup(self.source_url)
@@ -102,11 +102,13 @@ class Thailand:
         metrics = re.search(self.regex_vax, text).groups()
         people_vaccinated = clean_count(metrics[0])
         people_fully_vaccinated = clean_count(metrics[1])
-        total_vaccinations = clean_count(metrics[2])
+        total_boosters = clean_count(metrics[2])
+        total_vaccinations = clean_count(metrics[3])
         return {
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
+            "total_boosters": total_boosters,
         }
 
     def _parse_date(self, text: str):

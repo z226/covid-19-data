@@ -105,6 +105,7 @@ def _check_fields(
     people_vaccinated,
     people_partly_vaccinated,
     people_fully_vaccinated,
+    total_boosters,
 ):
     # Check location, vaccine, source_url
     if not isinstance(location, str):
@@ -129,10 +130,10 @@ def _check_fields(
         raise TypeError(
             f"Check `total_vaccinations` type! Should be numeric, found {type_wrong}. Value was {total_vaccinations}"
         )
-    if not isinstance(total_vaccinations, numbers.Number):
-        type_wrong = type(location).__name__
+    if not (isinstance(total_boosters, numbers.Number) or pd.isnull(total_boosters)):
+        type_wrong = type(total_boosters).__name__
         raise TypeError(
-            f"Check `total_vaccinations` type! Should be a str, found {type_wrong}. Value was {location}"
+            f"Check `total_boosters` type! Should be numeric, found {type_wrong}. Value was {total_boosters}"
         )
     if not (
         isinstance(people_vaccinated, numbers.Number) or pd.isnull(people_vaccinated)
@@ -183,6 +184,7 @@ def _increment(
     people_vaccinated=None,
     people_partly_vaccinated=None,
     people_fully_vaccinated=None,
+    total_boosters=None,
 ):
     prev = pd.read_csv(filepath)
     if (
@@ -199,6 +201,7 @@ def _increment(
                 df["date"] == date, "people_partly_vaccinated"
             ] = people_partly_vaccinated
         df.loc[df["date"] == date, "people_fully_vaccinated"] = people_fully_vaccinated
+        df.loc[df["date"] == date, "total_boosters"] = total_boosters
         df.loc[df["date"] == date, "source_url"] = source_url
     else:
         new = _build_df(
@@ -210,6 +213,7 @@ def _increment(
             people_vaccinated,
             people_partly_vaccinated,
             people_fully_vaccinated,
+            total_boosters,
         )
         df = pd.concat([prev, new])
     return df.sort_values("date")
@@ -224,6 +228,7 @@ def _build_df(
     people_vaccinated=None,
     people_partly_vaccinated=None,
     people_fully_vaccinated=None,
+    total_boosters=None,
 ):
     new = pd.DataFrame(
         {
@@ -240,6 +245,8 @@ def _build_df(
         new["people_partly_vaccinated"] = people_partly_vaccinated
     if people_fully_vaccinated is not None:
         new["people_fully_vaccinated"] = people_fully_vaccinated
+    if total_boosters is not None:
+        new["total_boosters"] = total_boosters
     return new
 
 

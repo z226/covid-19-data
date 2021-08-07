@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
+from vax.utils.incremental import enrich_data, increment, clean_count
 from vax.utils.dates import localdate
 
 
@@ -23,8 +23,10 @@ def read(source: str) -> pd.Series:
 
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
-    total_vaccinations = int(soup.find(id="stats").find_all("span")[0].text)
-    people_fully_vaccinated = int(soup.find(id="stats").find_all("span")[1].text)
+    total_vaccinations = clean_count(soup.find(id="stats").find_all("span")[0].text)
+    people_fully_vaccinated = clean_count(
+        soup.find(id="stats").find_all("span")[1].text
+    )
     assert total_vaccinations >= people_fully_vaccinated
 
     data = {

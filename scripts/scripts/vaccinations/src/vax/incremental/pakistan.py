@@ -12,7 +12,6 @@ def read(source: str) -> pd.Series:
 
     counters = soup.find_all(class_="counter")
     people_vaccinated = clean_count(counters[0].text)
-    dose_2 = clean_count(counters[1].text)
     total_vaccinations = clean_count(counters[2].text)
 
     date = soup.find("span", id="last-update").text
@@ -26,11 +25,6 @@ def read(source: str) -> pd.Series:
         "date": date,
         "source_url": source,
     }
-
-    # CanSino is supposed to be administered in the country, but so far
-    # the reported numbers are consistent with only 2-dose vaccines being used.
-    if total_vaccinations == people_vaccinated + dose_2:
-        data["people_fully_vaccinated"] = dose_2
 
     return pd.Series(data=data)
 

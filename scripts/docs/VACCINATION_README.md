@@ -1,28 +1,30 @@
 # Vaccination update automation
 [![Python 3"](https://img.shields.io/badge/python-3.7|3.8|3.9-blue.svg?&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3)
 [![Contribute](https://img.shields.io/badge/-contribute-0055ff)](CONTRIBUTE.md)
-[![Data](https://img.shields.io/badge/public-data-purple)](../../../public/data/)
+[![Data](https://img.shields.io/badge/public-data-purple)](../../public/data/)
+
+**THIS FILE IS BEING RE-WRITTEN**
 
 Vaccination data is updated on a daily basis. For some countries, the update is done by means of an automated process,
 while others require some manual work. To keep track of the currently automated processes, check [this
 table](automation_state.csv). 
 
 ### Content
-1. [Directory content](#1-directory-content)
+1. [Vaccination pipeline files](#1-vaccination-pipeline-files)
 2. [Development environment](#2-development-environment)
 3. [The data pipeline](#3-the-data-pipeline)
 4. [Other functions](#4-other-functions)
 5. [Contribute](CONTRIBUTE.md)
 6. [FAQs](#6-FAQs)
 
-## 1. Directory content
+## 1. Vaccination pipeline files
 This directory contains the following files:
 
 
 | File name      | Description |
 | ----------- | ----------- |
-| [`output/`](output)      | Temporary automated imports are placed here.       |
-| [`src/vax/`](src/vax)      | Scripts to automate country data imports.       |
+| [`output/`](../output/vaccination/)      | Temporary automated imports are placed here.       |
+| [`src/cowidev/vax/`](src/cowidev/vax)      | Scripts to automate country data imports.       |
 | [`config.yaml`](config.yaml)      | Data pipeline configuration.       |
 | [`us_states/input/`](us_states/input)      | Data for US-state vaccination data updates.       |
 | [`MANIFEST.in`](MANIFEST.IN), [`setup.py`](setup.py), [`requirements.txt`](requirements.txt), [`requirements-flake.txt`](requirements-flake.txt)      |     Library development related files   |
@@ -197,8 +199,8 @@ Run:
 ```
 $ cowid-vax get
 ```
-This step runs the scrips for [batch](src/vax/batch) and [incremental](src/vax/incremental) updates. It will then generate
-individual country files and save them in [`output`](output).
+This step runs the scrips for [batch](../src/cowidev/vax/batch) and [incremental](../src/cowidev/vax/incremental) updates. It will then generate
+individual country files and save them in [`output`](output/vaccinations/main_data/).
 
 *Note:* This step might crash for some countries, as the automation scripts might no longer (or temporarily) work
 (e.g. due to changes in the source). Try to keep the scripts up to date.
@@ -240,18 +242,18 @@ Once the automation is successfully executed, the following files and directorie
 
 | File name      | Description |
 | ----------- | ----------- |
-| [`vaccinations.csv`](../../../public/data/vaccinations/vaccinations.csv)      | Main output with vaccination data of all countries.       |
-| [`vaccinations.json`](../../../public/data/vaccinations/vaccinations.json)   | Same as `vaccinations.csv` but in JSON format.        |
-| [`vaccinations-by-manufacturer.csv`](../../../public/data/vaccinations/vaccinations-by-manufacturer.csv)   | Secondary output with vaccination by manufacturer for a select number of countries.        |
-| [`country_data/`](../../../public/data/vaccinations/country_data/)   | Individual country CSV files.        |
-| [`locations.csv`](../../../public/data/vaccinations/locations.csv)   | Country-level metadata.        |
-| [`source_table.csv`](source_table.html)   | HTML table with country source URLs. Shown at [OWID's website](https://ourworldindata.org/covid-vaccinations#source-information-country-by-country)        |
-| [`automation_state.csv`](automation_state.csv)   | Lists if country process is automated (TRUE) or not (FALSE).        |
-| [`COVID-19 - Vaccinations.csv`](../../grapher/COVID-19%20-%20Vaccinations.csv)   | Internal file for OWID grapher on vaccinations.        |
-| [`COVID-19 - Vaccinations by manufacturer.csv`](../../grapher/COVID-19%20-%20Vaccinations%20by%20manufacturer.csv)   | Internal file for OWID grapher on vaccinations by manufacturer.        |
+| [`vaccinations.csv`](../../public/data/vaccinations/vaccinations.csv)      | Main output with vaccination data of all countries.       |
+| [`vaccinations.json`](../../public/data/vaccinations/vaccinations.json)   | Same as `vaccinations.csv` but in JSON format.        |
+| [`vaccinations-by-manufacturer.csv`](../../public/data/vaccinations/vaccinations-by-manufacturer.csv)   | Secondary output with vaccination by manufacturer for a select number of countries.        |
+| [`country_data/`](../../public/data/vaccinations/country_data/)   | Individual country CSV files.        |
+| [`locations.csv`](../../public/data/vaccinations/locations.csv)   | Country-level metadata.        |
+| [`source_table.csv`](../output/vaccinations/source_table.html)   | HTML table with country source URLs. Shown at [OWID's website](https://ourworldindata.org/covid-vaccinations#source-information-country-by-country)        |
+| [`automation_state.csv`](../output/vaccinations/automation_state.csv)   | Lists if country process is automated (TRUE) or not (FALSE).        |
+| [`COVID-19 - Vaccinations.csv`](../grapher/COVID-19%20-%20Vaccinations.csv)   | Internal file for OWID grapher on vaccinations.        |
+| [`COVID-19 - Vaccinations by manufacturer.csv`](../grapher/COVID-19%20-%20Vaccinations%20by%20manufacturer.csv)   | Internal file for OWID grapher on vaccinations by manufacturer.        |
 
 
-_You can find more information about these files [here](../../../public/data/vaccinations/README.md)_.
+_You can find more information about these files [here](../../public/data/vaccinations/README.md)_.
 
 #### Notes
 
@@ -325,7 +327,7 @@ Countries are given from the one with the least to the one with he most number o
 
 
 ## 5. Contribute
-We welcome contributions! Read more in [CONTRIBUTE](CONTRIBUTE.md)
+We welcome contributions! Read more in [CONTRIBUTE](VACCINATIONS_CONTRIBUTE.md)
 ## 6. FAQs
 
 ### Any question or suggestion?

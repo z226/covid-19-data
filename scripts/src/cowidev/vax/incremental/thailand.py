@@ -7,14 +7,14 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from pdfreader import SimplePDFViewer
 
-from vax.utils.incremental import (
+from cowidev.vax.utils.incremental import (
     enrich_data,
     increment,
     clean_count,
     merge_with_current_data,
 )
-from vax.utils.utils import get_soup
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.dates import clean_date
 
 
 class Thailand:

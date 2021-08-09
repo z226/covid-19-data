@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from vax.utils.dates import clean_date, localdate
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.dates import clean_date, localdate
+from cowidev.vax.utils.files import export_metadata
 
 
 age_groups_known = {

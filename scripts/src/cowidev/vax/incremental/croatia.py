@@ -3,7 +3,7 @@ import requests
 
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.incremental import enrich_data, increment
 
 
 def read(source: str) -> pd.Series:

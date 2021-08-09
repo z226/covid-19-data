@@ -4,8 +4,8 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
+from cowidev.vax.utils.dates import clean_date
 
 
 def read(source: str, source_old: str) -> pd.Series:

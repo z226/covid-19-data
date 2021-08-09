@@ -3,8 +3,8 @@ from datetime import datetime
 import requests
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.dates import clean_date
 
 
 class Zambia:

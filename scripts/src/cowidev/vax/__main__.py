@@ -1,7 +1,7 @@
 import argparse
 
-from vax.cmd import main_get_data, main_process_data
-from vax.cmd.get_data import (
+from cowidev.vax.cmd import main_get_data, main_process_data
+from cowidev.vax.cmd.get_data import (
     modules_name,
     modules_name_batch,
     modules_name_incremental,

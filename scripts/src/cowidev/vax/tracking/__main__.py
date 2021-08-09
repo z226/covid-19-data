@@ -1,8 +1,8 @@
 import os
 import argparse
 
-from vax.tracking.countries import countries_missing, country_updates_summary
-from vax.tracking.vaccines import vaccines_missing, vaccines_comparison_with_who
+from cowidev.vax.tracking.countries import countries_missing, country_updates_summary
+from cowidev.vax.tracking.vaccines import vaccines_missing, vaccines_comparison_with_who
 
 
 def _parse_args():

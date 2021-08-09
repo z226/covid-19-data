@@ -68,7 +68,7 @@ def extract_clean_date(
     Example:
 
     ```python
-    >>> from vax.utils.utils import extract_clean_date
+    >>> from cowidev.vax.utils.utils import extract_clean_date
     >>> text = "Something irrelevant. This page was last updated on 25 May 2021 at 09:05hrs."
     >>> date_str = extract_clean_date(
         text=text,

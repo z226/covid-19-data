@@ -1,8 +1,8 @@
 import requests
 import pandas as pd
 
-from vax.utils.files import load_query, load_data
-from vax.utils.dates import clean_date_series
+from cowidev.vax.utils.files import load_query, load_data
+from cowidev.vax.utils.dates import clean_date_series
 
 
 def read(source: str) -> pd.DataFrame:

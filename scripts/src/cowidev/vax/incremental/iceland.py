@@ -4,8 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import increment, clean_count
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.incremental import increment, clean_count
+from cowidev.vax.utils.files import export_metadata
 
 
 VACCINE_PROTOCOLS = {

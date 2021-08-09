@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.files import export_metadata
 
 
 def read(source: str) -> pd.DataFrame:

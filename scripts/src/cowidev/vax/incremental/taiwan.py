@@ -3,8 +3,8 @@ import re
 import pandas as pd
 import tabula
 
-from vax.utils.utils import get_soup
-from vax.utils.incremental import clean_count, enrich_data, increment, clean_date
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import clean_count, enrich_data, increment, clean_date
 
 
 vaccines_mapping = {

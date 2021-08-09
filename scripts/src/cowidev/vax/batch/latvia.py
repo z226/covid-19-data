@@ -1,7 +1,7 @@
 import pandas as pd
 
-from vax.utils.utils import get_soup
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.files import export_metadata
 
 
 vaccine_mapping = {

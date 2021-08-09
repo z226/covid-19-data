@@ -2,7 +2,7 @@ import argparse
 import os
 from difflib import SequenceMatcher
 
-from vax.cmd.utils import normalize_country_name, get_logger
+from cowidev.vax.cmd.utils import normalize_country_name, get_logger
 
 
 CHOICES = ["get", "process", "generate", "export", "propose"]

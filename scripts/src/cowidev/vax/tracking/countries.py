@@ -3,7 +3,7 @@ from datetime import datetime
 from matplotlib import use
 
 import pandas as pd
-from vax.tracking.vaccines import vaccines_comparison_with_who
+from cowidev.vax.tracking.vaccines import vaccines_comparison_with_who
 
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))

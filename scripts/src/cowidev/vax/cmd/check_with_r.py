@@ -4,7 +4,7 @@ import json
 
 import pandas as pd
 
-from vax.cmd.generate_dataset import DatasetGenerator, Bucket
+from cowidev.vax.cmd.generate_dataset import DatasetGenerator, Bucket
 
 
 def test_check_with_r(paths):

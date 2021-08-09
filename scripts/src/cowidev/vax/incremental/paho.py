@@ -6,12 +6,12 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.files import get_file_encoding
-from vax.utils.utils import get_soup
-from vax.utils.dates import clean_date
-from vax.utils.incremental import increment
-from vax.utils.who import VACCINES_WHO_MAPPING
-from vax.cmd.utils import get_logger
+from cowidev.vax.utils.files import get_file_encoding
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import increment
+from cowidev.vax.utils.who import VACCINES_WHO_MAPPING
+from cowidev.vax.cmd.utils import get_logger
 
 
 logger = get_logger()

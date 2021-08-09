@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 import pandas as pd
 from bs4 import BeautifulSoup
 
-import vax.utils.utils as utils
+import cowidev.vax.utils.utils as utils
 
 
 class NewZealand:

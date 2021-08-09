@@ -5,9 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import localdate
-from vax.utils.utils import (
+from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
+from cowidev.vax.utils.dates import localdate
+from cowidev.vax.utils.utils import (
     get_driver,
     set_download_settings,
     get_latest_file,

@@ -2,9 +2,9 @@ import re
 
 import pandas as pd
 
-from vax.utils.utils import get_soup
-from vax.utils.incremental import clean_count, increment, enrich_data
-from vax.utils.dates import extract_clean_date
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import clean_count, increment, enrich_data
+from cowidev.vax.utils.dates import extract_clean_date
 
 
 class AntiguaBarbuda:

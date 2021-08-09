@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 
-from vax.utils.incremental import increment
-from vax.utils.checks import VACCINES_ONE_DOSE
-from vax.utils.who import VACCINES_WHO_MAPPING
-from vax.cmd.utils import get_logger
+from cowidev.vax.utils.incremental import increment
+from cowidev.vax.utils.checks import VACCINES_ONE_DOSE
+from cowidev.vax.utils.who import VACCINES_WHO_MAPPING
+from cowidev.vax.cmd.utils import get_logger
 
 
 logger = get_logger()

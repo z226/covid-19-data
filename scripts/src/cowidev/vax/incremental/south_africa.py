@@ -3,9 +3,9 @@ import re
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import localdate
-from vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
+from cowidev.vax.utils.dates import localdate
+from cowidev.vax.utils.utils import get_soup
 
 
 class SouthAfrica:

@@ -2,8 +2,8 @@ import re
 
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
+from cowidev.vax.utils.dates import clean_date
 
 
 class Colombia:

@@ -6,8 +6,8 @@ import requests
 import json
 import re
 
-from vax.utils.incremental import enrich_data, increment
-from vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.utils import get_soup
 
 
 def read(dose1_source: str, dose2_source: str) -> pd.Series:

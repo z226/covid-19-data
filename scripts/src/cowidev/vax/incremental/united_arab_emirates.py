@@ -2,10 +2,10 @@ import re
 
 import pandas as pd
 
-from vax.utils.utils import get_driver
-from vax.utils.dates import extract_clean_date
-from vax.utils.incremental import enrich_data, increment, clean_count
-from vax.utils.dates import localdate
+from cowidev.vax.utils.utils import get_driver
+from cowidev.vax.utils.dates import extract_clean_date
+from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
+from cowidev.vax.utils.dates import localdate
 
 
 class UnitedArabEmirates:

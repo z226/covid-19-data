@@ -1,6 +1,6 @@
 import pandas as pd
 
-from vax.utils.pipeline import enrich_total_vaccinations
+from cowidev.vax.utils.pipeline import enrich_total_vaccinations
 
 
 def read(source: str) -> pd.DataFrame:

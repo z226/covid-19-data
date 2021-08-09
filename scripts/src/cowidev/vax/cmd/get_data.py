@@ -2,9 +2,9 @@ import importlib
 
 from joblib import Parallel, delayed
 
-from vax.batch import __all__ as batch_countries
-from vax.incremental import __all__ as incremental_countries
-from vax.cmd.utils import get_logger, print_eoe
+from cowidev.vax.batch import __all__ as batch_countries
+from cowidev.vax.incremental import __all__ as incremental_countries
+from cowidev.vax.cmd.utils import get_logger, print_eoe
 
 
 # Logger

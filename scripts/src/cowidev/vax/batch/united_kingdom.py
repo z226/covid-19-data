@@ -1,7 +1,7 @@
 import pandas as pd
 
-from vax.utils.pipeline import enrich_total_vaccinations
-from vax.utils.utils import make_monotonic
+from cowidev.vax.utils.pipeline import enrich_total_vaccinations
+from cowidev.vax.utils.utils import make_monotonic
 from uk_covid19 import Cov19API
 
 

@@ -2,7 +2,7 @@ import os
 import importlib.util
 import webbrowser
 import pyperclip
-from vax.cmd.utils import get_logger
+from cowidev.vax.cmd.utils import get_logger
 
 
 logger = get_logger()

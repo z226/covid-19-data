@@ -3,7 +3,7 @@ from typing import Dict
 
 import pandas as pd
 
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.files import export_metadata
 
 
 class Germany:

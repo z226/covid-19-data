@@ -7,9 +7,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import PyPDF2
 
-from vax.utils.incremental import increment
-from vax.utils.dates import clean_date
-from vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import increment
+from cowidev.vax.utils.dates import clean_date
+from cowidev.vax.utils.utils import get_soup
 
 vaccines_mapping = {
     "Covishield Vaccine": "Oxford/AstraZeneca",

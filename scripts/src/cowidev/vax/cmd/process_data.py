@@ -1,8 +1,8 @@
 import pandas as pd
 
-from vax.utils.gsheets import VaccinationGSheet
-from vax.process import process_location
-from vax.cmd.utils import get_logger, print_eoe
+from cowidev.vax.utils.gsheets import VaccinationGSheet
+from cowidev.vax.process import process_location
+from cowidev.vax.cmd.utils import get_logger, print_eoe
 
 
 logger = get_logger()

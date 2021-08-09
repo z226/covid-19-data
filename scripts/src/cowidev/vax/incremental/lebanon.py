@@ -3,8 +3,8 @@ import json
 import requests
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
-from vax.utils.dates import localdate
+from cowidev.vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.dates import localdate
 
 
 def get_api_value(source: str, query: str, headers: dict):

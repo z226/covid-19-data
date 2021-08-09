@@ -3,10 +3,10 @@ from datetime import datetime
 import requests
 import pandas as pd
 
-from vax.utils.dates import clean_date
-from vax.utils.incremental import increment
-from vax.utils.who import VACCINES_WHO_MAPPING
-from vax.cmd.utils import get_logger
+from cowidev.vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import increment
+from cowidev.vax.utils.who import VACCINES_WHO_MAPPING
+from cowidev.vax.cmd.utils import get_logger
 
 
 logger = get_logger()

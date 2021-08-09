@@ -4,8 +4,8 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 
-from vax.manual.twitter.base import TwitterCollectorBase
-from vax.utils.dates import clean_date
+from cowidev.vax.manual.twitter.base import TwitterCollectorBase
+from cowidev.vax.utils.dates import clean_date
 
 
 class Gibraltar(TwitterCollectorBase):

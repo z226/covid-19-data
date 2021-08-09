@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import requests
 import pandas as pd
 
-from vax.utils.incremental import enrich_data, increment
-from vax.utils.files import load_query
+from cowidev.vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.files import load_query
 
 
 class Poland:

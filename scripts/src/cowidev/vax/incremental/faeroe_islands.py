@@ -2,9 +2,9 @@ import requests
 
 import pandas as pd
 
-from vax.utils.utils import clean_count
-from vax.utils.incremental import enrich_data, increment
-from vax.utils.dates import localdate
+from cowidev.vax.utils.utils import clean_count
+from cowidev.vax.utils.incremental import enrich_data, increment
+from cowidev.vax.utils.dates import localdate
 
 
 class FaeroeIslands:

@@ -3,8 +3,8 @@ import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.incremental import increment, clean_count
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.incremental import increment, clean_count
+from cowidev.vax.utils.dates import clean_date
 
 
 def main(paths):

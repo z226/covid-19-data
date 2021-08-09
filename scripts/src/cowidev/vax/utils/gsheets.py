@@ -7,7 +7,7 @@ import json
 import pandas as pd
 from gsheets import Sheets
 
-from vax.utils.checks import country_df_sanity_checks
+from cowidev.vax.utils.checks import country_df_sanity_checks
 
 
 class GSheetApi:

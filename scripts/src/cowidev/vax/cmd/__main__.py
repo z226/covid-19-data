@@ -1,9 +1,9 @@
-from vax.cmd._config import get_config
-from vax.cmd import main_get_data, main_process_data, main_generate_dataset
-from vax.cmd.export import main_export
-from vax.cmd.twitter import main_propose_data_twitter
-from vax.cmd.check_with_r import test_check_with_r
-from vax.utils.paths import Paths
+from cowidev.vax.cmd._config import get_config
+from cowidev.vax.cmd import main_get_data, main_process_data, main_generate_dataset
+from cowidev.vax.cmd.export import main_export
+from cowidev.vax.cmd.twitter import main_propose_data_twitter
+from cowidev.vax.cmd.check_with_r import test_check_with_r
+from cowidev.vax.utils.paths import Paths
 
 
 def main():

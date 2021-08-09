@@ -3,9 +3,9 @@ import re
 from bs4 import BeautifulSoup
 import pandas as pd
 
-from vax.utils.utils import get_soup
-from vax.utils.incremental import clean_count, merge_with_current_data
-from vax.utils.dates import clean_date
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.incremental import clean_count, merge_with_current_data
+from cowidev.vax.utils.dates import clean_date
 
 
 class Albania:

@@ -4,8 +4,8 @@ import copy
 import requests
 import pandas as pd
 
-from vax.utils.files import load_data
-from vax.utils.utils import make_monotonic
+from cowidev.vax.utils.files import load_data
+from cowidev.vax.utils.utils import make_monotonic
 
 
 metrics_mapping = {

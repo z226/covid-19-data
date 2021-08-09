@@ -1,7 +1,7 @@
 import pandas as pd
 
-from vax.utils.utils import read_xlsx_from_url, clean_df_columns_multiindex
-from vax.utils.dates import clean_date_series
+from cowidev.vax.utils.utils import read_xlsx_from_url, clean_df_columns_multiindex
+from cowidev.vax.utils.dates import clean_date_series
 
 
 class South_korea:

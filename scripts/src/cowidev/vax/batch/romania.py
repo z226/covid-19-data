@@ -1,8 +1,8 @@
 import requests
 import pandas as pd
 
-from vax.utils.files import export_metadata
-from vax.utils.utils import make_monotonic
+from cowidev.vax.utils.files import export_metadata
+from cowidev.vax.utils.utils import make_monotonic
 
 
 class Romania:

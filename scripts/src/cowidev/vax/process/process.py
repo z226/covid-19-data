@@ -1,8 +1,8 @@
 from datetime import datetime
 import pandas as pd
 
-from vax.utils.checks import country_df_sanity_checks
-from vax.process.urls import clean_urls
+from cowidev.vax.utils.checks import country_df_sanity_checks
+from cowidev.vax.process.urls import clean_urls
 
 
 def process_location(

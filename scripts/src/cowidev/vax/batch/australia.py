@@ -1,6 +1,6 @@
 import pandas as pd
 
-from vax.utils.utils import make_monotonic
+from cowidev.vax.utils.utils import make_monotonic
 
 
 class Australia:

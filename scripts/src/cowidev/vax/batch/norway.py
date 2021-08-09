@@ -5,7 +5,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.dates import clean_date_series
+from cowidev.vax.utils.dates import clean_date_series
 
 
 class Norway:

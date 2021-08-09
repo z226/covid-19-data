@@ -2,7 +2,7 @@ import requests
 from functools import reduce
 import pandas as pd
 
-from vax.utils.dates import clean_date_series
+from cowidev.vax.utils.dates import clean_date_series
 
 
 class Greece:

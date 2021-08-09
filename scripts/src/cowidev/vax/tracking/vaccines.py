@@ -4,8 +4,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-from vax.utils.utils import get_soup, get_headers
-from vax.utils.who import VACCINES_WHO_MAPPING
+from cowidev.vax.utils.utils import get_soup, get_headers
+from cowidev.vax.utils.who import VACCINES_WHO_MAPPING
 
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))

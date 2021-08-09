@@ -8,7 +8,7 @@ import PyPDF2
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from vax.utils.incremental import clean_count, enrich_data, increment
+from cowidev.vax.utils.incremental import clean_count, enrich_data, increment
 
 
 class Nepal:

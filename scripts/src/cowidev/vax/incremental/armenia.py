@@ -5,7 +5,7 @@ import pandas as pd
 
 from facebook_scraper import get_posts
 
-from vax.utils.incremental import clean_count, merge_with_current_data
+from cowidev.vax.utils.incremental import clean_count, merge_with_current_data
 
 
 class Armenia:

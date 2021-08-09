@@ -1,8 +1,8 @@
 import pandas as pd
 
-from vax.utils.incremental import clean_count, enrich_data, increment
-from vax.utils.utils import get_soup
-from vax.utils.dates import localdate
+from cowidev.vax.utils.incremental import clean_count, enrich_data, increment
+from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.dates import localdate
 
 
 class Bolivia:

@@ -4,8 +4,8 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-from vax.utils.utils import get_driver, download_file_from_url
-from vax.utils.files import export_metadata
+from cowidev.vax.utils.utils import get_driver, download_file_from_url
+from cowidev.vax.utils.files import export_metadata
 
 
 class Switzerland:

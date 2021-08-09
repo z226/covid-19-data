@@ -20,6 +20,7 @@ VACCINE_MAPPING = {
 }
 ONE_DOSE_VACCINES = ["Johnson&Johnson"]
 
+
 class Italy:
     def __init__(
         self,
@@ -62,7 +63,11 @@ class Italy:
         return df.replace({"vaccine": self.vaccine_mapping})
 
     def get_total_vaccinations(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(total_vaccinations=df["prima_dose"] + df["seconda_dose"] + df["pregressa_infezione"])
+        return df.assign(
+            total_vaccinations=df["prima_dose"]
+            + df["seconda_dose"]
+            + df["pregressa_infezione"]
+        )
 
     def pipeline_base(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
@@ -76,15 +81,20 @@ class Italy:
         return df.assign(people_vaccinated=df["prima_dose"] + df["pregressa_infezione"])
 
     def get_people_fully_vaccinated(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.assign(people_fully_vaccinated=lambda x: x.apply(
-            lambda row:
-            row["prima_dose"] + row["pregressa_infezione"] if row["vaccine"] in self.one_dose_vaccines else row["seconda_dose"],
-            axis=1
-        ))
+        return df.assign(
+            people_fully_vaccinated=lambda x: x.apply(
+                lambda row: row["prima_dose"]
+                if row["vaccine"] in self.one_dose_vaccines
+                else row["seconda_dose"],
+                axis=1,
+            )
+        )
 
     def get_final_numbers(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df.groupby("date")[["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]]
+            df.groupby("date")[
+                ["total_vaccinations", "people_vaccinated", "people_fully_vaccinated"]
+            ]
             .sum()
             .sort_index()
             .cumsum()
@@ -136,13 +146,16 @@ class Italy:
             .sum()
             .sort_index()
             .reset_index()
-            .assign(total_vaccinations=lambda x: x.groupby("vaccine")["total_vaccinations"].cumsum())
+            .assign(
+                total_vaccinations=lambda x: x.groupby("vaccine")[
+                    "total_vaccinations"
+                ].cumsum()
+            )
         )
 
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
-        return (
-            df.pipe(self.get_total_vaccinations_by_manufacturer)
-            .pipe(self.enrich_location)
+        return df.pipe(self.get_total_vaccinations_by_manufacturer).pipe(
+            self.enrich_location
         )
 
     def to_csv(self, paths):
@@ -172,6 +185,7 @@ def main(paths):
         vaccine_mapping=VACCINE_MAPPING,
         one_dose_vaccines=ONE_DOSE_VACCINES,
     ).to_csv(paths)
+
 
 if __name__ == "__main__":
     main()

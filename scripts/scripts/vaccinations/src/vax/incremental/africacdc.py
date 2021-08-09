@@ -16,6 +16,7 @@ COUNTRIES = {
     "Central African Republic": "Central African Republic",
     "Chad": "Chad",
     "Congo": "Congo",
+    "Djibouti": "Djibouti",
     "Gabon": "Gabon",
     "Gambia": "Gambia",
     "Mauritania": "Mauritania",

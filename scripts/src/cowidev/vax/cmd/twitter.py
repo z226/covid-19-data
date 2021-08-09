@@ -11,7 +11,7 @@ from cowidev.vax.cmd.utils import get_logger, print_eoe
 logger = get_logger()
 
 # Import modules
-country_to_module = {c: f"vax.manual.twitter.{c}" for c in twitter_countries}
+country_to_module = {c: f"cowidev.vax.manual.twitter.{c}" for c in twitter_countries}
 modules_name = list(country_to_module.values())
 
 

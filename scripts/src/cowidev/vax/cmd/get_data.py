@@ -11,9 +11,9 @@ from cowidev.vax.cmd.utils import get_logger, print_eoe
 logger = get_logger()
 
 # Import modules
-country_to_module_batch = {c: f"vax.batch.{c}" for c in batch_countries}
+country_to_module_batch = {c: f"cowidev.vax.batch.{c}" for c in batch_countries}
 country_to_module_incremental = {
-    c: f"vax.incremental.{c}" for c in incremental_countries
+    c: f"cowidev.vax.incremental.{c}" for c in incremental_countries
 }
 country_to_module = {
     **country_to_module_batch,

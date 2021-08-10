@@ -7,6 +7,9 @@ from cowidev.vax.utils.utils import get_soup
 from cowidev.vax.utils.incremental import clean_count, enrich_data, increment, clean_date
 
 
+# New vaccine "Medigen" soon:
+# https://www.cdc.gov.tw/En/Bulletin/Detail/5NuaA-4jqd9nSh03MdwiWw?typeid=158
+# https://www.cdc.gov.tw/En/Bulletin/Detail/SEd8rAKMzywG_b92N6z8nA?typeid=158
 vaccines_mapping = {
     "AstraZeneca": "Oxford/AstraZeneca",
     "Moderna": "Moderna",

@@ -16,6 +16,7 @@ metrics_mapping = {
 country_mapping = {
     "CK": "Cook Islands",
     "FJ": "Fiji",
+    "KI": "Kiribati",
     "NC": "New Caledonia",
     "NR": "Nauru",
     "NU": "Niue",
@@ -23,6 +24,7 @@ country_mapping = {
     "PG": "Papua New Guinea",
     "PN": "Pitcairn",
     "SB": "Solomon Islands",
+    "TK": "Tokelau",
     "TO": "Tonga",
     "TV": "Tuvalu",
     "VU": "Vanuatu",

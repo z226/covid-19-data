@@ -46,7 +46,10 @@ def main(paths):
         "AstraZeneca": "Oxford/AstraZeneca",
         "Johnson & Johnson": "Johnson&Johnson",
     }
-    assert set(df["vaccine_name"].unique()) == set(vaccine_mapping.keys())
+    vaccines_wrong = set(df["vaccine_name"].unique()).difference(vaccine_mapping)
+    if vaccines_wrong:
+        raise ValueError(f"Missing vaccines: {vaccines_wrong}")
+    # assert set(df["vaccine_name"].unique()) == set(vaccine_mapping.keys())
     df = df.replace(vaccine_mapping)
     vax = (
         df.groupby(["date", "vaccine_name"], as_index=False)["vaccinated_cum"]

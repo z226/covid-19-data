@@ -21,8 +21,8 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
         time.sleep(5)
 
         total_vaccinations = driver.find_element_by_id("counter1").text
-        people_vaccinated = driver.find_element_by_id("counter2").text
-        people_fully_vaccinated = driver.find_element_by_id("counter3").text
+        # people_vaccinated = driver.find_element_by_id("counter2").text
+        # people_fully_vaccinated = driver.find_element_by_id("counter3").text
 
         driver.get(source_old)
         time.sleep(5)
@@ -39,8 +39,8 @@ def connect_parse_data(source: str, source_old: str) -> pd.Series:
 
     data = {
         "total_vaccinations": clean_count(total_vaccinations),
-        "people_vaccinated": clean_count(people_vaccinated),
-        "people_fully_vaccinated": clean_count(people_fully_vaccinated),
+        # "people_vaccinated": clean_count(people_vaccinated),
+        # "people_fully_vaccinated": clean_count(people_fully_vaccinated),
         "date": date,
     }
     return pd.Series(data=data)
@@ -70,8 +70,8 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
-        people_vaccinated=data["people_vaccinated"],
-        people_fully_vaccinated=data["people_fully_vaccinated"],
+        # people_vaccinated=data["people_vaccinated"],
+        # people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

@@ -4,78 +4,87 @@ import pandas as pd
 
 from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
 from cowidev.vax.utils.utils import get_driver
+from cowidev.vax.utils.dates import clean_date
 
 
-def read(source: str) -> pd.Series:
+class Philippines:
 
-    with get_driver() as driver:
-        driver.get(source)
-        time.sleep(2)
-        spans = [
-            span
-            for span in driver.find_elements_by_tag_name("span")
-            if span.get_attribute("data-text")
-        ]
-
-        date_raw = spans[6].text
-        date = str(
-            pd.to_datetime(date_raw.replace("(as of ", "").replace(")", "")).date()
+    def __init__(self) -> None:
+        self.location = "Philippines"
+        self.source_url = "https://e.infogram.com/_/yFVE69R1WlSdqY3aCsBF"
+        self.source_url_ref = (
+            "https://news.abs-cbn.com/spotlight/multimedia/infographic/03/23/21/philippines-covid-19-vaccine-tracker"
         )
 
-        total_vaccinations = clean_count(spans[8].text)
-        people_vaccinated = clean_count(spans[13].text)
-        people_fully_vaccinated = clean_count(spans[15].text)
+    def read(self) -> pd.Series:
+        return pd.Series(
+            data=self._parse_data()
+        )
 
-    assert total_vaccinations == people_vaccinated + people_fully_vaccinated
+    def _parse_data(self) -> dict:
+        with get_driver() as driver:
+            driver.get(self.source_url)
+            time.sleep(2)
+            spans = [
+                span
+                for span in driver.find_elements_by_tag_name("span")
+                if span.get_attribute("data-text")
+            ]
+            # Date
+            date = clean_date(spans[6].text, "(as of %b. %d, %Y)")
+            # Metrics
+            total_vaccinations = clean_count(spans[8].text)
+            people_vaccinated = clean_count(spans[13].text)
+            people_fully_vaccinated = clean_count(spans[14].text)
+        # Sanity check
+        if total_vaccinations != people_vaccinated + people_fully_vaccinated:
+            raise ValueError("total_vaccinations should equal sum of first and second doses.")
 
-    return pd.Series(
-        data={
+        return {
             "total_vaccinations": total_vaccinations,
             "people_vaccinated": people_vaccinated,
             "people_fully_vaccinated": people_fully_vaccinated,
             "date": date,
         }
-    )
 
+    def pipe_location(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(ds, "location", self.location)
 
-def enrich_location(ds: pd.Series) -> pd.Series:
-    return enrich_data(ds, "location", "Philippines")
+    def pipe_vaccine(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(
+            ds,
+            "vaccine",
+            "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V",
+        )
 
+    def pipe_source(self, ds: pd.Series) -> pd.Series:
+        return enrich_data(
+            ds,
+            "source_url",
+            self.source_url_ref,
+        )
 
-def enrich_vaccine(ds: pd.Series) -> pd.Series:
-    return enrich_data(
-        ds,
-        "vaccine",
-        "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech, Sinovac, Sputnik V",
-    )
+    def pipeline(self, ds: pd.Series) -> pd.Series:
+        return (
+            ds
+            .pipe(self.pipe_location).
+            pipe(self.pipe_vaccine)
+            .pipe(self.pipe_source)
+        )
 
-
-def enrich_source(ds: pd.Series) -> pd.Series:
-    return enrich_data(
-        ds,
-        "source_url",
-        "https://news.abs-cbn.com/spotlight/multimedia/infographic/03/23/21/philippines-covid-19-vaccine-tracker",
-    )
-
-
-def pipeline(ds: pd.Series) -> pd.Series:
-    return ds.pipe(enrich_location).pipe(enrich_vaccine).pipe(enrich_source)
+    def export(self, paths):
+        data = self.read().pipe(self.pipeline)
+        increment(
+            paths=paths,
+            location=data["location"],
+            total_vaccinations=data["total_vaccinations"],
+            people_vaccinated=data["people_vaccinated"],
+            people_fully_vaccinated=data["people_fully_vaccinated"],
+            date=data["date"],
+            source_url=data["source_url"],
+            vaccine=data["vaccine"],
+        )
 
 
 def main(paths):
-    source = "https://e.infogram.com/_/yFVE69R1WlSdqY3aCsBF"
-    data = read(source).pipe(pipeline)
-    increment(
-        paths=paths,
-        location=data["location"],
-        total_vaccinations=data["total_vaccinations"],
-        people_vaccinated=data["people_vaccinated"],
-        people_fully_vaccinated=data["people_fully_vaccinated"],
-        date=data["date"],
-        source_url=data["source_url"],
-        vaccine=data["vaccine"],
-    )
-
-
-if __name__ == "__main__":
-    main()
+    Philippines().export(paths)

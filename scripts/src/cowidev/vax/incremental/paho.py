@@ -24,6 +24,7 @@ COUNTRIES = {
     "Honduras": "Honduras",
     "Jamaica": "Jamaica",
     "Venezuela": "Venezuela",
+    "Nicaragua": "Nicaragua",
 }
 
 

@@ -1,14 +1,13 @@
 import re
 
 import pandas as pd
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from cowidev.vax.utils.incremental import enrich_data, increment, clean_count
 from cowidev.vax.utils.dates import localdate
+from cowidev.vax.utils.utils import get_soup, get_driver
 
 
 class Jordan:
@@ -20,18 +19,10 @@ class Jordan:
         return self._parse_data()
 
     def _parse_data(self) -> pd.Series:
-        op = Options()
-        op.add_argument("--headless")
 
-        with webdriver.Chrome(options=op) as driver:
+        with get_driver(headless=True) as driver:
             # Main page
-            driver.get(self.source_url)
-            # Get report page from within iframe
-            source = driver.find_element_by_xpath(
-                "/html/body/section[2]/iframe"
-            ).get_attribute("src")
-
-            driver.get(source)
+            driver.get(self._get_iframe_url())
 
             data_blocks = WebDriverWait(driver, 30).until(
                 EC.visibility_of_all_elements_located((By.CLASS_NAME, "card"))
@@ -56,6 +47,11 @@ class Jordan:
                 "people_fully_vaccinated": people_fully_vaccinated,
             }
         )
+
+    def _get_iframe_url(self):
+        soup = get_soup(self.source_url, verify=False)
+        url = soup.find("body").find_all("section")[1].find("iframe").get("src")
+        return url
 
     def pipe_vaccinations(self, ds: pd.Series) -> pd.Series:
         total_vaccinations = ds.people_vaccinated + ds.people_fully_vaccinated

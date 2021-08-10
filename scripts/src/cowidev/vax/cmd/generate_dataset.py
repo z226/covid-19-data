@@ -774,10 +774,10 @@ def main_generate_dataset(paths):
         ),
         manufacturer=os.path.join(
             paths.project_dir,
-            "scripts/scripts/vaccinations/output/by_manufacturer/*.csv",
+            "scripts/output/vaccinations/by_manufacturer/*.csv",
         ),
         age=os.path.join(
-            paths.project_dir, "scripts/scripts/vaccinations/output/by_age_group/*.csv"
+            paths.project_dir, "scripts/output/vaccinations//by_age_group/*.csv"
         ),
     )
     outputs = Bucket(
@@ -786,7 +786,7 @@ def main_generate_dataset(paths):
         ),
         automated=os.path.abspath(
             os.path.join(
-                paths.project_dir, "scripts/scripts/vaccinations/automation_state.csv"
+                paths.project_dir, "scripts/output/vaccinations/automation_state.csv"
             )
         ),
         vaccinations=os.path.abspath(
@@ -834,7 +834,7 @@ def main_generate_dataset(paths):
         ),
         html_table=os.path.abspath(
             os.path.join(
-                paths.project_dir, "scripts/scripts/vaccinations/source_table.html"
+                paths.project_dir, "scripts/output/vaccinations/source_table.html"
             )
         ),
     )

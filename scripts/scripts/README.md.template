@@ -91,6 +91,7 @@ If you are interested in the individual files that make up the complete dataset,
 - On 5 March 2021, due to [the COVID Tracking Project's announcement](https://covidtracking.com/analysis-updates/covid-tracking-project-end-march-7) that their data collection effort would stop in March 2021, we transitioned to the [Department of Health & Human Services](https://healthdata.gov/dataset/covid-19-reported-patient-impact-and-hospital-capacity-state-timeseries) as our source for data on hospitalizations and ICU admissions in the United States.
 - On 1 July 2021, we added a [dataset on SARS-CoV-2 variants](variants/covid-variants.csv) based on data made available by [CoVariants.org](https://covariants.org/).
 - On 15 July 2021, we added data on intensive care unit (ICU) patients for Algeria, sourced from the [Ministry of Health](https://github.com/yasserkaddour/covid19-icu-data-algeria).
+- On 11 August 2021, we added new metric `total_boosters` to our vaccination data. This counts the total number of administered booster doses.
 
 
 ## Data alterations

@@ -183,6 +183,8 @@ def get_vax():
             "people_vaccinated_per_hundred",
             "people_fully_vaccinated",
             "people_fully_vaccinated_per_hundred",
+            "total_boosters",
+            "total_boosters_per_hundred",
         ],
     )
     vax = vax.rename(
@@ -199,6 +201,7 @@ def get_vax():
     vax["people_fully_vaccinated_per_hundred"] = vax[
         "people_fully_vaccinated_per_hundred"
     ].round(3)
+    vax["total_boosters_per_hundred"] = vax["total_boosters_per_hundred"].round(3)
     return vax
 
 
@@ -500,11 +503,13 @@ internal_files_columns = {
             "total_vaccinations",
             "people_vaccinated",
             "people_fully_vaccinated",
+            "total_boosters",
             "new_vaccinations",
             "new_vaccinations_smoothed",
             "total_vaccinations_per_hundred",
             "people_vaccinated_per_hundred",
             "people_fully_vaccinated_per_hundred",
+            "total_boosters_per_hundred",
             "new_vaccinations_smoothed_per_million",
             "population",
             "people_partly_vaccinated",

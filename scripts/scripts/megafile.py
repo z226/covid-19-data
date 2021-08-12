@@ -194,14 +194,13 @@ def get_vax():
             "daily_vaccinations_per_million": "new_vaccinations_smoothed_per_million",
         }
     )
-    vax["total_vaccinations_per_hundred"] = vax["total_vaccinations_per_hundred"].round(
-        3
-    )
-    vax["people_vaccinated_per_hundred"] = vax["people_vaccinated_per_hundred"].round(3)
-    vax["people_fully_vaccinated_per_hundred"] = vax[
-        "people_fully_vaccinated_per_hundred"
-    ].round(3)
-    vax["total_boosters_per_hundred"] = vax["total_boosters_per_hundred"].round(3)
+    rounded_cols = [
+        "total_vaccinations_per_hundred",
+        "people_vaccinated_per_hundred",
+        "people_fully_vaccinated_per_hundred",
+        "total_boosters_per_hundred",
+    ]
+    vax[rounded_cols] = vax[rounded_cols].round(3)
     return vax
 
 

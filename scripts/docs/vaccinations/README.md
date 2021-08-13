@@ -6,7 +6,7 @@
 
 Vaccination data is updated on a daily basis. For some countries, the update is done by means of an automated process,
 while others require some manual work. To keep track of the currently automated processes, check [this
-table](automation_state.csv). 
+table](../../output/vaccinations/automation_state.csv). 
 
 ### Content
 1. [Vaccination pipeline files](#1-vaccination-pipeline-files)
@@ -26,7 +26,7 @@ This directory contains the following files:
 | [`src/cowidev/vax/`](../../src/cowidev/vax)      | Scripts to automate country data imports.       |
 | [`config.yaml`](config.yaml)      | Data pipeline configuration.       |
 | [`MANIFEST.in`](MANIFEST.IN), [`setup.py`](setup.py), [`requirements.txt`](requirements.txt), [`requirements-flake.txt`](requirements-flake.txt)      |     Library development related files   |
-| [`automation_state.csv`](automation_state.csv)      |     Lists if country process is automated (TRUE) or not (FALSE).   |
+| [`automation_state.csv`](../../output/vaccinations/automation_state.csv)      |     Lists if country process is automated (TRUE) or not (FALSE).   |
 | [`source_table.html`](source_table.html)      | HTML table with country source URLs. Shown at [OWID's website](https://ourworldindata.org/covid-vaccinations#source-information-country-by-country).       |
 | [`vax_update.sh.template`](vax_update.sh.template)      | Template to push vaccination update changes.       |
 

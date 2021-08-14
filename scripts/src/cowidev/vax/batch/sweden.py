@@ -44,7 +44,7 @@ class Sweden(object):
         return origin_date + pd.DateOffset(days=7 * int(row.Vecka))
 
     def _read_weekly_data(self) -> pd.DataFrame:
-        df = pd.read_excel(self.self.source_url_weekly, sheet_name="Vaccinerade tidsserie")
+        df = pd.read_excel(self.source_url_weekly, sheet_name="Vaccinerade tidsserie")
         df = df[df["Region"] == "| Sverige |"][
             ["Vecka", "Antal vaccinerade", "Vaccinationsstatus"]
         ]

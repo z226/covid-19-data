@@ -9,7 +9,8 @@ import PyPDF2
 
 from cowidev.vax.utils.incremental import increment
 from cowidev.vax.utils.dates import clean_date
-from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.utils import get_soup, clean_count
+
 
 vaccines_mapping = {
     "Covishield Vaccine": "Oxford/AstraZeneca",
@@ -21,12 +22,12 @@ vaccines_mapping = {
 }
 
 regex_mapping = {
-    "Covishield Vaccine": r"(Covishield Vaccine) 1st Dose (\d+) 2nd Dose (\d+)",
-    "AstraZeneca Vaccine": r"(AstraZeneca Vaccine) 1st Dose (\d+) 2nd Dose (\d+)",
-    "Sinopharm Vaccine": r"(Sinopharm Vaccine) 1st Dose (\d+) 2nd Dose (\d+)",
-    "Sputnik V": r"(Sputnik V) 1st Dose (\d+) 2nd Dose (\d+)",
-    "Pfizer": r"(Pfizer) 1st Dose (\d+) 2nd Dose (\d+)",
-    "Moderna": r"(Moderna) (\d+)",
+    "Covishield Vaccine": r"(Covishield Vaccine) 1st Dose ([\d,]+) 2nd Dose ([\d,]+)",
+    "AstraZeneca Vaccine": r"(AstraZeneca Vaccine) 1st Dose ([\d,]+) 2nd Dose ([\d,]+)",
+    "Sinopharm Vaccine": r"(Sinopharm Vaccine) 1st Dose ([\d,]+) 2nd Dose ([\d,]+)",
+    "Sputnik V": r"(Sputnik V) 1st Dose ([\d,]+) 2nd Dose ([\d,]+)",
+    "Pfizer": r"(Pfizer) 1st Dose ([\d,]+) 2nd Dose ([\d,]+)",
+    "Moderna": r"(Moderna) ([\d,]+)",
 }
 
 
@@ -103,9 +104,11 @@ class SriLanka:
         df = pd.DataFrame(flat_ls, columns=["vaccine", "doses_1", "doses_2"]).replace(
             "-", 0
         )
-        df.replace(to_replace=[None], value=0, inplace=True)
-        df = df.astype({"doses_1": int, "doses_2": int}).assign(
-            vaccine=df.vaccine.str.strip()
+        df = df.replace(to_replace=[None], value=0)
+        df = df.assign(
+            doses_1=df["doses_1"].astype(str).apply(clean_count),
+            doses_2=df["doses_2"].astype(str).apply(clean_count),
+            vaccine=df.vaccine.str.strip(),
         )
         return df
 

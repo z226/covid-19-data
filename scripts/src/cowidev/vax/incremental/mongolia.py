@@ -11,6 +11,7 @@ vaccine_mapping = {
     "Pfizer-BioNTech / КОВАКС 🤝": "Pfizer/BioNTech",
     "Синофарм / БНХАУ 🤝+ 💵": "Sinopharm/Beijing",
     "Спутник V / ОХУ 💵": "Sputnik V",
+    "Спутник V / ОХУ 🤝 + 💵": "Sputnik V",
 }
 
 

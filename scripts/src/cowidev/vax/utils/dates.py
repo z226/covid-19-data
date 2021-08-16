@@ -92,7 +92,9 @@ def extract_clean_date(
     """
     if unicode_norm:
         text = unicodedata.normalize("NFKC", text)
-    date_raw = re.search(regex, text).group(1)
+    date_raw = re.search(regex, text).groups()
+    if isinstance(date_raw, tuple):
+        date_raw = " ".join(date_raw)
     date_str = clean_date(
         date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days
     )

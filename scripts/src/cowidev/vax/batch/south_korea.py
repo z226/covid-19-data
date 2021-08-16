@@ -15,7 +15,7 @@ class South_korea:
             "모더나 누적": "Moderna",
             "아스트라제네카 누적": "Oxford/AstraZeneca",
             "화이자 누적": "Pfizer/BioNTech",
-            "얀센 누적": "Johnson&Johnson"
+            "얀센 누적": "Johnson&Johnson",
         }
 
     def read(self):
@@ -44,6 +44,19 @@ class South_korea:
                 "people_fully_vaccinated": df.loc[:, ("전체 누적", "완료")],
                 "janssen": df.loc[:, ("얀센 누적", "1차(완료)")],
             }
+        )
+
+    def pipe_extract_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
+        data = {
+            "date": df.loc[:, "일자"]
+        }
+        for vax_og, vax_new in self.vaccines_mapping.items():
+            data[vax_new] = df.loc[:, vax_og].sum(axis=1)
+        return pd.DataFrame(data)
+
+    def pipe_melt_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
+        return pd.DataFrame(
+            df.melt(id_vars="date", var_name="vaccine", value_name="total_vaccinations")
         )
 
     def pipe_source(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -98,9 +111,27 @@ class South_korea:
             .drop_duplicates()
         )
 
+    def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
+        return (
+            df
+            .pipe(self.pipe_check_format)
+            .pipe(self.pipe_extract_manufacturer)
+            .pipe(self.pipe_date)
+            .pipe(self.pipe_melt_manufacturer)
+            .pipe(self.pipe_location)
+            .sort_values(["date", "vaccine"])
+            .drop_duplicates()
+            .reset_index(drop=True)
+        )
+
     def export(self, paths):
         df = self.read()
+        # Main data
         df.pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False)
+        # Vaccination by manufacturer
+        df.pipe(self.pipeline_manufacturer).to_csv(
+            paths.tmp_vax_out_man(self.location), index=False
+        )
 
 
 def main(paths):

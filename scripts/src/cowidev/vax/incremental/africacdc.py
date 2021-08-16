@@ -20,6 +20,7 @@ COUNTRIES = {
     "Gabon": "Gabon",
     "Gambia": "Gambia",
     "Mauritania": "Mauritania",
+    "Rwanda": "Rwanda",
 }
 
 

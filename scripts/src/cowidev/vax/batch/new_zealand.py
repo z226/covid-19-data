@@ -9,32 +9,24 @@ from cowidev.vax.utils.dates import clean_date_series
 
 
 class NewZealand:
-    def __init__(
-        self,
-        source_url: str,
-        location: str,
-        columns_rename: dict = None,
-        columns_by_age_group_rename: dict = None,
-        columns_cumsum: list = None,
-        columns_cumsum_by_age: list = None,
-    ):
-        """Constructor.
-
-        Args:
-            source_url (str): Source data url
-            location (str): Location name
-            columns_rename (dict, optional): Maps original to new names. Defaults to None.
-            columns_by_age_group_rename (dict, optional): Maps original to new age by group names.
-            columns_cumsum (list, optional): List of columns to apply cumsum to. Comes handy when the values reported
-                                                are daily. Defaults to None.
-            columns_cumsum_by_age (list, optional): Group by age column to apply cumsum.
-        """
-        self.source_url = source_url
-        self.location = location
-        self.columns_rename = columns_rename
-        self.columns_by_age_group_rename = columns_by_age_group_rename
-        self.columns_cumsum = columns_cumsum
-        self.columns_cumsum_by_age = columns_cumsum_by_age
+    def __init__(self):
+        """Constructor."""
+        self.source_url = (
+            "https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/"
+            "covid-19-data-and-statistics/covid-19-vaccine-data"
+        )
+        self.location = "New Zealand"
+        self.columns_rename = {
+            "First dose administered": "people_vaccinated",
+            "Second dose administered": "people_fully_vaccinated",
+            "Date": "date",
+        }
+        self.columns_by_age_group_rename={
+            "# doses administered": "total_vaccinations",
+            "Ten year age group": "age_group",
+        }
+        self.columns_cumsum=["First dose administered", "Second dose administered"],
+        self.columns_cumsum_by_age=["Ten year age group"]
 
     def read(self) -> pd.DataFrame:
         """Load data."""
@@ -87,7 +79,8 @@ class NewZealand:
     def pipeline(self, df: pd.DataFrame) -> pd.DataFrame:
         """Could be generalized."""
         return (
-            df.pipe(self.pipe_cumsum)
+            df
+            .pipe(self.pipe_cumsum)
             .pipe(self.pipe_rename)
             .pipe(self.pipe_metrics)
             .pipe(self.pipe_date)
@@ -122,13 +115,14 @@ class NewZealand:
     def pipeline_by_age(self, df: pd.DataFrame, date_str: str) -> pd.DataFrame:
         """Could be generalized."""
         return (
-            df.pipe(self.pipe_aggregate_by_age)
+            df
+            .pipe(self.pipe_aggregate_by_age)
             .pipe(self.pipe_rename_by_age)
             .pipe(self.pipe_location)
             .pipe(self.pipe_postprocess, date_str)
         )
 
-    def to_csv(self, paths):
+    def export(self, paths):
         """Generalized."""
         df = self.read()
         # Main data
@@ -141,24 +135,7 @@ class NewZealand:
 
 
 def main(paths):
-    NewZealand(
-        source_url=(
-            "https://www.health.govt.nz/our-work/diseases-and-conditions/covid-19-novel-coronavirus/"
-            "covid-19-data-and-statistics/covid-19-vaccine-data"
-        ),
-        location="New Zealand",
-        columns_rename={
-            "First dose administered": "people_vaccinated",
-            "Second dose administered": "people_fully_vaccinated",
-            "Date": "date",
-        },
-        columns_cumsum=["First dose administered", "Second dose administered"],
-        columns_cumsum_by_age=["Ten year age group"],
-        columns_by_age_group_rename={
-            "# doses administered": "total_vaccinations",
-            "Ten year age group": "age_group",
-        },
-    ).to_csv(paths)
+    NewZealand().export(paths)
 
 
 if __name__ == "__main__":

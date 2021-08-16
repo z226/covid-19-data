@@ -15,7 +15,7 @@ class South_korea:
             "모더나 누적": "Moderna",
             "아스트라제네카 누적": "Oxford/AstraZeneca",
             "화이자 누적": "Pfizer/BioNTech",
-            "얀센 누적": "Johnson&Johnson"
+            "얀센 누적": "Johnson&Johnson",
         }
 
     def read(self):
@@ -45,21 +45,20 @@ class South_korea:
                 "janssen": df.loc[:, ("얀센 누적", "1차(완료)")],
             }
         )
-    
+
     def pipe_extract_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
-        return pd.DataFrame(
-            {
-                "date": df.loc[:, "일자"],
-                "Oxford/AstraZeneca" : df.loc[:, "아스트라제네카 누적"].sum(axis=1),
-                "Pfizer/BioNTech" : df.loc[:, "화이자 누적"].sum(axis=1),
-                "Moderna" : df.loc[:, "모더나 누적"].sum(axis=1),
-                "Johnson&Johnson": df.loc[:, "얀센 누적"].sum(axis=1),
-            }
-        )
-    
+        data = {
+            "date": df.loc[:, "일자"]
+        }
+        for vax_og, vax_new in self.vaccines_mapping.items():
+            data[vax_new] = df.loc[:, vax_og].sum(axis=1)
+        return pd.DataFrame(data)
+
     def pipe_melt_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
-        return pd.DataFrame(df.melt(id_vars='date',var_name="vaccine",value_name="total_vaccinations"))
-    
+        return pd.DataFrame(
+            df.melt(id_vars="date", var_name="vaccine", value_name="total_vaccinations")
+        )
+
     def pipe_source(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(source_url=self.source_url_ref)
 
@@ -111,25 +110,28 @@ class South_korea:
             .sort_values("date")
             .drop_duplicates()
         )
-    
+
     def pipeline_manufacturer(self, df: pd.DataFrame) -> pd.DataFrame:
         return (
-            df.pipe(self.pipe_check_format)
+            df
+            .pipe(self.pipe_check_format)
             .pipe(self.pipe_extract_manufacturer)
             .pipe(self.pipe_date)
             .pipe(self.pipe_melt_manufacturer)
             .pipe(self.pipe_location)
-            .sort_values(["date","vaccine"])
+            .sort_values(["date", "vaccine"])
             .drop_duplicates()
             .reset_index(drop=True)
         )
-    
+
     def export(self, paths):
         df = self.read()
         # Main data
         df.pipe(self.pipeline).to_csv(paths.tmp_vax_out(self.location), index=False)
         # Vaccination by manufacturer
-        df.pipe(self.pipeline_manufacturer).to_csv(paths.tmp_vax_out_man(self.location), index=False)
+        df.pipe(self.pipeline_manufacturer).to_csv(
+            paths.tmp_vax_out_man(self.location), index=False
+        )
 
 
 def main(paths):

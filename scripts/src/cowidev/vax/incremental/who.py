@@ -68,6 +68,7 @@ COUNTRIES = {
     "Turkmenistan": "Turkmenistan",
     "Turks and Caicos Islands": "Turks and Caicos Islands",
     "Yemen": "Yemen",
+    "Gambia": "Gambia",
 }
 
 

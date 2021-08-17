@@ -109,8 +109,11 @@ def sel_options(headless: bool = True):
     return op
 
 
-def get_driver(headless: bool = True):
-    return webdriver.Chrome(options=sel_options(headless=headless))
+def get_driver(headless: bool = True, download_folder: str = None):
+    driver = webdriver.Chrome(options=sel_options(headless=headless))
+    if download_folder:
+        set_download_settings(driver, download_folder)
+    return driver
 
 
 def set_download_settings(driver, folder_name: str = None):

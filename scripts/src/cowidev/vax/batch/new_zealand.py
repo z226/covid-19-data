@@ -25,7 +25,7 @@ class NewZealand:
             "# doses administered": "total_vaccinations",
             "Ten year age group": "age_group",
         }
-        self.columns_cumsum=["First dose administered", "Second dose administered"],
+        self.columns_cumsum=["First dose administered", "Second dose administered"]
         self.columns_cumsum_by_age=["Ten year age group"]
 
     def read(self) -> pd.DataFrame:

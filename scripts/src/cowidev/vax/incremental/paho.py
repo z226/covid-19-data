@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 from cowidev.vax.utils.files import get_file_encoding
-from cowidev.vax.utils.utils import get_soup
+from cowidev.vax.utils.utils import get_soup, get_driver
 from cowidev.vax.utils.dates import clean_date
 from cowidev.vax.utils.incremental import increment
 from cowidev.vax.utils.who import VACCINES_WHO_MAPPING
@@ -28,23 +28,20 @@ COUNTRIES = {
 }
 
 
-columns = {
-    "Country/ Territory",
-    "Country code",
-    "Single dose [5]",
-    "First dose [3,6]",
-    "Second dose [4,6]",
-    "Complete Schedule [2]",
-    "Total Doses [1]",
-    "Population 2021",
-    "date",
-}
-
-
 class PAHO:
     def __init__(self) -> None:
         self.source_url = "https://ais.paho.org/imm/IM_DosisAdmin-Vacunacion.asp"
         self._download_path = "/tmp"
+        self.columns_mapping = {
+            "Country/ Territory": "location",
+            "Country code": "country_code",
+            "Single dose [5]": "single_dose",
+            "First dose [3,6]": "dose_1",
+            "Second dose [4,6]": "dose_2",
+            "Complete Schedule [2]": "people_fully_vaccinated",
+            "Total Doses [1,11]": "total_vaccinations",
+            "date": "date",
+        }
 
     def read(self):
         url = self._parse_iframe_link()
@@ -57,8 +54,7 @@ class PAHO:
         return url
 
     def _parse_data(self, url: str):
-        with webdriver.Chrome(options=self._load_options()) as driver:
-            self._set_download_settings(driver)
+        with get_driver(download_folder=self._download_path) as driver:
             # Go to page
             driver.get(url)
             time.sleep(10)
@@ -76,31 +72,6 @@ class PAHO:
             df = df.assign(date=self._parse_date(driver))
         return df
 
-    def _load_options(self):
-        op = Options()
-        op.add_argument("--disable-notifications")
-        op.add_experimental_option(
-            "prefs",
-            {
-                "download.prompt_for_download": False,
-                "download.directory_upgrade": True,
-                "safebrowsing.enabled": True,
-            },
-        )
-        op.add_argument("--headless")
-        return op
-
-    def _set_download_settings(self, driver):
-        driver.command_executor._commands["send_command"] = (
-            "POST",
-            "/session/$sessionId/chromium/send_command",
-        )
-        params = {
-            "cmd": "Page.setDownloadBehavior",
-            "params": {"behavior": "allow", "downloadPath": self._download_path},
-        }
-        _ = driver.execute("send_command", params)
-
     def _download_csv(self, driver, option: str, filename: str):
         # Click on download
         driver.find_element_by_id("download-ToolbarButton").click()
@@ -115,8 +86,8 @@ class PAHO:
         driver.find_element_by_xpath("//div[contains(text(),'CSV')]").click()
         time.sleep(2)
         # Select RDT Overview option
-        driver.find_element_by_xpath(f"//span[contains(text(),'{filename}')]").click()
-        time.sleep(2)
+        # driver.find_element_by_xpath(f"//span[contains(text(),'{filename}')]").click()
+        # time.sleep(2)
         # Download
         driver.find_element_by_xpath("//button[contains(text(),'Download')]").click()
         time.sleep(5)
@@ -136,16 +107,20 @@ class PAHO:
 
     def _get_downloaded_filename(self):
         files = glob(os.path.join(self._download_path, "*.csv"))
+        print(files)
         return max(files, key=os.path.getctime)
 
     def pipe_check_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        columns_missing = columns.difference(df.columns)
+        columns_missing = set(self.columns_mapping).difference(df.columns)
+        columns_unknown = df.columns.difference(self.columns_mapping)
         if columns_missing:
-            raise ValueError(f"Missing column field")
+            raise ValueError(
+                f"Missing column fields: {columns_missing}. Unknown columns: {columns_unknown}"
+            )
         return df
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.rename(columns={"Country/ Territory": "location"})
+        return df.rename(columns=self.columns_mapping)
 
     def pipe_filter_countries(self, df: pd.DataFrame) -> pd.DataFrame:
         """Get rows from selected countries."""
@@ -155,9 +130,7 @@ class PAHO:
 
     def pipe_metrics(self, df: pd.DataFrame) -> pd.DataFrame:
         return df.assign(
-            people_vaccinated=df["Single dose [5]"] + df["First dose [3,6]"],
-            people_fully_vaccinated=df["Complete Schedule [2]"],
-            total_vaccinations=df["Total Doses [1]"],
+            people_vaccinated=df["single_dose"] + df["dose_1"],
         )
 
     def pipe_metadata(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -178,7 +151,7 @@ class PAHO:
                 )
             )
         )
-        df = df.merge(df_who, left_on="Country code", right_on="ISO3")
+        df = df.merge(df_who, left_on="country_code", right_on="ISO3")
         return df
 
     def pipe_select_out_cols(self, df: pd.DataFrame) -> pd.DataFrame:

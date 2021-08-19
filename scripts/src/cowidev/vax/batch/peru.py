@@ -1,11 +1,17 @@
 import pandas as pd
 
+from cowidev.vax.utils.dates import localdatenow
+from cowidev.vax.utils.files import export_metadata
+
 
 class Peru:
     def __init__(self) -> None:
         self.location = "Peru"
         self.source_url = (
             "https://github.com/jmcastagnetto/covid-19-peru-vacunas/raw/main/datos/vacunas_covid_resumen.csv"
+        )
+        self.source_url_age = (
+            "https://github.com/jmcastagnetto/covid-19-peru-vacunas/raw/main/datos/vacunas_covid_rangoedad_owid.csv"
         )
         self.source_url_ref = (
             "https://www.datosabiertos.gob.pe/dataset/vacunaci%C3%B3n-contra-covid-19-ministerio-de-salud-minsa"
@@ -21,6 +27,9 @@ class Peru:
             self.source_url,
             usecols=["fecha_vacunacion", "fabricante", "dosis", "n_reg"],
         )
+
+    def read_age(self):
+        return pd.read_csv(self.source_url_age)
 
     def pipe_rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.rename(columns={"fecha_vacunacion": "date", "fabricante": "vaccine"})
@@ -73,9 +82,32 @@ class Peru:
             .pipe(self.pipe_metadata)
         )
 
+    def pipe_checks_age(self, df: pd.DataFrame) -> pd.DataFrame:
+        if (df.people_vaccinated_per_hundred > 100).sum():
+            raise ValueError("Check `people_vaccinated_per_hundred` field! Found values above 100%.")
+        if (df.people_fully_vaccinated_per_hundred > 100).sum():
+            raise ValueError("Check `people_fully_vaccinated_per_hundred` field! Found values above 100%.")
+        if (df.date.min() < "2021-02-08") or (df.date.max() > localdatenow("America/Lima")):
+            raise ValueError("Check `date` field! Some dates may be out of normal")
+        if not (df.location.unique() == "Peru").all():
+            raise ValueError("Invalid values in `location` field!")
+        return df
+
+    def pipeline_age(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df.pipe(self.pipe_checks_age)
+
     def export(self, paths):
         df = self.read().pipe(self.pipeline)
         df.to_csv(paths.tmp_vax_out(self.location), index=False)
+        # Age data
+        df_age = self.read_age().pipe(self.pipeline_age)
+        df_age.to_csv(paths.tmp_vax_out_by_age_group(self.location), index=False)
+        export_metadata(
+            df_age,
+            "Ministerio de Salud via https://github.com/jmcastagnetto/covid-19-peru-vacunas",
+            self.source_url_ref,
+            paths.tmp_vax_metadata_age,
+        )
 
 
 def main(paths):

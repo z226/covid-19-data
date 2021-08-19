@@ -107,7 +107,7 @@ class PAHO:
 
     def _get_downloaded_filename(self):
         files = glob(os.path.join(self._download_path, "*.csv"))
-        print(files)
+        # print(files)
         return max(files, key=os.path.getctime)
 
     def pipe_check_columns(self, df: pd.DataFrame) -> pd.DataFrame:

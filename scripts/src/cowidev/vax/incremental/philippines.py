@@ -30,6 +30,7 @@ class Philippines:
                 spans[6].text,
                 "\(as of ([a-zA-Z]+)\.\s?(\d{1,2}), (20\d{2})\)",
                 "%b %d %Y",
+                lang="en",
             )
             # Metrics
             total_vaccinations = clean_count(spans[8].text)

@@ -21,6 +21,11 @@ def parse_data(soup: BeautifulSoup) -> pd.Series:
         parse_people_fully_vaccinated(soup),
     )
     data = dict(zip(keys, values))
+    data["total_boosters"] = (
+        data["total_vaccinations"]
+        - data["people_vaccinated"]
+        - data["people_fully_vaccinated"]
+    )
     return pd.Series(data=data)
 
 
@@ -78,6 +83,7 @@ def main(paths):
         total_vaccinations=data["total_vaccinations"],
         people_vaccinated=data["people_vaccinated"],
         people_fully_vaccinated=data["people_fully_vaccinated"],
+        total_boosters=data["total_boosters"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

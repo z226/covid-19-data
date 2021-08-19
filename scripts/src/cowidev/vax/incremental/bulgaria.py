@@ -37,13 +37,6 @@ def translate_index(ds: pd.Series) -> pd.Series:
     )
 
 
-def add_totals(ds: pd.Series) -> pd.Series:
-    people_vaccinated = int(ds["total_vaccinations"]) - int(
-        ds["people_fully_vaccinated"]
-    )
-    return enrich_data(ds, "people_vaccinated", people_vaccinated)
-
-
 def enrich_location(ds: pd.Series) -> pd.Series:
     return enrich_data(ds, "location", "Bulgaria")
 
@@ -61,7 +54,6 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
         ds.pipe(translate_index)
-        .pipe(add_totals)
         .pipe(enrich_date)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
@@ -76,7 +68,6 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=int(data["total_vaccinations"]),
-        people_vaccinated=int(data["people_vaccinated"]),
         people_fully_vaccinated=int(data["people_fully_vaccinated"]),
         date=data["date"],
         source_url=data["source_url"],

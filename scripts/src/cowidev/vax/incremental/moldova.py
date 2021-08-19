@@ -24,21 +24,11 @@ def read(source: str) -> pd.Series:
 def parse_data(soup: BeautifulSoup) -> pd.Series:
 
     total_vaccinations = clean_count(soup.find(id="stats").find_all("span")[0].text)
-    people_fully_vaccinated = clean_count(
-        soup.find(id="stats").find_all("span")[1].text
-    )
-    assert total_vaccinations >= people_fully_vaccinated
 
     data = {
         "total_vaccinations": total_vaccinations,
-        "people_fully_vaccinated": people_fully_vaccinated,
     }
     return pd.Series(data=data)
-
-
-def add_totals(ds: pd.Series) -> pd.Series:
-    people_vaccinated = ds["total_vaccinations"] - ds["people_fully_vaccinated"]
-    return enrich_data(ds, "people_vaccinated", people_vaccinated)
 
 
 def format_date(ds: pd.Series) -> pd.Series:
@@ -54,7 +44,7 @@ def enrich_vaccine(ds: pd.Series) -> pd.Series:
     return enrich_data(
         ds,
         "vaccine",
-        "Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
+        "Johnson&Johnson, Oxford/AstraZeneca, Pfizer/BioNTech, Sinopharm/Beijing, Sputnik V",
     )
 
 
@@ -64,8 +54,7 @@ def enrich_source(ds: pd.Series) -> pd.Series:
 
 def pipeline(ds: pd.Series) -> pd.Series:
     return (
-        ds.pipe(add_totals)
-        .pipe(format_date)
+        ds.pipe(format_date)
         .pipe(enrich_location)
         .pipe(enrich_vaccine)
         .pipe(enrich_source)
@@ -79,8 +68,6 @@ def main(paths):
         paths=paths,
         location=data["location"],
         total_vaccinations=data["total_vaccinations"],
-        people_vaccinated=data["people_vaccinated"],
-        people_fully_vaccinated=data["people_fully_vaccinated"],
         date=data["date"],
         source_url=data["source_url"],
         vaccine=data["vaccine"],

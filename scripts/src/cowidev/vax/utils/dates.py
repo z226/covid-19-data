@@ -48,9 +48,7 @@ def clean_date(date_or_text, fmt=None, lang=None, loc="", minus_days=0):
             loc = loc.replace("_", "-")
     # Thread-safe extract date
     with _setlocale(loc):
-        return (
-            datetime.strptime(date_or_text, fmt) - timedelta(days=minus_days)
-        ).strftime(DATE_FORMAT)
+        return (datetime.strptime(date_or_text, fmt) - timedelta(days=minus_days)).strftime(DATE_FORMAT)
 
 
 def extract_clean_date(
@@ -95,17 +93,13 @@ def extract_clean_date(
     date_raw = re.search(regex, text).groups()
     if isinstance(date_raw, tuple):
         date_raw = " ".join(date_raw)
-    date_str = clean_date(
-        date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days
-    )
+    date_str = clean_date(date_raw, fmt=date_format, lang=lang, loc=loc, minus_days=minus_days)
     if replace_year is not None:
         date_str = _replace_date_fields(date_str, {"year": replace_year})
     return date_str
 
 
-def _replace_date_fields(
-    date_raw: str, replace_fields: dict = {}, date_format: str = DATE_FORMAT
-):
+def _replace_date_fields(date_raw: str, replace_fields: dict = {}, date_format: str = DATE_FORMAT):
     """Replace date field.
 
     Args:
@@ -122,10 +116,12 @@ def _replace_date_fields(
     return dt.strftime(DATE_FORMAT)
 
 
-def localdatenow(tz=None):
-    if tz is None:
-        tz = "utc"
-    return localdate(tz, 0)
+def list_timezones():
+    return pytz.all_timezones
+
+
+def localdatenow(tz="utc"):
+    return localdate(tz, force_today=True)
 
 
 def localdate(tz="utc", force_today=False, hour_limit=None, date_format=None):
@@ -149,9 +145,7 @@ def localdate(tz="utc", force_today=False, hour_limit=None, date_format=None):
     return local_time.strftime(date_format)
 
 
-def clean_date_series(
-    ds: pd.Series, format_input: str = None, format_output: str = DATE_FORMAT
-) -> pd.Series:
+def clean_date_series(ds: pd.Series, format_input: str = None, format_output: str = DATE_FORMAT) -> pd.Series:
     if format_output is None:
         format_output = DATE_FORMAT
     return pd.to_datetime(ds, format=format_input).dt.strftime(format_output)
